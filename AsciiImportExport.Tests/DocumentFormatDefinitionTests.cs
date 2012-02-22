@@ -10,16 +10,17 @@ namespace AsciiImportExport.Tests
     [TestFixture]
     internal class DocumentFormatDefinitionTests
     {
-        private const int Int32PropValue = 4;
-        private const string StringPropValue = "Hello!";
+        private const int Int32PropValue1 = 1233;
+        private const int Int32PropValue2 = -344;
+        private const string StringPropValue1 = "Hello";
+        private const string StringPropValue2 = "World!";
 
         private static DocumentFormatDefinition<Poco> GetPocoDefinition()
         {
-            var builder = new DocumentFormatDefinitionBuilder<Poco>();
-            return builder
+            return new DocumentFormatDefinitionBuilder<Poco>()
                 .SetColumnSeparator("\t")
                 .SetCommentString("!")
-                .SetAutosizeColumns(true)
+                .SetAutosizeColumns(false)
                 .SetExportHeaderLine(false)
                 .AddColumn(new DocumentColumn<Poco>(x => x.StringProp))
                 .AddColumn(new DocumentColumn<Poco>(x => x.Int32Prop))
@@ -27,14 +28,30 @@ namespace AsciiImportExport.Tests
         }
 
         [Test]
+        public void ExportMultiplePocos()
+        {
+            DocumentFormatDefinition<Poco> definition = GetPocoDefinition();
+
+            var pocoList = new List<Poco>
+                               {
+                                   new Poco {Int32Prop = Int32PropValue1, StringProp = StringPropValue1},
+                                   new Poco {Int32Prop = Int32PropValue2, StringProp = StringPropValue2}
+                               };
+
+            string result = definition.Export(pocoList);
+
+            Assert.AreEqual(StringPropValue1 + "\t" + Int32PropValue1 + "\r\n" + StringPropValue2 + "\t" + Int32PropValue2, result);
+        }
+
+        [Test]
         public void ExportPoco()
         {
             DocumentFormatDefinition<Poco> definition = GetPocoDefinition();
 
-            var poco = new Poco {Int32Prop = Int32PropValue, StringProp = StringPropValue};
+            var poco = new Poco {Int32Prop = Int32PropValue1, StringProp = StringPropValue1};
             string result = definition.Export(new[] {poco});
 
-            Assert.AreEqual(StringPropValue + "\t" + Int32PropValue, result);
+            Assert.AreEqual(StringPropValue1 + "\t" + Int32PropValue1, result);
         }
 
         [Test]
@@ -42,27 +59,28 @@ namespace AsciiImportExport.Tests
         {
             DocumentFormatDefinition<Poco> definition = GetPocoDefinition();
 
-            const string importData = "Hello\t789\r\nWorld!\t-923";
-            List<Poco> result = definition.Import(importData);
+            List<Poco> result = definition.Import(StringPropValue1 + "\t" + Int32PropValue1 + "\r\n" + StringPropValue2 + "\t" + Int32PropValue2);
 
             Assert.AreEqual(2, result.Count);
-            Assert.AreEqual("Hello", result[0].StringProp);
-            Assert.AreEqual(789, result[0].Int32Prop);
 
-            Assert.AreEqual("World!", result[1].StringProp);
-            Assert.AreEqual(-923, result[1].Int32Prop);
+            Assert.AreEqual(StringPropValue1, result[0].StringProp);
+            Assert.AreEqual(Int32PropValue1, result[0].Int32Prop);
+
+            Assert.AreEqual(StringPropValue2, result[1].StringProp);
+            Assert.AreEqual(Int32PropValue2, result[1].Int32Prop);
         }
+
 
         [Test]
         public void ImportPoco()
         {
             DocumentFormatDefinition<Poco> definition = GetPocoDefinition();
 
-            List<Poco> result = definition.Import(StringPropValue + "\t" + Int32PropValue);
+            List<Poco> result = definition.Import(StringPropValue1 + "\t" + Int32PropValue1);
 
             Assert.AreEqual(1, result.Count);
-            Assert.AreEqual(StringPropValue, result[0].StringProp);
-            Assert.AreEqual(Int32PropValue, result[0].Int32Prop);
+            Assert.AreEqual(StringPropValue1, result[0].StringProp);
+            Assert.AreEqual(Int32PropValue1, result[0].Int32Prop);
         }
     }
 }

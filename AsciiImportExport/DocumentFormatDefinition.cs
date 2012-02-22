@@ -79,7 +79,7 @@ namespace AsciiImportExport
                     lineSb.Append(_columns[j].FormatAsString(exportResults[i][j]));
                     lineSb.Append(ColumnSeparator);
                 }
-                sb.AppendLine(lineSb.ToString().TrimEnd(ColumnSeparator.ToArray()));
+                sb.AppendLine(lineSb.ToString().TrimEnd());
             }
 
             return sb.ToString().TrimEnd('\r', '\n');

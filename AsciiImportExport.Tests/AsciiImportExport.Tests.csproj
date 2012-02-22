@@ -49,6 +49,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Autoresize\AutoresizePoco.cs" />
+    <Compile Include="Autoresize\AutoresizeTests.cs" />
     <Compile Include="DocumentColumnTests.cs" />
     <Compile Include="DocumentFormatDefinitionTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -61,6 +63,14 @@
       <Project>{9F7245A5-5DF6-4BB9-949F-F81A4E5978A9}</Project>
       <Name>AsciiImportExport</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Autoresize\space.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Autoresize\tab.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

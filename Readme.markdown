@@ -8,7 +8,7 @@ For now this is only for experimental use.
 Please don't use this in a productive environment.
 
 ## Example
-These example was taken from the Autoresize folder.
+This example was taken from the Autoresize folder.
 We want to export a list of AutoresizePoco.
 
 ### POCO

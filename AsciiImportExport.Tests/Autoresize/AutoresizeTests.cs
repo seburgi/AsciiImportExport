@@ -18,7 +18,7 @@ namespace AsciiImportExport.Tests.Autoresize
                        {
                            new AutoresizePoco {Birthday = new DateTime(1983, 1, 29), Gender = Gender.Male, Height = 175.5, Name = "Peter", Memo = "Nice guy!"},
                            new AutoresizePoco {Birthday = new DateTime(1931, 10, 5), Gender = Gender.Male, Height = 173.45, Name = "Paul", Memo = "Sometimes a litte grumpy."},
-                           new AutoresizePoco {Birthday = new DateTime(1980, 4, 12), Gender = Gender.Female, Height = 193, Name = "Mary", Memo = "Tall!"},
+                           new AutoresizePoco {Birthday = new DateTime(1980, 4, 12), Gender = Gender.Female, Height = 1193, Name = "Mary", Memo = "Tall!"},
                        };
         }
 
@@ -80,7 +80,6 @@ namespace AsciiImportExport.Tests.Autoresize
             }
         }
 
-
         private void ExportImportExport(DocumentFormatDefinition<AutoresizePoco> definition)
         {
             string exportData1 = definition.Export(GetPocoList());
@@ -94,8 +93,6 @@ namespace AsciiImportExport.Tests.Autoresize
         private void Export(DocumentFormatDefinition<AutoresizePoco> definition, string fileName)
         {
             string result = definition.Export(GetPocoList());
-            Console.WriteLine(result);
-
             Assert.AreEqual(File.ReadAllText(fileName), result);
         }
 

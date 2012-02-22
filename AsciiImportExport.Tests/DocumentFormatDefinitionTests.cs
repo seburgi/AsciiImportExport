@@ -1,5 +1,6 @@
 ﻿#region using directives
 
+using System.Collections.Generic;
 using NUnit.Framework;
 
 #endregion
@@ -31,21 +32,9 @@ namespace AsciiImportExport.Tests
             DocumentFormatDefinition<Poco> definition = GetPocoDefinition();
 
             var poco = new Poco {Int32Prop = Int32PropValue, StringProp = StringPropValue};
-            var result = definition.Export(new[] {poco});
+            string result = definition.Export(new[] {poco});
 
             Assert.AreEqual(StringPropValue + "\t" + Int32PropValue, result);
-        }
-
-        [Test]
-        public void ImportPoco()
-        {
-            DocumentFormatDefinition<Poco> definition = GetPocoDefinition();
-
-            var result = definition.Import(StringPropValue + "\t" + Int32PropValue);
-
-            Assert.AreEqual(1, result.Count);
-            Assert.AreEqual(StringPropValue, result[0].StringProp);
-            Assert.AreEqual(Int32PropValue, result[0].Int32Prop);
         }
 
         [Test]
@@ -54,7 +43,7 @@ namespace AsciiImportExport.Tests
             DocumentFormatDefinition<Poco> definition = GetPocoDefinition();
 
             const string importData = "Hello\t789\r\nWorld!\t-923";
-            var result = definition.Import(importData);
+            List<Poco> result = definition.Import(importData);
 
             Assert.AreEqual(2, result.Count);
             Assert.AreEqual("Hello", result[0].StringProp);
@@ -62,6 +51,18 @@ namespace AsciiImportExport.Tests
 
             Assert.AreEqual("World!", result[1].StringProp);
             Assert.AreEqual(-923, result[1].Int32Prop);
+        }
+
+        [Test]
+        public void ImportPoco()
+        {
+            DocumentFormatDefinition<Poco> definition = GetPocoDefinition();
+
+            List<Poco> result = definition.Import(StringPropValue + "\t" + Int32PropValue);
+
+            Assert.AreEqual(1, result.Count);
+            Assert.AreEqual(StringPropValue, result[0].StringProp);
+            Assert.AreEqual(Int32PropValue, result[0].Int32Prop);
         }
     }
 }

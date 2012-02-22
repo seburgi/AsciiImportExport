@@ -27,7 +27,7 @@ namespace AsciiImportExport.Tests
         [Test]
         public void ExportInt32Prop()
         {
-            var column = GetInt32PropColumn();
+            DocumentColumn<Poco> column = GetInt32PropColumn();
 
             var poco = new Poco {Int32Prop = Int32PropValue};
             string result = column.Format(poco);
@@ -38,7 +38,7 @@ namespace AsciiImportExport.Tests
         [Test]
         public void ExportStringProp()
         {
-            var column = GetStringPropColumn();
+            DocumentColumn<Poco> column = GetStringPropColumn();
 
             var poco = new Poco {StringProp = StringPropValue};
             string result = column.Format(poco);
@@ -49,7 +49,7 @@ namespace AsciiImportExport.Tests
         [Test]
         public void ImportInt32Prop()
         {
-            var column = GetInt32PropColumn();
+            DocumentColumn<Poco> column = GetInt32PropColumn();
 
             var poco = new Poco();
             column.SetValue(poco, Int32PropValue.ToString());
@@ -60,7 +60,7 @@ namespace AsciiImportExport.Tests
         [Test]
         public void ImportStringProp()
         {
-            var column = GetStringPropColumn();
+            DocumentColumn<Poco> column = GetStringPropColumn();
 
             var poco = new Poco();
             column.SetValue(poco, StringPropValue);

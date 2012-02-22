@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Text;
 
 #endregion
@@ -12,8 +11,8 @@ namespace AsciiImportExport
 {
     public class DocumentFormatDefinition<T> where T : class, new()
     {
-        private readonly List<DocumentColumn<T>> _columns;
         private readonly bool _autosizeColumns;
+        private readonly List<DocumentColumn<T>> _columns;
         private readonly bool _exportHeaderLine;
         private readonly Func<T> _instantiator;
 

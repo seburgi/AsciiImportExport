@@ -1,7 +1,5 @@
 ﻿#region using directives
 
-
-
 #endregion
 
 namespace AsciiImportExport.FileDialogHelper

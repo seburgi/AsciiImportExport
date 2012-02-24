@@ -8,11 +8,9 @@ For now this is only for experimental use.
 Please don't use this in a productive environment.
 
 ## Example
-This example was taken from the Autoresize folder.
-We want to export a list of AutoresizePoco.
 
 ### POCO
-    class AutoresizePoco
+    class Poco
     {
         public string Name { get; set; }
         public Gender Gender { get; set; }
@@ -31,13 +29,13 @@ We want to export a list of AutoresizePoco.
 ### Data
 This is our list:
 	
-	public List<AutoresizePoco> GetPocoList()
+	public List<Poco> GetPocoList()
     {
-        return new List<AutoresizePoco>
+        return new List<Poco>
                     {
-                        new AutoresizePoco {Birthday = new DateTime(1983, 1, 29), Gender = Gender.Male, Height = 175.5, Name = "Peter", Memo = "Nice guy!"},
-                        new AutoresizePoco {Birthday = new DateTime(1931, 10, 5), Gender = Gender.Male, Height = 173.45, Name = "Paul", Memo = "Sometimes a litte grumpy."},
-                        new AutoresizePoco {Birthday = new DateTime(1980, 4, 12), Gender = Gender.Female, Height = 1193, Name = "Mary", Memo = "Tall!"},
+                        new Poco {Birthday = new DateTime(1983, 1, 29), Gender = Gender.Male, Height = 175.5, Name = "Peter", Memo = "Nice guy!"},
+                        new Poco {Birthday = new DateTime(1931, 10, 5), Gender = Gender.Male, Height = 173.45, Name = "Paul", Memo = "Sometimes a litte grumpy."},
+                        new Poco {Birthday = new DateTime(1980, 4, 12), Gender = Gender.Female, Height = 1193, Name = "Mary", Memo = "Tall!"},
                     };
     }
 
@@ -46,18 +44,18 @@ This is our list:
 
 Now we define how the data will be exported / imported:
 
-    private static DocumentFormatDefinition<AutoresizePoco> GetDefinition_With_Tab_As_ColumnSeparator()
+    private static DocumentFormatDefinition<Poco> GetDefinition()
     {
-        return new DocumentFormatDefinitionBuilder<AutoresizePoco>()
+        return new DocumentFormatDefinitionBuilder<Poco>()
             .SetColumnSeparator("\t")
             .SetCommentString("!")
             .SetAutosizeColumns(true)
             .SetExportHeaderLine(false)
-            .AddColumn(new DocumentColumn<AutoresizePoco>(x => x.Name))
-            .AddColumn(new DocumentColumn<AutoresizePoco>(x => x.Gender).SetImportExportActions(s => StringToGender(s), o => GenderToString(o)))
-            .AddColumn(new DocumentColumn<AutoresizePoco>(x => x.Height).SetAlignment(ColumnAlignment.Right).SetDoublePrecision(2))
-            .AddColumn(new DocumentColumn<AutoresizePoco>(x => x.Birthday).SetDateTimeFormat("yyyyMMdd"))
-            .AddColumn(new DocumentColumn<AutoresizePoco>(x => x.Memo))
+            .AddColumn(new DocumentColumn<Poco>(x => x.Name))
+            .AddColumn(new DocumentColumn<Poco>(x => x.Gender).SetImportExportActions(s => StringToGender(s), o => GenderToString(o)))
+            .AddColumn(new DocumentColumn<Poco>(x => x.Height).SetAlignment(ColumnAlignment.Right).SetDoublePrecision(2))
+            .AddColumn(new DocumentColumn<Poco>(x => x.Birthday).SetDateTimeFormat("yyyyMMdd"))
+            .AddColumn(new DocumentColumn<Poco>(x => x.Memo))
             .Build();
     }
     
@@ -105,9 +103,9 @@ That is what we defined:
 
 And now we can export the list:
 
-	public string Export(List<AutoresizePoco> list)
+	public string Export(List<Poco> list)
 	{
-	    var definition = GetDefinition_With_Tab_As_ColumnSeparator();
+	    var definition = GetDefinition();
 	    return definition.Export(list);
 	}
 
@@ -121,8 +119,8 @@ Which will yield:
 
 No surprises here!
 
-	public List<AutoresizePoco> Import(string data)
+	public List<Poco> Import(string data)
 	{
-	    var definition = GetDefinition_With_Tab_As_ColumnSeparator();
+	    var definition = GetDefinition();
 	    return definition.Import(data);
 	}

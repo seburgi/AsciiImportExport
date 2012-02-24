@@ -2,6 +2,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -37,25 +39,31 @@ namespace AsciiImportExport
 
         public string CommentString { get; private set; }
 
-        public string Export(IEnumerable<T> data)
+        public string Export(List<T> data)
         {
             if (!data.Any()) return "";
 
             var exportResults = new string[data.Count()][];
+            var columnWidths = new List<int>();
 
-            int i = 0;
-            foreach (var item in data)
+            for (int i = 0; i < data.Count; i++)
             {
                 exportResults[i] = new string[_columns.Count];
 
                 for (int j = 0; j < _columns.Count; j++)
                 {
-                    exportResults[i][j] = _columns[j].Format(item);
+                    exportResults[i][j] = _columns[j].Format(data[i]);
                 }
-                i++;
             }
 
-            if (_autosizeColumns) InitializeAutosizeColumns(exportResults);
+            if (_autosizeColumns)
+            {
+                for (int i = 0; i < _columns.Count; i++)
+                {
+                    int maxLength = exportResults.Select(t => t[i].Length).Max();
+                    columnWidths.Add(maxLength);
+                }
+            }
 
             var sb = new StringBuilder();
 
@@ -69,14 +77,32 @@ namespace AsciiImportExport
                     lineSb.Append(ColumnSeparator);
                 }
                 sb.AppendLine(lineSb.ToString().TrimEnd(ColumnSeparator.ToArray()));
+
+                // Adjust width of first column due to additional length of comment string
+                if (_autosizeColumns) columnWidths[0] = Math.Max(columnWidths[0], _columns[0].FormattedHeader.Length + CommentString.Length);
             }
 
-            for (i = 0; i < exportResults.Length; i++)
+            for (int i = 0; i < exportResults.Length; i++)
             {
                 var lineSb = new StringBuilder();
                 for (int j = 0; j < _columns.Count; j++)
                 {
-                    lineSb.Append(_columns[j].FormatAsString(exportResults[i][j]));
+                    if (_autosizeColumns)
+                    {
+                        if (_columns[j].Alignment == ColumnAlignment.Right)
+                        {
+                            lineSb.Append(exportResults[i][j].PadLeft(columnWidths[j]));
+                        }
+                        else
+                        {
+                            lineSb.Append(exportResults[i][j].PadRight(columnWidths[j]));
+                        }
+                    }
+                    else
+                    {
+                        lineSb.Append(exportResults[i][j]);
+                    }
+
                     lineSb.Append(ColumnSeparator);
                 }
                 sb.AppendLine(lineSb.ToString().TrimEnd());
@@ -153,17 +179,6 @@ namespace AsciiImportExport
             }
 
             return result;
-        }
-
-        private void InitializeAutosizeColumns(string[][] data)
-        {
-            for (int i = 0; i < _columns.Count; i++)
-            {
-                if (_columns[i].ColumnWidth > 0) continue;
-
-                int maxLength = data.Select(t => t[i].Length).Max();
-                _columns[i].SetColumnWidth(maxLength);
-            }
         }
     }
 }

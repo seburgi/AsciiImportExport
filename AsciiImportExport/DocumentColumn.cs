@@ -17,7 +17,7 @@ namespace AsciiImportExport
         private string _booleanTrue = "1";
         private string _dateTimeFormat = "dd.MM.yyyy HH:mm:ss";
         private object _defaultValue;
-        private int _doublePrecision = 4;
+        private string _doubleStringFormat = "0.0000";
         private readonly bool _dummyColumn;
         private readonly Func<T, object> _getValueFunc;
         private string _header;
@@ -62,6 +62,11 @@ namespace AsciiImportExport
             get { return _header; }
         }
 
+        public ColumnAlignment Alignment    
+        {
+            get { return _alignment; }
+        }
+
         public string Format(T item)
         {
             if (item == null) throw new ArgumentNullException("item");
@@ -77,7 +82,7 @@ namespace AsciiImportExport
             Type type = value.GetType();
             if (type == typeof (String)) return FormatAsString((string) value);
             if (type == typeof (int) || type == typeof (int?)) return FormatAsInteger((int?) value);
-            if (type == typeof (double) || type == typeof (double?)) return FormatAsDouble((double?) value, _doublePrecision);
+            if (type == typeof (double) || type == typeof (double?)) return FormatAsDouble((double?) value);
             if (type == typeof (Boolean) || type == typeof (Boolean?)) return FormatAsBoolean((Boolean?) value);
             if (type == typeof (DateTime) || type == typeof (DateTime?)) return FormatAsDateTime((DateTime?) value);
 
@@ -124,7 +129,8 @@ namespace AsciiImportExport
 
         public DocumentColumn<T> SetDoublePrecision(int precision)
         {
-            _doublePrecision = precision;
+            //_doublePrecision = precision;
+            _doubleStringFormat = "0.".PadRight(precision + 2, '0');
             return this;
         }
 
@@ -159,7 +165,7 @@ namespace AsciiImportExport
                 if (type == typeof (String)) _propertyInfo.SetValue(item, valueString, null);
                 else if (type == typeof (int) || type == typeof (int?)) _propertyInfo.SetValue(item, ConvertToInteger(valueString), null);
                 else if (type == typeof (double) || type == typeof (double?)) _propertyInfo.SetValue(item, ConvertToDouble(valueString), null);
-                else if (type == typeof (DateTime) || type == typeof (DateTime?)) _propertyInfo.SetValue(item, ConvertToDateTime(valueString, _dateTimeFormat, DateTime.MinValue), null);
+                else if (type == typeof (DateTime) || type == typeof (DateTime?)) _propertyInfo.SetValue(item, ConvertToDateTime(valueString), null);
                 else if (type == typeof (Boolean) || type == typeof (Boolean?)) _propertyInfo.SetValue(item, ConvertToBoolean(valueString), null);
                 else throw new InvalidOperationException("the column type '" + type.FullName + "' is unknown");
             }
@@ -184,19 +190,19 @@ namespace AsciiImportExport
             throw new InvalidOperationException("invalid value '" + valueString + "' in boolean column '" + _header + "'");
         }
 
-        private DateTime ConvertToDateTime(string value, string format, DateTime defaultValue)
+        private DateTime ConvertToDateTime(string value)
         {
-            return value == null ? defaultValue : DateTime.ParseExact(value, format, CultureInfo.InvariantCulture);
+            return value == null ? DateTime.MinValue : DateTime.ParseExact(value, _dateTimeFormat, CultureInfo.InvariantCulture.DateTimeFormat);
         }
 
         private double? ConvertToDouble(string value)
         {
-            return String.IsNullOrEmpty(value) ? (double?) _defaultValue : Double.Parse(value.Replace(',', '.'), CultureInfo.InvariantCulture);
+            return String.IsNullOrEmpty(value) ? (double?) _defaultValue : Double.Parse(value.Replace(',', '.'), CultureInfo.InvariantCulture.NumberFormat);
         }
 
         private int? ConvertToInteger(string value)
         {
-            return String.IsNullOrEmpty(value) ? (int?) _defaultValue : Int32.Parse(value, CultureInfo.InvariantCulture);
+            return String.IsNullOrEmpty(value) ? (int?) _defaultValue : Int32.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
         }
 
         private string FormatAsBoolean(bool? value)
@@ -206,12 +212,12 @@ namespace AsciiImportExport
 
         private string FormatAsDateTime(DateTime? value)
         {
-            return FormatAsString(!value.HasValue ? "" : value.Value.ToString(_dateTimeFormat, CultureInfo.InvariantCulture));
+            return FormatAsString(!value.HasValue ? "" : value.Value.ToString(_dateTimeFormat, CultureInfo.InvariantCulture.DateTimeFormat));
         }
 
-        private string FormatAsDouble(double? value, int precision)
+        private string FormatAsDouble(double? value)
         {
-            return FormatAsString(!value.HasValue ? "" : value.Value.ToString("0.".PadRight(precision + 2, '0'), CultureInfo.InvariantCulture));
+            return FormatAsString(!value.HasValue ? "" : value.Value.ToString(_doubleStringFormat, CultureInfo.InvariantCulture.NumberFormat));
         }
 
         private string FormatAsInteger(int? value)

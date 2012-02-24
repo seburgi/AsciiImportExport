@@ -49,7 +49,7 @@ namespace AsciiImportExport.Tests
             DocumentFormatDefinition<Poco> definition = GetPocoDefinition();
 
             var poco = new Poco {Int32Prop = Int32PropValue1, StringProp = StringPropValue1};
-            string result = definition.Export(new[] {poco});
+            string result = definition.Export(new List<Poco> { poco });
 
             Assert.AreEqual(StringPropValue1 + "\t" + Int32PropValue1, result);
         }

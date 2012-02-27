@@ -21,9 +21,10 @@ namespace AsciiImportExport
         private readonly bool _dummyColumn;
         private readonly Func<T, object> _getValueFunc;
         private string _header;
-        private readonly PropertyInfo _propertyInfo;
-        private Func<object, string> _specialExportFunc;
-        private Func<string, object> _specialImportFunc;
+        private readonly Action<T, object> _setValueFunc;
+        private Func<object, string> _exportFunc;
+        private Func<string, object> _importFunc;
+        private readonly Type type;
 
         public DocumentColumn(Expression<Func<T, object>> expression)
         {
@@ -33,11 +34,18 @@ namespace AsciiImportExport
             if (me != null)
             {
                 _header = me.Member.Name;
-                _propertyInfo = me.Member as PropertyInfo;
+                var propertyInfo = me.Member as PropertyInfo;
+                type = propertyInfo.PropertyType;
+                _setValueFunc = GetValueSetter(propertyInfo);
             }
             else _dummyColumn = true;
 
             ColumnWidth = -1;
+        }
+
+        public ColumnAlignment Alignment
+        {
+            get { return _alignment; }
         }
 
         public int ColumnWidth { get; private set; }
@@ -62,31 +70,26 @@ namespace AsciiImportExport
             get { return _header; }
         }
 
-        public ColumnAlignment Alignment    
-        {
-            get { return _alignment; }
-        }
-
         public string Format(T item)
         {
             if (item == null) throw new ArgumentNullException("item");
 
-            object value = _getValueFunc.Invoke(item);
+            object columnValue = _getValueFunc.Invoke(item);
 
-            if (_specialExportFunc != null) return FormatAsString(_specialExportFunc.Invoke(value));
+            if (columnValue == null && _defaultValue != null)
+                columnValue = _defaultValue;
 
-            if (value == null)
-                if (_defaultValue == null) return FormatAsString("");
-                else value = _defaultValue;
+            if (_exportFunc == null)
+            {
+                if (type == typeof(String)) _exportFunc = value => FormatAsString((string)value);
+                else if (type == typeof(Int32) || type == typeof(Int32?)) _exportFunc = value => FormatAsInteger((int?)value);
+                else if (type == typeof(Double) || type == typeof(Double?)) _exportFunc = value => FormatAsDouble((double?)value);
+                else if (type == typeof(Boolean) || type == typeof(Boolean?)) _exportFunc = value => FormatAsBoolean((Boolean?)value);
+                else if (type == typeof(DateTime) || type == typeof(DateTime?)) _exportFunc = value => FormatAsDateTime((DateTime?)value);
+                else throw new InvalidOperationException("the column type '" + type.FullName + "' is unknown");
+            }
 
-            Type type = value.GetType();
-            if (type == typeof (String)) return FormatAsString((string) value);
-            if (type == typeof (int) || type == typeof (int?)) return FormatAsInteger((int?) value);
-            if (type == typeof (double) || type == typeof (double?)) return FormatAsDouble((double?) value);
-            if (type == typeof (Boolean) || type == typeof (Boolean?)) return FormatAsBoolean((Boolean?) value);
-            if (type == typeof (DateTime) || type == typeof (DateTime?)) return FormatAsDateTime((DateTime?) value);
-
-            throw new InvalidOperationException("the column type '" + type.FullName + "' is unknown");
+            return _exportFunc(columnValue);
         }
 
         public string FormatAsString(string str)
@@ -129,7 +132,6 @@ namespace AsciiImportExport
 
         public DocumentColumn<T> SetDoublePrecision(int precision)
         {
-            //_doublePrecision = precision;
             _doubleStringFormat = "0.".PadRight(precision + 2, '0');
             return this;
         }
@@ -142,8 +144,8 @@ namespace AsciiImportExport
 
         public DocumentColumn<T> SetImportExportActions(Expression<Func<string, object>> importAction, Expression<Func<object, string>> exportAction)
         {
-            if (importAction != null) _specialImportFunc = importAction.Compile();
-            if (exportAction != null) _specialExportFunc = exportAction.Compile();
+            if (importAction != null) _importFunc = importAction.Compile();
+            if (exportAction != null) _exportFunc = exportAction.Compile();
 
             return this;
         }
@@ -153,31 +155,22 @@ namespace AsciiImportExport
             if (_dummyColumn) return;
             if (valueString == null) return;
 
-            if (_specialImportFunc != null)
+            if(_importFunc == null)
             {
-                _propertyInfo.SetValue(item, _specialImportFunc.Invoke(valueString), null);
-                return;
+                if (type == typeof(String)) _importFunc = s => s;
+                else if (type == typeof(int) || type == typeof(int?)) _importFunc = s => ConvertToInteger(s);
+                else if (type == typeof(double) || type == typeof(double?)) _importFunc = s => ConvertToDouble(s);
+                else if (type == typeof(DateTime) || type == typeof(DateTime?)) _importFunc = s => ConvertToDateTime(s);
+                else if (type == typeof(Boolean) || type == typeof(Boolean?)) _importFunc = s => ConvertToBoolean(s);
+                else throw new InvalidOperationException("the column type '" + type.FullName + "' is unknown");   
             }
 
-            try
-            {
-                Type type = _propertyInfo.PropertyType;
-                if (type == typeof (String)) _propertyInfo.SetValue(item, valueString, null);
-                else if (type == typeof (int) || type == typeof (int?)) _propertyInfo.SetValue(item, ConvertToInteger(valueString), null);
-                else if (type == typeof (double) || type == typeof (double?)) _propertyInfo.SetValue(item, ConvertToDouble(valueString), null);
-                else if (type == typeof (DateTime) || type == typeof (DateTime?)) _propertyInfo.SetValue(item, ConvertToDateTime(valueString), null);
-                else if (type == typeof (Boolean) || type == typeof (Boolean?)) _propertyInfo.SetValue(item, ConvertToBoolean(valueString), null);
-                else throw new InvalidOperationException("the column type '" + type.FullName + "' is unknown");
-            }
-            catch (Exception ex)
-            {
-                throw new ImportException(_header, ex);
-            }
+            _setValueFunc(item, _importFunc(valueString));
         }
 
         public override string ToString()
         {
-            return _dummyColumn ? "DummyColumn" : ((_header ?? "")) + " [" + _propertyInfo.PropertyType + "]";
+            return _dummyColumn ? "DummyColumn" : ((_header ?? "")) + " [" + type + "]";
         }
 
         private bool ConvertToBoolean(string valueString)
@@ -222,7 +215,33 @@ namespace AsciiImportExport
 
         private string FormatAsInteger(int? value)
         {
-            return FormatAsString(!value.HasValue ? "" : value.Value.ToString());
+            return FormatAsString(!value.HasValue ? "" : value.Value.ToString(CultureInfo.InvariantCulture.NumberFormat));
+        }
+
+        /// <summary>
+        /// From ServiceStack.Text - StaticAccessors.cs
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="propertyInfo"></param>
+        /// <returns></returns>
+        private static Action<T, object> GetValueSetter(PropertyInfo propertyInfo)
+        {
+            if (typeof (T) != propertyInfo.DeclaringType)
+            {
+                throw new ArgumentException();
+            }
+
+            ParameterExpression instance = Expression.Parameter(propertyInfo.DeclaringType, "i");
+            ParameterExpression argument = Expression.Parameter(typeof (object), "a");
+            MethodCallExpression setterCall = Expression.Call(
+                instance,
+                propertyInfo.GetSetMethod(),
+                Expression.Convert(argument, propertyInfo.PropertyType));
+
+            return Expression.Lambda<Action<T, object>>
+                (
+                    setterCall, instance, argument
+                ).Compile();
         }
     }
 }

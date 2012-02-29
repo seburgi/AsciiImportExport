@@ -142,10 +142,10 @@ namespace AsciiImportExport
             return this;
         }
 
-        public DocumentColumn<T> SetImportExportActions(Expression<Func<string, object>> importAction, Expression<Func<object, string>> exportAction)
+        public DocumentColumn<T> SetImportExportActions(Func<string, object> importAction, Func<object, string> exportAction)
         {
-            if (importAction != null) _importFunc = importAction.Compile();
-            if (exportAction != null) _exportFunc = exportAction.Compile();
+            if (importAction != null) _importFunc = importAction;
+            if (exportAction != null) _exportFunc = exportAction;
 
             return this;
         }

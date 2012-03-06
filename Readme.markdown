@@ -10,13 +10,13 @@ Please don't use this in a productive environment.
 ## Example
 
 ### POCO
-    class Poco
+    internal class Poco
     {
-        public string Name { get; set; }
-        public Gender Gender { get; set; }
         public DateTime Birthday { get; set; }
-        public string Memo { get; set; }
+        public Gender Gender { get; set; }
         public double Height { get; set; }
+        public string Memo { get; set; }
+        public string Name { get; set; }
     }
 
     public enum Gender
@@ -29,7 +29,7 @@ Please don't use this in a productive environment.
 ### Data
 This is our list:
 	
-	public List<Poco> GetPocoList()
+    public List<Poco> GetPocoList()
     {
         return new List<Poco>
                     {
@@ -44,24 +44,23 @@ This is our list:
 
 Now we define how the data will be exported / imported:
 
-    private static DocumentFormatDefinition<Poco> GetDefinition()
+    private static DocumentFormatDefinition<Poco> GetDefinition_With_Tab_As_ColumnSeparator()
     {
         return new DocumentFormatDefinitionBuilder<Poco>()
             .SetColumnSeparator("\t")
             .SetCommentString("!")
             .SetAutosizeColumns(true)
             .SetExportHeaderLine(false)
-            .AddColumn(new DocumentColumn<Poco>(x => x.Name))
-            .AddColumn(new DocumentColumn<Poco>(x => x.Gender).SetImportExportActions(s => StringToGender(s), o => GenderToString(o)))
-            .AddColumn(new DocumentColumn<Poco>(x => x.Height).SetAlignment(ColumnAlignment.Right).SetDoublePrecision(2))
-            .AddColumn(new DocumentColumn<Poco>(x => x.Birthday).SetDateTimeFormat("yyyyMMdd"))
-            .AddColumn(new DocumentColumn<Poco>(x => x.Memo))
+            .AddColumn(x => x.Name)
+            .AddColumn(x => x.Gender, ColumnAlignment.Left, StringToGender, GenderToString)
+            .AddColumn(x => x.Height, ColumnAlignment.Right, "0.00")
+            .AddColumn(x => x.Birthday, "yyyyMMdd")
+            .AddColumn(x => x.Memo)
             .Build();
     }
     
-    private static string GenderToString(object o)
+    private static string GenderToString(Gender gender)
     {
-        Gender gender = o is Gender ? (Gender) o : Gender.Unknown;
         switch (gender)
         {
             case Gender.Female:
@@ -73,7 +72,7 @@ Now we define how the data will be exported / imported:
         }
     }
 
-    private static object StringToGender(string s)
+    private static Gender StringToGender(string s)
     {
         switch (s)
         {

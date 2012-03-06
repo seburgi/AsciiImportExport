@@ -15,9 +15,7 @@ namespace AsciiImportExport
         ColumnAlignment Alignment { get; }
         int ColumnWidth { get; }
         string FormattedHeader { get; }
-        string Header { get; }
         string Format(T item);
-        string FormatAsString(string str);
         void SetValue(T item, string valueString);
     }
 
@@ -96,7 +94,7 @@ namespace AsciiImportExport
             return _exportFunc((TRet) columnValue);
         }
 
-        public string FormatAsString(string str)
+        private string FormatAsString(string str)
         {
             int width = ColumnWidth >= 0 ? ColumnWidth : 0;
 

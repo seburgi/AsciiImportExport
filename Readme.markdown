@@ -2,10 +2,7 @@ AsciiImportExport v0.1
 ======================================================================
 
 ## Overview
-A library for easy ASCII-Import/Export in .NET applications.
-
-For now this is only for experimental use.
-Please don't use this in a productive environment.
+A .NET library providing fast and easy de/serialization of arbitrary column-based text data.
 
 ## Example
 

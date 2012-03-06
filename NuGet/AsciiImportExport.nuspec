@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <version>1.1.0</version>
+    <authors>Sebastian Burgstaller</authors>
+    <owners>passionatedev</owners>
+    <licenseUrl>https://github.com/seburgi/AsciiImportExport/blob/master/License.txt</licenseUrl>
+    <projectUrl>https://github.com/seburgi/AsciiImportExport</projectUrl>
+    <id>AsciiImportExport</id>
+    <title>AsciiImportExport</title>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A library for easy column-based Import/Export in .NET applications.</description>
+    <summary>A library for easy column-based Import/Export in .NET applications.</summary>
+    <copyright>Sebastian Burgstaller 2012</copyright>
+    <tags>CSV TXT Import Export ASCII Serializer</tags>
+  </metadata>
+  <files>
+    <file src="..\AsciiImportExport\bin\Debug\AsciiImportExport.XML" target="lib\AsciiImportExport.XML" />
+    <file src="..\AsciiImportExport\bin\Debug\AsciiImportExport.dll" target="lib\AsciiImportExport.dll" />
+    <file src="..\AsciiImportExport\bin\Debug\AsciiImportExport.pdb" target="lib\AsciiImportExport.pdb" />
+  </files>
+</package>

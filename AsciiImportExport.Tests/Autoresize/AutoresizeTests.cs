@@ -30,11 +30,11 @@ namespace AsciiImportExport.Tests.Autoresize
                 .SetCommentString("!")
                 .SetAutosizeColumns(true)
                 .SetExportHeaderLine(false)
-                .AddColumn(new DocumentColumn<AutoresizePoco>(x => x.Name))
-                .AddColumn(new DocumentColumn<AutoresizePoco>(x => x.Gender).SetImportExportActions(StringToGender, GenderToString))
-                .AddColumn(new DocumentColumn<AutoresizePoco>(x => x.Height).SetAlignment(ColumnAlignment.Right).SetDoublePrecision(2))
-                .AddColumn(new DocumentColumn<AutoresizePoco>(x => x.Birthday).SetDateTimeFormat("yyyyMMdd"))
-                .AddColumn(new DocumentColumn<AutoresizePoco>(x => x.Memo))
+                .AddColumn(x => x.Name)
+                .AddColumn(x => x.Gender, ColumnAlignment.Left, StringToGender, GenderToString)
+                .AddColumn(x => x.Height, ColumnAlignment.Right, "0.00")
+                .AddColumn(x => x.Birthday, "yyyyMMdd")
+                .AddColumn(x => x.Memo)
                 .Build();
         }
 
@@ -45,17 +45,16 @@ namespace AsciiImportExport.Tests.Autoresize
                 .SetCommentString("!")
                 .SetAutosizeColumns(true)
                 .SetExportHeaderLine(false)
-                .AddColumn(new DocumentColumn<AutoresizePoco>(x => x.Name))
-                .AddColumn(new DocumentColumn<AutoresizePoco>(x => x.Gender).SetImportExportActions(StringToGender, GenderToString))
-                .AddColumn(new DocumentColumn<AutoresizePoco>(x => x.Height).SetAlignment(ColumnAlignment.Right).SetDoublePrecision(2))
-                .AddColumn(new DocumentColumn<AutoresizePoco>(x => x.Birthday).SetDateTimeFormat("yyyyMMdd"))
-                .AddColumn(new DocumentColumn<AutoresizePoco>(x => x.Memo))
+                .AddColumn(x => x.Name)
+                .AddColumn(x => x.Gender, ColumnAlignment.Left, StringToGender, GenderToString)
+                .AddColumn(x => x.Height, ColumnAlignment.Right, "0.00")
+                .AddColumn(x => x.Birthday, "yyyyMMdd")
+                .AddColumn(x => x.Memo)
                 .Build();
         }
 
-        private static string GenderToString(object o)
+        private static string GenderToString(Gender gender)
         {
-            Gender gender = o is Gender ? (Gender) o : Gender.Unknown;
             switch (gender)
             {
                 case Gender.Female:
@@ -67,7 +66,7 @@ namespace AsciiImportExport.Tests.Autoresize
             }
         }
 
-        private static object StringToGender(string s)
+        private static Gender StringToGender(string s)
         {
             switch (s)
             {

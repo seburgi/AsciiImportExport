@@ -12,22 +12,22 @@ namespace AsciiImportExport.Tests
         private const string StringPropValue = "Hello!";
         private const int Int32PropValue = 4;
 
-        private static DocumentColumn<Poco> GetStringPropColumn()
+        private static IDocumentColumn<Poco> GetStringPropColumn()
         {
-            var column = new DocumentColumn<Poco>(x => x.StringProp);
+            var column = new DocumentColumn<Poco, string>(x => x.StringProp);
             return column;
         }
 
-        private static DocumentColumn<Poco> GetInt32PropColumn()
+        private static IDocumentColumn<Poco> GetInt32PropColumn()
         {
-            var column = new DocumentColumn<Poco>(x => x.Int32Prop);
+            var column = new DocumentColumn<Poco, int>(x => x.Int32Prop);
             return column;
         }
 
         [Test]
         public void ExportInt32Prop()
         {
-            DocumentColumn<Poco> column = GetInt32PropColumn();
+            IDocumentColumn<Poco> column = GetInt32PropColumn();
 
             var poco = new Poco {Int32Prop = Int32PropValue};
             string result = column.Format(poco);
@@ -38,7 +38,7 @@ namespace AsciiImportExport.Tests
         [Test]
         public void ExportStringProp()
         {
-            DocumentColumn<Poco> column = GetStringPropColumn();
+            IDocumentColumn<Poco> column = GetStringPropColumn();
 
             var poco = new Poco {StringProp = StringPropValue};
             string result = column.Format(poco);
@@ -49,7 +49,7 @@ namespace AsciiImportExport.Tests
         [Test]
         public void ImportInt32Prop()
         {
-            DocumentColumn<Poco> column = GetInt32PropColumn();
+            IDocumentColumn<Poco> column = GetInt32PropColumn();
 
             var poco = new Poco();
             column.SetValue(poco, Int32PropValue.ToString());
@@ -60,7 +60,7 @@ namespace AsciiImportExport.Tests
         [Test]
         public void ImportStringProp()
         {
-            DocumentColumn<Poco> column = GetStringPropColumn();
+            IDocumentColumn<Poco> column = GetStringPropColumn();
 
             var poco = new Poco();
             column.SetValue(poco, StringPropValue);

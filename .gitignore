@@ -11,3 +11,4 @@ _ReSharper.*
 /Build
 /Packages
 *.user
+*.nupkg

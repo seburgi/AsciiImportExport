@@ -54,6 +54,8 @@
   <ItemGroup>
     <Compile Include="Autoresize\AutoresizePoco.cs" />
     <Compile Include="Autoresize\AutoresizeTests.cs" />
+    <Compile Include="Csv\CsvPoco.cs" />
+    <Compile Include="Csv\CsvTests.cs" />
     <Compile Include="DocumentColumnTests.cs" />
     <Compile Include="DocumentFormatDefinitionTests.cs" />
     <Compile Include="Performance\PerformancePoco.cs" />

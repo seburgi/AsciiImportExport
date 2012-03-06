@@ -22,8 +22,8 @@ namespace AsciiImportExport.Tests
                 .SetCommentString("!")
                 .SetAutosizeColumns(false)
                 .SetExportHeaderLine(false)
-                .AddColumn(new DocumentColumn<Poco>(x => x.StringProp))
-                .AddColumn(new DocumentColumn<Poco>(x => x.Int32Prop))
+                .AddColumn(x => x.StringProp)
+                .AddColumn(x => x.Int32Prop)
                 .Build();
         }
 
@@ -49,7 +49,7 @@ namespace AsciiImportExport.Tests
             DocumentFormatDefinition<Poco> definition = GetPocoDefinition();
 
             var poco = new Poco {Int32Prop = Int32PropValue1, StringProp = StringPropValue1};
-            string result = definition.Export(new List<Poco> { poco });
+            string result = definition.Export(new List<Poco> {poco});
 
             Assert.AreEqual(StringPropValue1 + "\t" + Int32PropValue1, result);
         }

@@ -14,11 +14,11 @@ namespace AsciiImportExport
     public class DocumentFormatDefinition<T> where T : class, new()
     {
         private readonly bool _autosizeColumns;
-        private readonly List<DocumentColumn<T>> _columns;
+        private readonly List<IDocumentColumn<T>> _columns;
         private readonly bool _exportHeaderLine;
         private readonly Func<T> _instantiator;
 
-        public DocumentFormatDefinition(List<DocumentColumn<T>> columns, string columnSeparator, string commentString, bool autosizeColumns, bool exportHeaderLine, Func<T> instantiator)
+        public DocumentFormatDefinition(List<IDocumentColumn<T>> columns, string columnSeparator, string commentString, bool autosizeColumns, bool exportHeaderLine, Func<T> instantiator)
         {
             _columns = columns;
 
@@ -32,7 +32,7 @@ namespace AsciiImportExport
 
         public string ColumnSeparator { get; private set; }
 
-        public IEnumerable<DocumentColumn<T>> Columns
+        public IEnumerable<IDocumentColumn<T>> Columns
         {
             get { return _columns; }
         }
@@ -127,7 +127,7 @@ namespace AsciiImportExport
             try
             {
                 int count = lines.Count();
-                DocumentColumn<T> lastColumn = _columns.Last();
+                IDocumentColumn<T> lastColumn = _columns.Last();
 
                 for (; zeile < count; zeile++)
                 {
@@ -135,9 +135,6 @@ namespace AsciiImportExport
 
                     if (String.IsNullOrEmpty(line.Trim())) continue;
                     if (line.StartsWith(CommentString)) continue;
-                    //if (!String.IsNullOrEmpty(_praefix) && line.StartsWith(_praefix)) line = line.Substring(_praefix.Length);
-
-                    line += ColumnSeparator;
 
                     T item = _instantiator();
 
@@ -155,11 +152,11 @@ namespace AsciiImportExport
                         {
                             if (column == lastColumn)
                             {
-                                value = line.Trim();
+                                value = line.TrimEnd(new[] {" ", ColumnSeparator});
                             }
                             else
                             {
-                                line = line.TrimStart(new[] {' '});
+                                line = line.TrimStart();
                                 int indexOfSeparator = line.IndexOf(ColumnSeparator);
                                 if (indexOfSeparator < 0) break;
                                 value = line.Substring(0, indexOfSeparator);
@@ -175,7 +172,7 @@ namespace AsciiImportExport
             }
             catch (ImportException ex)
             {
-                throw new ImportException("Error during importing of column '" + ex.ColumnName + "' at line " + (zeile + 1) + ": '" + line + "'", ex);
+                throw new ImportException("Error during import of column '" + ex.ColumnName + "' at line " + (zeile + 1) + ": '" + line + "'", ex);
             }
 
             return result;

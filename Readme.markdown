@@ -1,4 +1,4 @@
-AsciiImportExport v0.1
+AsciiImportExport v1.1
 ======================================================================
 
 ## Overview
@@ -41,7 +41,7 @@ This is our list:
 
 Now we define how the data will be exported / imported:
 
-    private static DocumentFormatDefinition<Poco> GetDefinition_With_Tab_As_ColumnSeparator()
+    private static DocumentFormatDefinition<Poco> GetDefinition()
     {
         return new DocumentFormatDefinitionBuilder<Poco>()
             .SetColumnSeparator("\t")

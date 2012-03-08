@@ -4,39 +4,38 @@ using System;
 using System.Globalization;
 using System.Linq.Expressions;
 using System.Reflection;
-using AsciiImportExport;
 
 #endregion
 
 namespace AsciiImportExport
 {
-    public interface IDocumentColumn<T>
-    {
-        ColumnAlignment Alignment { get; }
-        int ColumnWidth { get; }
-        string FormattedHeader { get; }
-        string Format(T item);
-        void SetValue(T item, string valueString);
-    }
-
     public class DocumentColumn<T, TRet> : IDocumentColumn<T> where T : class, new()
     {
-        private ColumnAlignment _alignment = ColumnAlignment.Left;
-        private string _booleanFalse = "F";
-        private string _booleanTrue = "T";
-        private string _dateTimeFormat = "dd.MM.yyyy HH:mm:ss";
-        private object _defaultValue;
-        private string _doubleStringFormat = "0.0000";
+        private readonly string _booleanFalse;
+        private readonly string _booleanTrue;
+        private readonly string _dateTimeStringFormat;
+        private readonly object _defaultValue;
+        private readonly string _doubleStringFormat;
         private readonly bool _dummyColumn;
         private Func<TRet, string> _exportFunc;
         private readonly Func<T, TRet> _getValueFunc;
-        private string _header;
+        private readonly string _header;
         private Func<string, TRet> _importFunc;
         private readonly Action<T, TRet> _setValueFunc;
         private readonly Type _type;
 
-        public DocumentColumn(Expression<Func<T, TRet>> expression)
+        public DocumentColumn(Expression<Func<T, TRet>> expression, string header, TRet defaultValue, int columnWidth, ColumnAlignment alignment, string doubleStringFormat, string dateTimeStringFormat, string booleanTrue, string booleanFalse, Func<string, TRet> importFunc, Func<TRet, string> exportFunc)
         {
+            _header = header;
+            _defaultValue = defaultValue;
+            _doubleStringFormat = doubleStringFormat;
+            ColumnWidth = columnWidth;
+            Alignment = alignment;
+            _dateTimeStringFormat = dateTimeStringFormat;
+            _booleanTrue = booleanTrue;
+            _booleanFalse = booleanFalse;
+            _importFunc = importFunc;
+            _exportFunc = exportFunc;
             _getValueFunc = expression.Compile();
 
             MemberExpression me = ReflectionHelper.GetMemberExpression(expression);
@@ -52,10 +51,7 @@ namespace AsciiImportExport
             ColumnWidth = -1;
         }
 
-        public ColumnAlignment Alignment
-        {
-            get { return _alignment; }
-        }
+        public ColumnAlignment Alignment { get; private set; }
 
         public int ColumnWidth { get; private set; }
 
@@ -94,64 +90,6 @@ namespace AsciiImportExport
             return _exportFunc((TRet) columnValue);
         }
 
-        private string FormatAsString(string str)
-        {
-            int width = ColumnWidth >= 0 ? ColumnWidth : 0;
-
-            return (_alignment == ColumnAlignment.Right ? str.PadLeft(width) : str.PadRight(width));
-        }
-
-        public DocumentColumn<T, TRet> SetAlignment(ColumnAlignment alignment)
-        {
-            _alignment = alignment;
-            return this;
-        }
-
-        public DocumentColumn<T, TRet> SetBooleanStrings(string trueString, string falseString)
-        {
-            _booleanTrue = trueString;
-            _booleanFalse = falseString;
-            return this;
-        }
-
-        public DocumentColumn<T, TRet> SetColumnWidth(int columnWidth)
-        {
-            ColumnWidth = columnWidth;
-            return this;
-        }
-
-        public DocumentColumn<T, TRet> SetDateTimeStringFormat(string dateTimeFormat)
-        {
-            _dateTimeFormat = dateTimeFormat;
-            return this;
-        }
-
-        public DocumentColumn<T, TRet> SetDefaultValue(object value)
-        {
-            _defaultValue = value;
-            return this;
-        }
-
-        public DocumentColumn<T, TRet> SetDoubleStringFormat(string doubleStringFormat)
-        {
-            _doubleStringFormat = doubleStringFormat;
-            return this;
-        }
-
-        public DocumentColumn<T, TRet> SetHeader(string header)
-        {
-            _header = header;
-            return this;
-        }
-
-        public DocumentColumn<T, TRet> SetImportExportActions(Func<string, TRet> importFunc, Func<TRet, string> exportFunc)
-        {
-            _importFunc = importFunc;
-            _exportFunc = exportFunc;
-
-            return this;
-        }
-
         public void SetValue(T item, string valueString)
         {
             if (_dummyColumn) return;
@@ -159,11 +97,11 @@ namespace AsciiImportExport
 
             if (_importFunc == null)
             {
-                if (_type == typeof(String)) _importFunc = s => (TRet)(object)s;
-                else if (_type == typeof(int) || _type == typeof(int?)) _importFunc = s => (TRet)(object)ConvertToInteger(s);
-                else if (_type == typeof(double) || _type == typeof(double?)) _importFunc = s => (TRet)(object)ConvertToDouble(s);
-                else if (_type == typeof(DateTime) || _type == typeof(DateTime?)) _importFunc = s => (TRet)(object)ConvertToDateTime(s);
-                else if (_type == typeof(Boolean) || _type == typeof(Boolean?)) _importFunc = s => (TRet)(object)ConvertToBoolean(s);
+                if (_type == typeof (String)) _importFunc = s => (TRet) (object) s;
+                else if (_type == typeof (int) || _type == typeof (int?)) _importFunc = s => (TRet) (object) ConvertToInteger(s);
+                else if (_type == typeof (double) || _type == typeof (double?)) _importFunc = s => (TRet) (object) ConvertToDouble(s);
+                else if (_type == typeof (DateTime) || _type == typeof (DateTime?)) _importFunc = s => (TRet) (object) ConvertToDateTime(s);
+                else if (_type == typeof (Boolean) || _type == typeof (Boolean?)) _importFunc = s => (TRet) (object) ConvertToBoolean(s);
                 else throw new InvalidOperationException("the column type '" + _type.FullName + "' is unknown");
             }
 
@@ -171,7 +109,7 @@ namespace AsciiImportExport
             {
                 _setValueFunc(item, _importFunc(valueString));
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new ImportException(_header, ex);
             }
@@ -194,7 +132,7 @@ namespace AsciiImportExport
 
         private DateTime ConvertToDateTime(string value)
         {
-            return value == null ? DateTime.MinValue : DateTime.ParseExact(value, _dateTimeFormat, CultureInfo.InvariantCulture.DateTimeFormat);
+            return value == null ? DateTime.MinValue : DateTime.ParseExact(value, _dateTimeStringFormat, CultureInfo.InvariantCulture.DateTimeFormat);
         }
 
         private double? ConvertToDouble(string value)
@@ -214,7 +152,7 @@ namespace AsciiImportExport
 
         private string FormatAsDateTime(DateTime? value)
         {
-            return FormatAsString(!value.HasValue ? "" : value.Value.ToString(_dateTimeFormat, CultureInfo.InvariantCulture.DateTimeFormat));
+            return FormatAsString(!value.HasValue ? "" : value.Value.ToString(_dateTimeStringFormat, CultureInfo.InvariantCulture.DateTimeFormat));
         }
 
         private string FormatAsDouble(double? value)
@@ -225,6 +163,13 @@ namespace AsciiImportExport
         private string FormatAsInteger(int? value)
         {
             return FormatAsString(!value.HasValue ? "" : value.Value.ToString(CultureInfo.InvariantCulture.NumberFormat));
+        }
+
+        private string FormatAsString(string str)
+        {
+            int width = ColumnWidth >= 0 ? ColumnWidth : 0;
+
+            return (Alignment == ColumnAlignment.Right ? str.PadLeft(width) : str.PadRight(width));
         }
 
         /// <summary>

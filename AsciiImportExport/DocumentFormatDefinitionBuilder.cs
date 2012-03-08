@@ -10,39 +10,46 @@ namespace AsciiImportExport
 {
     public class DocumentFormatDefinitionBuilder<T> where T : class, new()
     {
-        private bool _autosizeColumns = false;
+        private bool _autosizeColumns;
         private string _columnSeparator = ";";
         private readonly List<IDocumentColumn<T>> _columns = new List<IDocumentColumn<T>>();
         private string _commentString = "'";
-        private bool _exportHeaderLine = false;
+        private bool _exportHeaderLine;
         private Func<T> _instantiator = () => new T();
 
-        public DocumentFormatDefinitionBuilder<T> AddColumn<TRet>(Expression<Func<T, TRet>> expression, ColumnAlignment alignment = ColumnAlignment.Left, Func<string, TRet> importFunc = null, Func<TRet, string> exportFunc = null)
+        public DocumentFormatDefinitionBuilder<T> AddColumn(Expression<Func<T, double?>> expression, string doubleStringFormat, Action<DocumentColumnBuilder<T, double?>> customization = null)
         {
-            DocumentColumn<T, TRet> documentColumn = new DocumentColumn<T, TRet>(expression).SetAlignment(alignment);
+            DocumentColumnBuilder<T, double?> builder = new DocumentColumnBuilder<T, double?>(expression).SetDoubleStringFormat(doubleStringFormat);
 
-            if (importFunc != null && exportFunc != null)
-                documentColumn.SetImportExportActions(importFunc, exportFunc);
+            if (customization != null)
+                customization(builder);
 
-            _columns.Add(documentColumn);
+            _columns.Add(builder.Build());
+
             return this;
         }
 
-        public DocumentFormatDefinitionBuilder<T> AddColumn(Expression<Func<T, double?>> expression, ColumnAlignment alignment = ColumnAlignment.Left, string doubleStringFormat = "0.0000")
+        public DocumentFormatDefinitionBuilder<T> AddColumn(Expression<Func<T, DateTime?>> expression, string dateTimeStringFormat, Action<DocumentColumnBuilder<T, DateTime?>> customization = null)
         {
-            _columns.Add(new DocumentColumn<T, double?>(expression).SetAlignment(alignment).SetDoubleStringFormat(doubleStringFormat));
+            DocumentColumnBuilder<T, DateTime?> builder = new DocumentColumnBuilder<T, DateTime?>(expression).SetDateTimeStringFormat(dateTimeStringFormat);
+
+            if (customization != null)
+                customization(builder);
+
+            _columns.Add(builder.Build());
+
             return this;
         }
 
-        public DocumentFormatDefinitionBuilder<T> AddColumn(Expression<Func<T, DateTime?>> expression, string dateTimeFormat = "dd.MM.yyyy HH:mm:ss")
+        public DocumentFormatDefinitionBuilder<T> AddColumn(Expression<Func<T, bool?>> expression, string trueString, string falseString, Action<DocumentColumnBuilder<T, bool?>> customization = null)
         {
-            _columns.Add(new DocumentColumn<T, DateTime?>(expression).SetDateTimeStringFormat(dateTimeFormat));
-            return this;
-        }
+            DocumentColumnBuilder<T, bool?> builder = new DocumentColumnBuilder<T, bool?>(expression).SetBooleanStrings(trueString, falseString);
 
-        public DocumentFormatDefinitionBuilder<T> AddColumn(Expression<Func<T, bool?>> expression, string trueString = "T", string falseString = "F")
-        {
-            _columns.Add(new DocumentColumn<T, bool?>(expression).SetBooleanStrings(trueString, falseString));
+            if (customization != null)
+                customization(builder);
+
+            _columns.Add(builder.Build());
+
             return this;
         }
 
@@ -52,9 +59,21 @@ namespace AsciiImportExport
             return this;
         }
 
+        public DocumentFormatDefinitionBuilder<T> AddColumn<TRet>(Expression<Func<T, TRet>> expression, Action<DocumentColumnBuilder<T, TRet>> customization = null)
+        {
+            var builder = new DocumentColumnBuilder<T, TRet>(expression);
+
+            if (customization != null)
+                customization(builder);
+
+            _columns.Add(builder.Build());
+
+            return this;
+        }
+
         public DocumentFormatDefinitionBuilder<T> AddDummyColumn(string exportValue = "")
         {
-            return AddColumn(new DocumentColumn<T, string>(x => "").SetImportExportActions(null, x => exportValue));
+            return AddColumn(x => "", builder => builder.SetExportFunc(x => exportValue));
         }
 
         public DocumentFormatDefinition<T> Build()

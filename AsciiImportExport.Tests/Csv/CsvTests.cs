@@ -1,13 +1,15 @@
-﻿using System;
+﻿#region using directives
+
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using NUnit.Framework;
+
+#endregion
 
 namespace AsciiImportExport.Tests.Csv
 {
     [TestFixture]
-    class CsvTests
+    internal class CsvTests
     {
         private const string ExampleCsv = @"X-T0194q_1;-2.19819;-2.182;188.952;
 X-T0194q_2;-2.462;-2.124;188.965;
@@ -24,14 +26,17 @@ X-T0194q_12;0.1951;2.829;199.018;
 X-T0194q_119;4.015;6.229;192.1968;
 X-T0194q_14;5.1925;4.1986;195.525;";
 
-        [Test]
-        public void ImportTest()
+        private DocumentFormatDefinition<CsvPoco> GetDefinition()
         {
-            DocumentFormatDefinition<CsvPoco> definition = GetDefinition();
-
-            var importResult = definition.Import(ExampleCsv);
-
-            Assert.AreEqual(14, importResult.Count);
+            return new DocumentFormatDefinitionBuilder<CsvPoco>()
+                .SetColumnSeparator(";")
+                .SetExportHeaderLine(false)
+                .SetAutosizeColumns(false)
+                .AddColumn(x => x.Name)
+                .AddColumn(x => x.X, "0.000##")
+                .AddColumn(x => x.Y, "0.000##")
+                .AddColumn(x => x.Z, "0.000##")
+                .Build();
         }
 
         [Test]
@@ -39,12 +44,12 @@ X-T0194q_14;5.1925;4.1986;195.525;";
         {
             DocumentFormatDefinition<CsvPoco> definition = GetDefinition();
 
-            var importResult = definition.Import(ExampleCsv);
+            List<CsvPoco> importResult = definition.Import(ExampleCsv);
 
-            var exportResult = definition.Export(importResult);
+            string exportResult = definition.Export(importResult);
 
-            var expectedLines = ExampleCsv.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
-            var actualLines = exportResult.Split(new[]{"\r\n", "\n"}, StringSplitOptions.RemoveEmptyEntries);
+            string[] expectedLines = ExampleCsv.Split(new[] {"\r\n", "\n"}, StringSplitOptions.RemoveEmptyEntries);
+            string[] actualLines = exportResult.Split(new[] {"\r\n", "\n"}, StringSplitOptions.RemoveEmptyEntries);
 
             Assert.AreEqual(expectedLines.Length, actualLines.Length);
 
@@ -54,17 +59,14 @@ X-T0194q_14;5.1925;4.1986;195.525;";
             }
         }
 
-        private DocumentFormatDefinition<CsvPoco> GetDefinition()
+        [Test]
+        public void ImportTest()
         {
-            return new DocumentFormatDefinitionBuilder<CsvPoco>()
-                .SetColumnSeparator(";")
-                .SetExportHeaderLine(false)
-                .SetAutosizeColumns(false)
-                .AddColumn(x => x.Name)
-                .AddColumn(x => x.X, ColumnAlignment.Left, "0.000##")
-                .AddColumn(x => x.Y, ColumnAlignment.Left, "0.000##")
-                .AddColumn(x => x.Z, ColumnAlignment.Left, "0.000##")
-                .Build();
+            DocumentFormatDefinition<CsvPoco> definition = GetDefinition();
+
+            List<CsvPoco> importResult = definition.Import(ExampleCsv);
+
+            Assert.AreEqual(14, importResult.Count);
         }
     }
 }

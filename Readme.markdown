@@ -1,8 +1,12 @@
-AsciiImportExport v0.1
+AsciiImportExport v0.2
 ======================================================================
 
 ## Overview
 A .NET library providing fast and easy de/serialization of arbitrary column-based text data.
+
+## Changelog
+  * v0.1 - Initial release
+  * v0.2 - Added DocumentColumnBuilder for better separation of concerns
 
 ## Example
 
@@ -43,14 +47,14 @@ Now we define how the data will be exported / imported:
 
     private static DocumentFormatDefinition<Poco> GetDefinition()
     {
-        return new DocumentFormatDefinitionBuilder<Poco>()
+        return new DocumentFormatDefinitionBuilder<AutoresizePoco>()
             .SetColumnSeparator("\t")
             .SetCommentString("!")
             .SetAutosizeColumns(true)
             .SetExportHeaderLine(false)
             .AddColumn(x => x.Name)
-            .AddColumn(x => x.Gender, ColumnAlignment.Left, StringToGender, GenderToString)
-            .AddColumn(x => x.Height, ColumnAlignment.Right, "0.00")
+            .AddColumn(x => x.Gender, b => b.SetImportFunc(StringToGender).SetExportFunc(GenderToString))
+            .AddColumn(x => x.Height, "0.00", b => b.SetAlignment(ColumnAlignment.Right))
             .AddColumn(x => x.Birthday, "yyyyMMdd")
             .AddColumn(x => x.Memo)
             .Build();

@@ -21,9 +21,9 @@ namespace AsciiImportExport.Tests.Performance
                 .SetExportHeaderLine(false)
                 .AddColumn(x => x.Name)
                 .AddColumn(x => x.DateTime)
-                .AddColumn(x => x.X, ColumnAlignment.Right)
-                .AddColumn(x => x.Y, ColumnAlignment.Right)
-                .AddColumn(x => x.Z, ColumnAlignment.Right)
+                .AddColumn(x => x.X, b => b.SetAlignment(ColumnAlignment.Right))
+                .AddColumn(x => x.Y, b => b.SetAlignment(ColumnAlignment.Right))
+                .AddColumn(x => x.Z, b => b.SetAlignment(ColumnAlignment.Right))
                 .AddColumn(x => x.IsActive)
                 .Build();
         }

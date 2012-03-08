@@ -31,8 +31,8 @@ namespace AsciiImportExport.Tests.Autoresize
                 .SetAutosizeColumns(true)
                 .SetExportHeaderLine(false)
                 .AddColumn(x => x.Name)
-                .AddColumn(x => x.Gender, ColumnAlignment.Left, StringToGender, GenderToString)
-                .AddColumn(x => x.Height, ColumnAlignment.Right, "0.00")
+                .AddColumn(x => x.Gender, b => b.SetImportFunc(StringToGender).SetExportFunc(GenderToString))
+                .AddColumn(x => x.Height, "0.00", b => b.SetAlignment(ColumnAlignment.Right))
                 .AddColumn(x => x.Birthday, "yyyyMMdd")
                 .AddColumn(x => x.Memo)
                 .Build();
@@ -46,8 +46,8 @@ namespace AsciiImportExport.Tests.Autoresize
                 .SetAutosizeColumns(true)
                 .SetExportHeaderLine(false)
                 .AddColumn(x => x.Name)
-                .AddColumn(x => x.Gender, ColumnAlignment.Left, StringToGender, GenderToString)
-                .AddColumn(x => x.Height, ColumnAlignment.Right, "0.00")
+                .AddColumn(x => x.Gender, b => b.SetImportFunc(StringToGender).SetExportFunc(GenderToString))
+                .AddColumn(x => x.Height, "0.00", b => b.SetAlignment(ColumnAlignment.Right))
                 .AddColumn(x => x.Birthday, "yyyyMMdd")
                 .AddColumn(x => x.Memo)
                 .Build();

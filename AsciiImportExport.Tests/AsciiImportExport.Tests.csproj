@@ -56,7 +56,6 @@
     <Compile Include="Autoresize\AutoresizeTests.cs" />
     <Compile Include="Csv\CsvPoco.cs" />
     <Compile Include="Csv\CsvTests.cs" />
-    <Compile Include="DocumentColumnTests.cs" />
     <Compile Include="DocumentFormatDefinitionTests.cs" />
     <Compile Include="Performance\PerformancePoco.cs" />
     <Compile Include="Performance\PerformanceTests.cs" />

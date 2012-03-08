@@ -7,6 +7,12 @@ using NUnit.Framework;
 
 namespace AsciiImportExport.Tests
 {
+    internal class Poco
+    {
+        public int Int32Prop { get; set; }
+        public string StringProp { get; set; }
+    }
+
     [TestFixture]
     internal class DocumentFormatDefinitionTests
     {

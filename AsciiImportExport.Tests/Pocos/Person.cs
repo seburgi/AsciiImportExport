@@ -4,9 +4,9 @@ using System;
 
 #endregion
 
-namespace AsciiImportExport.Tests.Autoresize
+namespace AsciiImportExport.Tests.Pocos
 {
-    internal class AutoresizePoco
+    internal class Person
     {
         public DateTime Birthday { get; set; }
         public Gender Gender { get; set; }

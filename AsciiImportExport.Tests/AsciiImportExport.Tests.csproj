@@ -52,13 +52,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Autoresize\AutoresizePoco.cs" />
-    <Compile Include="Autoresize\AutoresizeTests.cs" />
-    <Compile Include="Csv\CsvPoco.cs" />
-    <Compile Include="Csv\CsvTests.cs" />
+    <Compile Include="Pocos\SimplePoco.cs" />
+    <Compile Include="Pocos\Person.cs" />
+    <Compile Include="AutosizeTests.cs" />
+    <Compile Include="Pocos\Location.cs" />
+    <Compile Include="CsvTests.cs" />
+    <Compile Include="DocumentColumnTests.cs" />
     <Compile Include="DocumentFormatDefinitionTests.cs" />
-    <Compile Include="Performance\PerformancePoco.cs" />
-    <Compile Include="Performance\PerformanceTests.cs" />
+    <Compile Include="Pocos\Measurement.cs" />
+    <Compile Include="PerformanceTests.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -72,10 +74,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Autoresize\space.txt">
+    <Content Include="Data\space.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Autoresize\tab.txt">
+    <Content Include="Data\tab.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

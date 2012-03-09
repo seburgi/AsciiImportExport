@@ -2,11 +2,12 @@
 
 using System;
 using System.Collections.Generic;
+using AsciiImportExport.Tests.Pocos;
 using NUnit.Framework;
 
 #endregion
 
-namespace AsciiImportExport.Tests.Csv
+namespace AsciiImportExport.Tests
 {
     [TestFixture]
     internal class CsvTests
@@ -26,9 +27,9 @@ X-T0194q_12;0.1951;2.829;199.018;
 X-T0194q_119;4.015;6.229;192.1968;
 X-T0194q_14;5.1925;4.1986;195.525;";
 
-        private DocumentFormatDefinition<CsvPoco> GetDefinition()
+        private DocumentFormatDefinition<Location> GetDefinition()
         {
-            return new DocumentFormatDefinitionBuilder<CsvPoco>()
+            return new DocumentFormatDefinitionBuilder<Location>()
                 .SetColumnSeparator(";")
                 .SetExportHeaderLine(false)
                 .SetAutosizeColumns(false)
@@ -42,9 +43,9 @@ X-T0194q_14;5.1925;4.1986;195.525;";
         [Test]
         public void ExportTest()
         {
-            DocumentFormatDefinition<CsvPoco> definition = GetDefinition();
+            DocumentFormatDefinition<Location> definition = GetDefinition();
 
-            List<CsvPoco> importResult = definition.Import(ExampleCsv);
+            List<Location> importResult = definition.Import(ExampleCsv);
 
             string exportResult = definition.Export(importResult);
 
@@ -62,9 +63,9 @@ X-T0194q_14;5.1925;4.1986;195.525;";
         [Test]
         public void ImportTest()
         {
-            DocumentFormatDefinition<CsvPoco> definition = GetDefinition();
+            DocumentFormatDefinition<Location> definition = GetDefinition();
 
-            List<CsvPoco> importResult = definition.Import(ExampleCsv);
+            List<Location> importResult = definition.Import(ExampleCsv);
 
             Assert.AreEqual(14, importResult.Count);
         }

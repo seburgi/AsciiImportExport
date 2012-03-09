@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace AsciiImportExport.Tests.Csv
+﻿namespace AsciiImportExport.Tests.Pocos
 {
-    class CsvPoco
+    class Location
     {
         public string Name { get; set; }
         public double X { get; set; }

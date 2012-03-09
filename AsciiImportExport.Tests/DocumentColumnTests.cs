@@ -1,5 +1,6 @@
 ﻿#region using directives
 
+using AsciiImportExport.Tests.Pocos;
 using NUnit.Framework;
 
 #endregion
@@ -12,24 +13,24 @@ namespace AsciiImportExport.Tests
         private const string StringPropValue = "Hello!";
         private const int Int32PropValue = 4;
 
-        private static IDocumentColumn<Poco> GetStringPropColumn()
+        private static IDocumentColumn<SimplePoco> GetStringPropColumn()
         {
-            var column = new DocumentColumn<Poco, string>(x => x.StringProp);
+            var column = new DocumentColumn<SimplePoco, string>(x => x.StringProp, null, null, -1, ColumnAlignment.Left, null, null, null, null, null, null);
             return column;
         }
 
-        private static IDocumentColumn<Poco> GetInt32PropColumn()
+        private static IDocumentColumn<SimplePoco> GetInt32PropColumn()
         {
-            var column = new DocumentColumn<Poco, int>(x => x.Int32Prop);
+            var column = new DocumentColumn<SimplePoco, int>(x => x.Int32Prop, null, 0, -1, ColumnAlignment.Left, "0.0000", null, null, null, null, null);
             return column;
         }
 
         [Test]
         public void ExportInt32Prop()
         {
-            IDocumentColumn<Poco> column = GetInt32PropColumn();
+            IDocumentColumn<SimplePoco> column = GetInt32PropColumn();
 
-            var poco = new Poco {Int32Prop = Int32PropValue};
+            var poco = new SimplePoco {Int32Prop = Int32PropValue};
             string result = column.Format(poco);
 
             Assert.AreEqual(Int32PropValue.ToString(), result);
@@ -38,9 +39,9 @@ namespace AsciiImportExport.Tests
         [Test]
         public void ExportStringProp()
         {
-            IDocumentColumn<Poco> column = GetStringPropColumn();
+            IDocumentColumn<SimplePoco> column = GetStringPropColumn();
 
-            var poco = new Poco {StringProp = StringPropValue};
+            var poco = new SimplePoco {StringProp = StringPropValue};
             string result = column.Format(poco);
 
             Assert.AreEqual(StringPropValue, result);
@@ -49,9 +50,9 @@ namespace AsciiImportExport.Tests
         [Test]
         public void ImportInt32Prop()
         {
-            IDocumentColumn<Poco> column = GetInt32PropColumn();
+            IDocumentColumn<SimplePoco> column = GetInt32PropColumn();
 
-            var poco = new Poco();
+            var poco = new SimplePoco();
             column.SetValue(poco, Int32PropValue.ToString());
 
             Assert.AreEqual(Int32PropValue, poco.Int32Prop);
@@ -60,9 +61,9 @@ namespace AsciiImportExport.Tests
         [Test]
         public void ImportStringProp()
         {
-            IDocumentColumn<Poco> column = GetStringPropColumn();
+            IDocumentColumn<SimplePoco> column = GetStringPropColumn();
 
-            var poco = new Poco();
+            var poco = new SimplePoco();
             column.SetValue(poco, StringPropValue);
 
             Assert.AreEqual(StringPropValue, poco.StringProp);

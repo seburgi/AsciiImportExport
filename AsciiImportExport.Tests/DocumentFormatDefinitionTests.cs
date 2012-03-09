@@ -1,18 +1,13 @@
 ﻿#region using directives
 
 using System.Collections.Generic;
+using AsciiImportExport.Tests.Pocos;
 using NUnit.Framework;
 
 #endregion
 
 namespace AsciiImportExport.Tests
 {
-    internal class Poco
-    {
-        public int Int32Prop { get; set; }
-        public string StringProp { get; set; }
-    }
-
     [TestFixture]
     internal class DocumentFormatDefinitionTests
     {
@@ -21,9 +16,9 @@ namespace AsciiImportExport.Tests
         private const string StringPropValue1 = "Hello";
         private const string StringPropValue2 = "World!";
 
-        private static DocumentFormatDefinition<Poco> GetPocoDefinition()
+        private static DocumentFormatDefinition<SimplePoco> GetPocoDefinition()
         {
-            return new DocumentFormatDefinitionBuilder<Poco>()
+            return new DocumentFormatDefinitionBuilder<SimplePoco>()
                 .SetColumnSeparator("\t")
                 .SetCommentString("!")
                 .SetAutosizeColumns(false)
@@ -36,12 +31,12 @@ namespace AsciiImportExport.Tests
         [Test]
         public void ExportMultiplePocos()
         {
-            DocumentFormatDefinition<Poco> definition = GetPocoDefinition();
+            DocumentFormatDefinition<SimplePoco> definition = GetPocoDefinition();
 
-            var pocoList = new List<Poco>
+            var pocoList = new List<SimplePoco>
                                {
-                                   new Poco {Int32Prop = Int32PropValue1, StringProp = StringPropValue1},
-                                   new Poco {Int32Prop = Int32PropValue2, StringProp = StringPropValue2}
+                                   new SimplePoco {Int32Prop = Int32PropValue1, StringProp = StringPropValue1},
+                                   new SimplePoco {Int32Prop = Int32PropValue2, StringProp = StringPropValue2}
                                };
 
             string result = definition.Export(pocoList);
@@ -52,10 +47,10 @@ namespace AsciiImportExport.Tests
         [Test]
         public void ExportPoco()
         {
-            DocumentFormatDefinition<Poco> definition = GetPocoDefinition();
+            DocumentFormatDefinition<SimplePoco> definition = GetPocoDefinition();
 
-            var poco = new Poco {Int32Prop = Int32PropValue1, StringProp = StringPropValue1};
-            string result = definition.Export(new List<Poco> {poco});
+            var poco = new SimplePoco {Int32Prop = Int32PropValue1, StringProp = StringPropValue1};
+            string result = definition.Export(new List<SimplePoco> {poco});
 
             Assert.AreEqual(StringPropValue1 + "\t" + Int32PropValue1, result);
         }
@@ -63,9 +58,9 @@ namespace AsciiImportExport.Tests
         [Test]
         public void ImportMultiplePocos()
         {
-            DocumentFormatDefinition<Poco> definition = GetPocoDefinition();
+            DocumentFormatDefinition<SimplePoco> definition = GetPocoDefinition();
 
-            List<Poco> result = definition.Import(StringPropValue1 + "\t" + Int32PropValue1 + "\r\n" + StringPropValue2 + "\t" + Int32PropValue2);
+            List<SimplePoco> result = definition.Import(StringPropValue1 + "\t" + Int32PropValue1 + "\r\n" + StringPropValue2 + "\t" + Int32PropValue2);
 
             Assert.AreEqual(2, result.Count);
 
@@ -80,9 +75,9 @@ namespace AsciiImportExport.Tests
         [Test]
         public void ImportPoco()
         {
-            DocumentFormatDefinition<Poco> definition = GetPocoDefinition();
+            DocumentFormatDefinition<SimplePoco> definition = GetPocoDefinition();
 
-            List<Poco> result = definition.Import(StringPropValue1 + "\t" + Int32PropValue1);
+            List<SimplePoco> result = definition.Import(StringPropValue1 + "\t" + Int32PropValue1);
 
             Assert.AreEqual(1, result.Count);
             Assert.AreEqual(StringPropValue1, result[0].StringProp);

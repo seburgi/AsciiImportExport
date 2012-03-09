@@ -3,29 +3,30 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using AsciiImportExport.Tests.Pocos;
 using NUnit.Framework;
 
 #endregion
 
-namespace AsciiImportExport.Tests.Autoresize
+namespace AsciiImportExport.Tests
 {
     [TestFixture]
-    internal class AutoresizeTests
+    internal class AutosizeTests
     {
-        public List<AutoresizePoco> GetPocoList()
+        public List<Person> GetPocoList()
         {
-            return new List<AutoresizePoco>
+            return new List<Person>
                        {
-                           new AutoresizePoco {Birthday = new DateTime(1983, 1, 29), Gender = Gender.Male, Height = 175.5, Name = "Peter", Memo = "Nice guy!"},
-                           new AutoresizePoco {Birthday = new DateTime(1931, 10, 5), Gender = Gender.Male, Height = 173.45, Name = "Paul", Memo = "Sometimes a litte grumpy."},
-                           new AutoresizePoco {Birthday = new DateTime(1980, 4, 12), Gender = Gender.Female, Height = 1193, Name = "Mary", Memo = "Tall!"},
+                           new Person {Birthday = new DateTime(1983, 1, 29), Gender = Gender.Male, Height = 175.5, Name = "Peter", Memo = "Nice guy!"},
+                           new Person {Birthday = new DateTime(1931, 10, 5), Gender = Gender.Male, Height = 173.45, Name = "Paul", Memo = "Sometimes a litte grumpy."},
+                           new Person {Birthday = new DateTime(1980, 4, 12), Gender = Gender.Female, Height = 1193, Name = "Mary", Memo = "Tall!"},
                        };
         }
 
 
-        private static DocumentFormatDefinition<AutoresizePoco> GetDefinition_With_Tab_As_ColumnSeparator()
+        private static DocumentFormatDefinition<Person> GetDefinition_With_Tab_As_ColumnSeparator()
         {
-            return new DocumentFormatDefinitionBuilder<AutoresizePoco>()
+            return new DocumentFormatDefinitionBuilder<Person>()
                 .SetColumnSeparator("\t")
                 .SetCommentString("!")
                 .SetAutosizeColumns(true)
@@ -38,9 +39,9 @@ namespace AsciiImportExport.Tests.Autoresize
                 .Build();
         }
 
-        private static DocumentFormatDefinition<AutoresizePoco> GetDefinition_With_Space_As_ColumnSeparator()
+        private static DocumentFormatDefinition<Person> GetDefinition_With_Space_As_ColumnSeparator()
         {
-            return new DocumentFormatDefinitionBuilder<AutoresizePoco>()
+            return new DocumentFormatDefinitionBuilder<Person>()
                 .SetColumnSeparator(" ")
                 .SetCommentString("!")
                 .SetAutosizeColumns(true)
@@ -79,27 +80,27 @@ namespace AsciiImportExport.Tests.Autoresize
             }
         }
 
-        private void ExportImportExport(DocumentFormatDefinition<AutoresizePoco> definition)
+        private void ExportImportExport(DocumentFormatDefinition<Person> definition)
         {
             string exportData1 = definition.Export(GetPocoList());
-            List<AutoresizePoco> importResult = definition.Import(exportData1);
+            List<Person> importResult = definition.Import(exportData1);
             string exportData2 = definition.Export(importResult);
 
             Assert.AreEqual(exportData1, exportData2);
         }
 
 
-        private void Export(DocumentFormatDefinition<AutoresizePoco> definition, string fileName)
+        private void Export(DocumentFormatDefinition<Person> definition, string fileName)
         {
             string result = definition.Export(GetPocoList());
             Assert.AreEqual(File.ReadAllText(fileName), result);
         }
 
 
-        private void Import(DocumentFormatDefinition<AutoresizePoco> definition, string fileName)
+        private void Import(DocumentFormatDefinition<Person> definition, string fileName)
         {
-            List<AutoresizePoco> result = definition.Import(File.ReadAllText(fileName));
-            List<AutoresizePoco> expected = GetPocoList();
+            List<Person> result = definition.Import(File.ReadAllText(fileName));
+            List<Person> expected = GetPocoList();
 
             for (int i = 0; i < result.Count; i++)
             {
@@ -114,7 +115,7 @@ namespace AsciiImportExport.Tests.Autoresize
         [Test]
         public void SpaceExport()
         {
-            Export(GetDefinition_With_Space_As_ColumnSeparator(), "Autoresize\\space.txt");
+            Export(GetDefinition_With_Space_As_ColumnSeparator(), "Data\\space.txt");
         }
 
         [Test]
@@ -126,13 +127,13 @@ namespace AsciiImportExport.Tests.Autoresize
         [Test]
         public void SpaceImport()
         {
-            Import(GetDefinition_With_Space_As_ColumnSeparator(), "Autoresize\\space.txt");
+            Import(GetDefinition_With_Space_As_ColumnSeparator(), "Data\\space.txt");
         }
 
         [Test]
         public void TabExport()
         {
-            Export(GetDefinition_With_Tab_As_ColumnSeparator(), "Autoresize\\tab.txt");
+            Export(GetDefinition_With_Tab_As_ColumnSeparator(), "Data\\tab.txt");
         }
 
         [Test]
@@ -144,7 +145,7 @@ namespace AsciiImportExport.Tests.Autoresize
         [Test]
         public void TabImport()
         {
-            Import(GetDefinition_With_Tab_As_ColumnSeparator(), "Autoresize\\tab.txt");
+            Import(GetDefinition_With_Tab_As_ColumnSeparator(), "Data\\tab.txt");
         }
     }
 }

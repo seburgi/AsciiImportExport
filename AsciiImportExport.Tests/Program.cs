@@ -1,5 +1,4 @@
 ﻿using System;
-using AsciiImportExport.Tests.Performance;
 
 namespace AsciiImportExport.Tests
 {

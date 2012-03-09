@@ -47,7 +47,7 @@ Now we define how the data will be exported / imported:
 
     private static DocumentFormatDefinition<Poco> GetDefinition()
     {
-        return new DocumentFormatDefinitionBuilder<AutoresizePoco>()
+        return new DocumentFormatDefinitionBuilder<Poco>()
             .SetColumnSeparator("\t")
             .SetCommentString("!")
             .SetAutosizeColumns(true)

@@ -3,18 +3,19 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using AsciiImportExport.Tests.Pocos;
 using NUnit.Framework;
 
 #endregion
 
-namespace AsciiImportExport.Tests.Performance
+namespace AsciiImportExport.Tests
 {
     [TestFixture]
     internal class PerformanceTests
     {
-        private DocumentFormatDefinition<PerformancePoco> GetDefinition()
+        private DocumentFormatDefinition<Measurement> GetDefinition()
         {
-            return new DocumentFormatDefinitionBuilder<PerformancePoco>()
+            return new DocumentFormatDefinitionBuilder<Measurement>()
                 .SetColumnSeparator("\t")
                 .SetCommentString("#")
                 .SetAutosizeColumns(true)
@@ -28,13 +29,13 @@ namespace AsciiImportExport.Tests.Performance
                 .Build();
         }
 
-        private List<PerformancePoco> CreateList(int count)
+        private List<Measurement> CreateList(int count)
         {
-            var list = new List<PerformancePoco>();
+            var list = new List<Measurement>();
             var r = new Random();
             for (int i = 0; i < count; i++)
             {
-                list.Add(new PerformancePoco
+                list.Add(new Measurement
                              {
                                  Name = "Poco-" + count,
                                  DateTime = DateTime.Now,
@@ -52,8 +53,8 @@ namespace AsciiImportExport.Tests.Performance
         public void Test()
         {
             const int count = 100000;
-            List<PerformancePoco> list = CreateList(count);
-            DocumentFormatDefinition<PerformancePoco> definition = GetDefinition();
+            List<Measurement> list = CreateList(count);
+            DocumentFormatDefinition<Measurement> definition = GetDefinition();
 
             Stopwatch sw = Stopwatch.StartNew();
             string exportResult = definition.Export(list);
@@ -65,7 +66,7 @@ namespace AsciiImportExport.Tests.Performance
             Console.WriteLine();
 
             sw = Stopwatch.StartNew();
-            List<PerformancePoco> importList = definition.Import(exportResult);
+            List<Measurement> importList = definition.Import(exportResult);
             sw.Stop();
 
             Console.WriteLine(sw.ElapsedMilliseconds);

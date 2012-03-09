@@ -4,9 +4,9 @@ using System;
 
 #endregion
 
-namespace AsciiImportExport.Tests.Performance
+namespace AsciiImportExport.Tests.Pocos
 {
-    internal class PerformancePoco
+    internal class Measurement
     {
         public DateTime DateTime { get; set; }
         public bool IsActive { get; set; }

@@ -11,23 +11,6 @@ namespace AsciiImportExport.Tests
     [TestFixture]
     internal class DocumentFormatDefinitionTests
     {
-        private const int Int32PropValue1 = 1233;
-        private const int Int32PropValue2 = -344;
-        private const string StringPropValue1 = "Hello";
-        private const string StringPropValue2 = "World!";
-
-        private static DocumentFormatDefinition<SimplePoco> GetPocoDefinition()
-        {
-            return new DocumentFormatDefinitionBuilder<SimplePoco>()
-                .SetColumnSeparator("\t")
-                .SetCommentString("!")
-                .SetAutosizeColumns(false)
-                .SetExportHeaderLine(false)
-                .AddColumn(x => x.StringProp)
-                .AddColumn(x => x.Int32Prop)
-                .Build();
-        }
-
         [Test]
         public void ExportMultiplePocos()
         {
@@ -83,5 +66,22 @@ namespace AsciiImportExport.Tests
             Assert.AreEqual(StringPropValue1, result[0].StringProp);
             Assert.AreEqual(Int32PropValue1, result[0].Int32Prop);
         }
+
+        private static DocumentFormatDefinition<SimplePoco> GetPocoDefinition()
+        {
+            return new DocumentFormatDefinitionBuilder<SimplePoco>()
+                .SetColumnSeparator("\t")
+                .SetCommentString("!")
+                .SetAutosizeColumns(false)
+                .SetExportHeaderLine(false)
+                .AddColumn(x => x.StringProp)
+                .AddColumn(x => x.Int32Prop)
+                .Build();
+        }
+
+        private const int Int32PropValue1 = 1233;
+        private const int Int32PropValue2 = -344;
+        private const string StringPropValue1 = "Hello";
+        private const string StringPropValue2 = "World!";
     }
 }

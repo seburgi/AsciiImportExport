@@ -24,94 +24,6 @@ namespace AsciiImportExport.Tests
         }
 
 
-        private static DocumentFormatDefinition<Person> GetDefinition_With_Tab_As_ColumnSeparator()
-        {
-            return new DocumentFormatDefinitionBuilder<Person>()
-                .SetColumnSeparator("\t")
-                .SetCommentString("!")
-                .SetAutosizeColumns(true)
-                .SetExportHeaderLine(false)
-                .AddColumn(x => x.Name)
-                .AddColumn(x => x.Gender, b => b.SetImportFunc(StringToGender).SetExportFunc(GenderToString))
-                .AddColumn(x => x.Height, "0.00", b => b.SetAlignment(ColumnAlignment.Right))
-                .AddColumn(x => x.Birthday, "yyyyMMdd")
-                .AddColumn(x => x.Memo)
-                .Build();
-        }
-
-        private static DocumentFormatDefinition<Person> GetDefinition_With_Space_As_ColumnSeparator()
-        {
-            return new DocumentFormatDefinitionBuilder<Person>()
-                .SetColumnSeparator(" ")
-                .SetCommentString("!")
-                .SetAutosizeColumns(true)
-                .SetExportHeaderLine(false)
-                .AddColumn(x => x.Name)
-                .AddColumn(x => x.Gender, b => b.SetImportFunc(StringToGender).SetExportFunc(GenderToString))
-                .AddColumn(x => x.Height, "0.00", b => b.SetAlignment(ColumnAlignment.Right))
-                .AddColumn(x => x.Birthday, "yyyyMMdd")
-                .AddColumn(x => x.Memo)
-                .Build();
-        }
-
-        private static string GenderToString(Gender gender)
-        {
-            switch (gender)
-            {
-                case Gender.Female:
-                    return "F";
-                case Gender.Male:
-                    return "M";
-                default:
-                    return "U";
-            }
-        }
-
-        private static Gender StringToGender(string s)
-        {
-            switch (s)
-            {
-                case "M":
-                    return Gender.Male;
-                case "F":
-                    return Gender.Female;
-                default:
-                    return Gender.Unknown;
-            }
-        }
-
-        private void ExportImportExport(DocumentFormatDefinition<Person> definition)
-        {
-            string exportData1 = definition.Export(GetPocoList());
-            List<Person> importResult = definition.Import(exportData1);
-            string exportData2 = definition.Export(importResult);
-
-            Assert.AreEqual(exportData1, exportData2);
-        }
-
-
-        private void Export(DocumentFormatDefinition<Person> definition, string fileName)
-        {
-            string result = definition.Export(GetPocoList());
-            Assert.AreEqual(File.ReadAllText(fileName), result);
-        }
-
-
-        private void Import(DocumentFormatDefinition<Person> definition, string fileName)
-        {
-            List<Person> result = definition.Import(File.ReadAllText(fileName));
-            List<Person> expected = GetPocoList();
-
-            for (int i = 0; i < result.Count; i++)
-            {
-                Assert.AreEqual(expected[i].Birthday, result[i].Birthday);
-                Assert.AreEqual(expected[i].Gender, result[i].Gender);
-                Assert.AreEqual(expected[i].Height, result[i].Height);
-                Assert.AreEqual(expected[i].Name, result[i].Name);
-                Assert.AreEqual(expected[i].Memo, result[i].Memo);
-            }
-        }
-
         [Test]
         public void SpaceExport()
         {
@@ -146,6 +58,92 @@ namespace AsciiImportExport.Tests
         public void TabImport()
         {
             Import(GetDefinition_With_Tab_As_ColumnSeparator(), "Data\\tab.txt");
+        }
+
+        private void Export(DocumentFormatDefinition<Person> definition, string fileName)
+        {
+            string result = definition.Export(GetPocoList());
+            Assert.AreEqual(File.ReadAllText(fileName), result);
+        }
+
+        private void ExportImportExport(DocumentFormatDefinition<Person> definition)
+        {
+            string exportData1 = definition.Export(GetPocoList());
+            List<Person> importResult = definition.Import(exportData1);
+            string exportData2 = definition.Export(importResult);
+
+            Assert.AreEqual(exportData1, exportData2);
+        }
+
+        private static string GenderToString(Gender gender)
+        {
+            switch (gender)
+            {
+                case Gender.Female:
+                    return "F";
+                case Gender.Male:
+                    return "M";
+                default:
+                    return "U";
+            }
+        }
+
+        private static DocumentFormatDefinition<Person> GetDefinition_With_Space_As_ColumnSeparator()
+        {
+            return new DocumentFormatDefinitionBuilder<Person>()
+                .SetColumnSeparator(" ")
+                .SetCommentString("!")
+                .SetAutosizeColumns(true)
+                .SetExportHeaderLine(false)
+                .AddColumn(x => x.Name)
+                .AddColumn(x => x.Gender, b => b.SetImportFunc(StringToGender).SetExportFunc(GenderToString))
+                .AddColumn(x => x.Height, "0.00", b => b.SetAlignment(ColumnAlignment.Right))
+                .AddColumn(x => x.Birthday, "yyyyMMdd")
+                .AddColumn(x => x.Memo)
+                .Build();
+        }
+
+        private static DocumentFormatDefinition<Person> GetDefinition_With_Tab_As_ColumnSeparator()
+        {
+            return new DocumentFormatDefinitionBuilder<Person>()
+                .SetColumnSeparator("\t")
+                .SetCommentString("!")
+                .SetAutosizeColumns(true)
+                .SetExportHeaderLine(false)
+                .AddColumn(x => x.Name)
+                .AddColumn(x => x.Gender, b => b.SetImportFunc(StringToGender).SetExportFunc(GenderToString))
+                .AddColumn(x => x.Height, "0.00", b => b.SetAlignment(ColumnAlignment.Right))
+                .AddColumn(x => x.Birthday, "yyyyMMdd")
+                .AddColumn(x => x.Memo)
+                .Build();
+        }
+
+        private void Import(DocumentFormatDefinition<Person> definition, string fileName)
+        {
+            List<Person> result = definition.Import(File.ReadAllText(fileName));
+            List<Person> expected = GetPocoList();
+
+            for (int i = 0; i < result.Count; i++)
+            {
+                Assert.AreEqual(expected[i].Birthday, result[i].Birthday);
+                Assert.AreEqual(expected[i].Gender, result[i].Gender);
+                Assert.AreEqual(expected[i].Height, result[i].Height);
+                Assert.AreEqual(expected[i].Name, result[i].Name);
+                Assert.AreEqual(expected[i].Memo, result[i].Memo);
+            }
+        }
+
+        private static Gender StringToGender(string s)
+        {
+            switch (s)
+            {
+                case "M":
+                    return Gender.Male;
+                case "F":
+                    return Gender.Female;
+                default:
+                    return Gender.Unknown;
+            }
         }
     }
 }

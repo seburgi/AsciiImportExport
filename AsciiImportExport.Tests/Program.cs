@@ -1,4 +1,8 @@
-﻿using System;
+﻿#region using directives
+
+using System;
+
+#endregion
 
 namespace AsciiImportExport.Tests
 {
@@ -11,7 +15,6 @@ namespace AsciiImportExport.Tests
 
             Console.Write("Press any key to exit...");
             Console.ReadLine();
-
         }
     }
 }

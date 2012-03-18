@@ -13,42 +13,6 @@ namespace AsciiImportExport.Tests
     [TestFixture]
     internal class PerformanceTests
     {
-        private DocumentFormatDefinition<Measurement> GetDefinition()
-        {
-            return new DocumentFormatDefinitionBuilder<Measurement>()
-                .SetColumnSeparator("\t")
-                .SetCommentString("#")
-                .SetAutosizeColumns(true)
-                .SetExportHeaderLine(false)
-                .AddColumn(x => x.Name)
-                .AddColumn(x => x.DateTime)
-                .AddColumn(x => x.X, b => b.SetAlignment(ColumnAlignment.Right))
-                .AddColumn(x => x.Y, b => b.SetAlignment(ColumnAlignment.Right))
-                .AddColumn(x => x.Z, b => b.SetAlignment(ColumnAlignment.Right))
-                .AddColumn(x => x.IsActive)
-                .Build();
-        }
-
-        private List<Measurement> CreateList(int count)
-        {
-            var list = new List<Measurement>();
-            var r = new Random();
-            for (int i = 0; i < count; i++)
-            {
-                list.Add(new Measurement
-                             {
-                                 Name = "Poco-" + count,
-                                 DateTime = DateTime.Now,
-                                 X = Math.Round(r.NextDouble()*100000, 4),
-                                 Y = Math.Round(r.NextDouble()*100000, 4),
-                                 Z = Math.Round(r.NextDouble()*100000, 4),
-                                 IsActive = r.NextDouble() > 0.5
-                             });
-            }
-
-            return list;
-        }
-
         [Test]
         public void Test()
         {
@@ -83,6 +47,42 @@ namespace AsciiImportExport.Tests
                 Assert.AreEqual(list[i].Z, importList[i].Z);
                 Assert.AreEqual(list[i].IsActive, importList[i].IsActive);
             }
+        }
+
+        private List<Measurement> CreateList(int count)
+        {
+            var list = new List<Measurement>();
+            var r = new Random();
+            for (int i = 0; i < count; i++)
+            {
+                list.Add(new Measurement
+                             {
+                                 Name = "Poco-" + count,
+                                 DateTime = DateTime.Now,
+                                 X = Math.Round(r.NextDouble()*100000, 4),
+                                 Y = Math.Round(r.NextDouble()*100000, 4),
+                                 Z = Math.Round(r.NextDouble()*100000, 4),
+                                 IsActive = r.NextDouble() > 0.5
+                             });
+            }
+
+            return list;
+        }
+
+        private DocumentFormatDefinition<Measurement> GetDefinition()
+        {
+            return new DocumentFormatDefinitionBuilder<Measurement>()
+                .SetColumnSeparator("\t")
+                .SetCommentString("#")
+                .SetAutosizeColumns(true)
+                .SetExportHeaderLine(false)
+                .AddColumn(x => x.Name)
+                .AddColumn(x => x.DateTime)
+                .AddColumn(x => x.X, b => b.SetAlignment(ColumnAlignment.Right))
+                .AddColumn(x => x.Y, b => b.SetAlignment(ColumnAlignment.Right))
+                .AddColumn(x => x.Z, b => b.SetAlignment(ColumnAlignment.Right))
+                .AddColumn(x => x.IsActive)
+                .Build();
         }
     }
 }

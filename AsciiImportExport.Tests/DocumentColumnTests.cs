@@ -10,21 +10,6 @@ namespace AsciiImportExport.Tests
     [TestFixture]
     internal class DocumentColumnTests
     {
-        private const string StringPropValue = "Hello!";
-        private const int Int32PropValue = 4;
-
-        private static IDocumentColumn<SimplePoco> GetStringPropColumn()
-        {
-            var column = new DocumentColumn<SimplePoco, string>(x => x.StringProp, null, null, -1, ColumnAlignment.Left, null, null, null, null, null, null);
-            return column;
-        }
-
-        private static IDocumentColumn<SimplePoco> GetInt32PropColumn()
-        {
-            var column = new DocumentColumn<SimplePoco, int>(x => x.Int32Prop, null, 0, -1, ColumnAlignment.Left, "0.0000", null, null, null, null, null);
-            return column;
-        }
-
         [Test]
         public void ExportInt32Prop()
         {
@@ -68,6 +53,20 @@ namespace AsciiImportExport.Tests
 
             Assert.AreEqual(StringPropValue, poco.StringProp);
         }
-    }
 
+        private static IDocumentColumn<SimplePoco> GetInt32PropColumn()
+        {
+            var column = new DocumentColumn<SimplePoco, int>(x => x.Int32Prop, null, 0, -1, ColumnAlignment.Left, "0.0000", null, null, null, null, null);
+            return column;
+        }
+
+        private static IDocumentColumn<SimplePoco> GetStringPropColumn()
+        {
+            var column = new DocumentColumn<SimplePoco, string>(x => x.StringProp, null, null, -1, ColumnAlignment.Left, null, null, null, null, null, null);
+            return column;
+        }
+
+        private const string StringPropValue = "Hello!";
+        private const int Int32PropValue = 4;
+    }
 }

@@ -1,6 +1,6 @@
 ﻿namespace AsciiImportExport.Tests.Pocos
 {
-    class Location
+    internal class Location
     {
         public string Name { get; set; }
         public double X { get; set; }

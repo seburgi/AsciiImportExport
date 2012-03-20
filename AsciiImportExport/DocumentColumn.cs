@@ -14,7 +14,7 @@ namespace AsciiImportExport
     /// </summary>
     /// <typeparam name="T">The type of the POCO you want to import/export</typeparam>
     /// <typeparam name="TRet">The type of the columns data</typeparam>
-    public class DocumentColumn<T, TRet> : IDocumentColumn<T> where T : class, new()
+    public class DocumentColumn<T, TRet> : IDocumentColumn<T>
     {
         private readonly string _booleanFalse;
         private readonly string _booleanTrue;
@@ -42,7 +42,7 @@ namespace AsciiImportExport
         /// <param name="booleanTrue">This string is used to represent the boolean value 'True'</param>
         /// <param name="booleanFalse">This string is used to represent the boolean value 'False'</param>
         /// <param name="importFunc">Custom import function that converts a string to a value of type TRet</param>
-        /// <param name="exportFunc">Custom import function that converts a value of type TRet to a string</param>
+        /// <param name="exportFunc">Custom export function that converts a value of type TRet to a string</param>
         public DocumentColumn(Expression<Func<T, TRet>> expression, string header, TRet defaultValue, int columnWidth, ColumnAlignment alignment, string doubleStringFormat, string dateTimeStringFormat, string booleanTrue, string booleanFalse, Func<string, TRet> importFunc, Func<TRet, string> exportFunc)
         {
             _header = header;
@@ -126,7 +126,7 @@ namespace AsciiImportExport
             }
             catch (Exception ex)
             {
-                throw new ImportException(_header, ex);
+                throw new ImportException(_header, value, ex);
             }
         }
 

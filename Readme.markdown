@@ -12,7 +12,7 @@ A .NET library providing fast and easy de/serialization of arbitrary column-base
 ## Example
 
 ### POCO
-    internal class Person
+    public class Person
     {
         public DateTime Birthday { get; set; }
         public Gender Gender { get; set; }

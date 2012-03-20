@@ -9,13 +9,26 @@ using System.Text;
 
 namespace AsciiImportExport
 {
-    public class DocumentFormatDefinition<T> where T : class, new()
+    /// <summary>
+    /// Holds all the format information necessary to import/export columnbased text data
+    /// </summary>
+    /// <typeparam name="T">The type of the POCO you want to import/export</typeparam>
+    public class DocumentFormatDefinition<T>
     {
         private readonly bool _autosizeColumns;
         private readonly List<IDocumentColumn<T>> _columns;
         private readonly bool _exportHeaderLine;
         private readonly Func<T> _instantiator;
 
+        /// <summary>
+        /// The constructor
+        /// </summary>
+        /// <param name="columns">List of columns of type <see cref="DocumentColumn{T,TRet}"/> defining the structure of a document</param>
+        /// <param name="columnSeparator">String that is used to separate columns in the text</param>
+        /// <param name="commentString">String that is used to identify the start of comments in the text</param>
+        /// <param name="autosizeColumns">Defines if the rows of a column shall all be of the same width</param>
+        /// <param name="exportHeaderLine">Defines if a header line shall be created during serialization</param>
+        /// <param name="instantiator">Function that creates a new instance of type <see cref="T"/>. </param>
         public DocumentFormatDefinition(List<IDocumentColumn<T>> columns, string columnSeparator, string commentString, bool autosizeColumns, bool exportHeaderLine, Func<T> instantiator)
         {
             _columns = columns;
@@ -28,29 +41,44 @@ namespace AsciiImportExport
             _instantiator = instantiator;
         }
 
+        /// <summary>
+        /// String that is used to separate columns in the text
+        /// </summary>
         public string ColumnSeparator { get; private set; }
 
+        /// <summary>
+        /// Enumerable list of columns of type <see cref="DocumentColumn{T,TRet}"/> defining the structure of a document
+        /// </summary>
         public IEnumerable<IDocumentColumn<T>> Columns
         {
             get { return _columns; }
         }
 
+        /// <summary>
+        /// String that is used to identify the start of comments in the text
+        /// </summary>
         public string CommentString { get; private set; }
 
-        public string Export(List<T> data)
+        /// <summary>
+        /// Serializes an enumerable list of type <see cref="T"/> to a string
+        /// </summary>
+        /// <param name="items"></param>
+        /// <returns></returns>
+        public string Export(IEnumerable<T> items)
         {
-            if (!data.Any()) return "";
+            int itemCount = items.Count();
+            if (itemCount == 0) return "";
 
-            var exportResults = new string[data.Count()][];
+            var exportResults = new string[itemCount][];
             var columnWidths = new List<int>();
 
-            for (int i = 0; i < data.Count; i++)
+            for (int i = 0; i < itemCount; i++)
             {
                 exportResults[i] = new string[_columns.Count];
 
                 for (int j = 0; j < _columns.Count; j++)
                 {
-                    exportResults[i][j] = _columns[j].Serialize(data[i]);
+                    exportResults[i][j] = _columns[j].Serialize(items.ElementAt(i));
                 }
             }
 
@@ -109,6 +137,11 @@ namespace AsciiImportExport
             return sb.ToString().TrimEnd('\r', '\n');
         }
 
+        /// <summary>
+        /// Parses a string to a generic List of type <see cref="T"/>
+        /// </summary>
+        /// <param name="fileContent">The input string</param>
+        /// <returns></returns>
         public List<T> Import(string fileContent)
         {
             string[] lines = fileContent.Split(new[] {"\r\n", "\n"}, StringSplitOptions.None);
@@ -116,6 +149,11 @@ namespace AsciiImportExport
             return Import(lines);
         }
 
+        /// <summary>
+        /// Parses an enumerable list of strings to a generic List of type <see cref="T"/>
+        /// </summary>
+        /// <param name="lines">The rows of a document</param>
+        /// <returns></returns>
         public List<T> Import(IEnumerable<string> lines)
         {
             var result = new List<T>();
@@ -170,7 +208,7 @@ namespace AsciiImportExport
             }
             catch (ImportException ex)
             {
-                throw new ImportException("Error during import of column '" + ex.ColumnName + "' at line " + (zeile + 1) + ": '" + line + "'", ex);
+                throw new ImportException(ex.ColumnName, ex.Value, ex, "Error during parsing of column '" + ex.ColumnName + "' at line " + (zeile + 1) + ": '" + line + "' column value '" + ex.Value + "'");
             }
 
             return result;

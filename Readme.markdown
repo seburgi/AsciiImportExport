@@ -1,4 +1,4 @@
-AsciiImportExport v0.2
+AsciiImportExport v0.3
 ======================================================================
 
 ## Overview
@@ -7,11 +7,12 @@ A .NET library providing fast and easy de/serialization of arbitrary column-base
 ## Changelog
   * v0.1 - Initial release
   * v0.2 - Added DocumentColumnBuilder for better separation of concerns
+  * v0.3 - Added comments, cleaned method names
 
 ## Example
 
 ### POCO
-    internal class Poco
+    internal class Person
     {
         public DateTime Birthday { get; set; }
         public Gender Gender { get; set; }
@@ -30,13 +31,13 @@ A .NET library providing fast and easy de/serialization of arbitrary column-base
 ### Data
 This is our list:
 	
-    public List<Poco> GetPocoList()
+    public List<Person> GetPersonList()
     {
-        return new List<Poco>
+        return new List<Person>
                     {
-                        new Poco {Birthday = new DateTime(1983, 1, 29), Gender = Gender.Male, Height = 175.5, Name = "Peter", Memo = "Nice guy!"},
-                        new Poco {Birthday = new DateTime(1931, 10, 5), Gender = Gender.Male, Height = 173.45, Name = "Paul", Memo = "Sometimes a litte grumpy."},
-                        new Poco {Birthday = new DateTime(1980, 4, 12), Gender = Gender.Female, Height = 1193, Name = "Mary", Memo = "Tall!"},
+                        new Person {Birthday = new DateTime(1983, 1, 29), Gender = Gender.Male, Height = 175.5, Name = "Peter", Memo = "Nice guy!"},
+                        new Person {Birthday = new DateTime(1931, 10, 5), Gender = Gender.Male, Height = 173.45, Name = "Paul", Memo = "Sometimes a litte grumpy."},
+                        new Person {Birthday = new DateTime(1980, 4, 12), Gender = Gender.Female, Height = 1193, Name = "Mary", Memo = "Tall!"},
                     };
     }
 
@@ -45,13 +46,12 @@ This is our list:
 
 Now we define how the data will be exported / imported:
 
-    private static DocumentFormatDefinition<Poco> GetDefinition()
+    private static DocumentFormatDefinition<Person> GetDefinition()
     {
-        return new DocumentFormatDefinitionBuilder<Poco>()
+        return new DocumentFormatDefinitionBuilder<Person>()
             .SetColumnSeparator("\t")
             .SetCommentString("!")
             .SetAutosizeColumns(true)
-            .SetExportHeaderLine(false)
             .AddColumn(x => x.Name)
             .AddColumn(x => x.Gender, b => b.SetImportFunc(StringToGender).SetExportFunc(GenderToString))
             .AddColumn(x => x.Height, "0.00", b => b.SetAlignment(ColumnAlignment.Right))
@@ -91,7 +91,6 @@ That is what we defined:
 * seperate columns by Tabs
 * lines starting with '!' are recognized as comments
 * automatically determine the width of a column
-* do not insert a header line
 * add new column for property Name
 * add new column for property Gender and use special import / export methods
 * add new column for property Height. Align the data of the column to the right and use a double precision of 2.
@@ -103,7 +102,7 @@ That is what we defined:
 
 And now we can export the list:
 
-	public string Export(List<Poco> list)
+	public string Export(List<Person> list)
 	{
 	    var definition = GetDefinition();
 	    return definition.Export(list);
@@ -119,7 +118,7 @@ Which will yield:
 
 No surprises here!
 
-	public List<Poco> Import(string data)
+	public List<Person> Import(string data)
 	{
 	    var definition = GetDefinition();
 	    return definition.Import(data);

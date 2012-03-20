@@ -50,7 +50,7 @@ namespace AsciiImportExport
 
                 for (int j = 0; j < _columns.Count; j++)
                 {
-                    exportResults[i][j] = _columns[j].Format(data[i]);
+                    exportResults[i][j] = _columns[j].Serialize(data[i]);
                 }
             }
 
@@ -162,7 +162,7 @@ namespace AsciiImportExport
                                 line = nextColumnIndex <= line.Length ? line.Substring(nextColumnIndex) : "";
                             }
                         }
-                        column.SetValue(item, value.Trim());
+                        column.Parse(item, value.Trim());
                     }
 
                     result.Add(item);

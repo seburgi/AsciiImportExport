@@ -16,7 +16,7 @@ namespace AsciiImportExport.Tests
             IDocumentColumn<SimplePoco> column = GetInt32PropColumn();
 
             var poco = new SimplePoco {Int32Prop = Int32PropValue};
-            string result = column.Format(poco);
+            string result = column.Serialize(poco);
 
             Assert.AreEqual(Int32PropValue.ToString(), result);
         }
@@ -27,7 +27,7 @@ namespace AsciiImportExport.Tests
             IDocumentColumn<SimplePoco> column = GetStringPropColumn();
 
             var poco = new SimplePoco {StringProp = StringPropValue};
-            string result = column.Format(poco);
+            string result = column.Serialize(poco);
 
             Assert.AreEqual(StringPropValue, result);
         }
@@ -38,7 +38,7 @@ namespace AsciiImportExport.Tests
             IDocumentColumn<SimplePoco> column = GetInt32PropColumn();
 
             var poco = new SimplePoco();
-            column.SetValue(poco, Int32PropValue.ToString());
+            column.Parse(poco, Int32PropValue.ToString());
 
             Assert.AreEqual(Int32PropValue, poco.Int32Prop);
         }
@@ -49,7 +49,7 @@ namespace AsciiImportExport.Tests
             IDocumentColumn<SimplePoco> column = GetStringPropColumn();
 
             var poco = new SimplePoco();
-            column.SetValue(poco, StringPropValue);
+            column.Parse(poco, StringPropValue);
 
             Assert.AreEqual(StringPropValue, poco.StringProp);
         }

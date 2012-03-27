@@ -11,10 +11,26 @@ namespace AsciiImportExport.Tests
     internal class DocumentColumnTests
     {
         [Test]
-        public void ExportInt32Prop()
+        public void CheckInt32PropDefaultHeader()
         {
             IDocumentColumn<SimplePoco> column = GetInt32PropColumn();
 
+            Assert.AreEqual("Int32Prop", column.FormattedHeader);
+        }
+
+        [Test]
+        public void CheckStringPropHeader()
+        {
+            IDocumentColumn<SimplePoco> column = GetStringPropColumn();
+
+            Assert.AreEqual("IAmAStringProperty", column.FormattedHeader);
+        }
+
+
+        [Test]
+        public void ExportInt32Prop()
+        {
+            IDocumentColumn<SimplePoco> column = GetInt32PropColumn();
             var poco = new SimplePoco {Int32Prop = Int32PropValue};
             string result = column.Serialize(poco);
 
@@ -62,7 +78,7 @@ namespace AsciiImportExport.Tests
 
         private static IDocumentColumn<SimplePoco> GetStringPropColumn()
         {
-            var column = new DocumentColumn<SimplePoco, string>(x => x.StringProp, null, null, -1, ColumnAlignment.Left, null, null, null, null, null, null);
+            var column = new DocumentColumn<SimplePoco, string>(x => x.StringProp, "IAmAStringProperty", null, -1, ColumnAlignment.Left, null, null, null, null, null, null);
             return column;
         }
 

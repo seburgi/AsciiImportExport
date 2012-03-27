@@ -21,7 +21,7 @@ namespace AsciiImportExport
         private readonly string _dateTimeStringFormat;
         private readonly object _defaultValue;
         private readonly string _doubleStringFormat;
-        private readonly bool _dummyColumn;
+        private readonly bool _isDummyColumn;
         private Func<TRet, string> _exportFunc;
         private readonly Func<T, TRet> _getValueFunc;
         private readonly string _header;
@@ -55,19 +55,21 @@ namespace AsciiImportExport
             _booleanFalse = booleanFalse;
             _importFunc = importFunc;
             _exportFunc = exportFunc;
+            
             _getValueFunc = expression.Compile();
 
             MemberExpression me = ReflectionHelper.GetMemberExpression(expression);
             if (me != null)
             {
-                _header = me.Member.Name;
+                _header = _header ?? me.Member.Name;
                 var propertyInfo = me.Member as PropertyInfo;
                 _type = propertyInfo.PropertyType;
                 _setValueFunc = GetValueSetter(propertyInfo);
             }
-            else _dummyColumn = true;
-
-            ColumnWidth = -1;
+            else
+            {
+                _isDummyColumn = true;
+            }
         }
 
         /// <summary>
@@ -107,7 +109,7 @@ namespace AsciiImportExport
         /// <param name="value">the input string</param>
         public void Parse(T item, string value)
         {
-            if (_dummyColumn) return;
+            if (_isDummyColumn) return;
             if (value == null) return;
 
             if (_importFunc == null)
@@ -139,21 +141,21 @@ namespace AsciiImportExport
         {
             if (item == null) throw new ArgumentNullException("item");
 
-            object columnValue = _getValueFunc.Invoke(item);
+            object value = _getValueFunc.Invoke(item);
 
-            if (columnValue == null && _defaultValue != null) columnValue = _defaultValue;
+            if (value == null && _defaultValue != null) value = _defaultValue;
 
             if (_exportFunc == null)
             {
-                if (_type == typeof (String)) _exportFunc = value => Serialize(value as string);
-                else if (_type == typeof (Int32) || _type == typeof (Int32?)) _exportFunc = value => Serialize(value as int?);
-                else if (_type == typeof (Double) || _type == typeof (Double?)) _exportFunc = value => Serialize(value as double?);
-                else if (_type == typeof (Boolean) || _type == typeof (Boolean?)) _exportFunc = value => Serialize(value as Boolean?);
-                else if (_type == typeof (DateTime) || _type == typeof (DateTime?)) _exportFunc = value => Serialize(value as DateTime?);
+                if (_type == typeof (String)) _exportFunc = v => Serialize(v as string);
+                else if (_type == typeof (Int32) || _type == typeof (Int32?)) _exportFunc = v => Serialize(v as int?);
+                else if (_type == typeof (Double) || _type == typeof (Double?)) _exportFunc = v => Serialize(v as double?);
+                else if (_type == typeof (Boolean) || _type == typeof (Boolean?)) _exportFunc = v => Serialize(v as Boolean?);
+                else if (_type == typeof (DateTime) || _type == typeof (DateTime?)) _exportFunc = v => Serialize(v as DateTime?);
                 else throw new InvalidOperationException("the column type '" + _type.FullName + "' is unknown");
             }
 
-            return _exportFunc((TRet) columnValue);
+            return _exportFunc((TRet) value);
         }
 
         /// <summary>
@@ -162,7 +164,7 @@ namespace AsciiImportExport
         /// <returns></returns>
         public override string ToString()
         {
-            return _dummyColumn ? "DummyColumn" : ((_header ?? "")) + " [" + _type + "]";
+            return _isDummyColumn ? "DummyColumn" : ((_header ?? "")) + " [" + _type + "]";
         }
 
         /// <summary>

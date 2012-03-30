@@ -19,6 +19,7 @@ namespace AsciiImportExport
         private readonly List<IDocumentColumn<T>> _columns;
         private readonly bool _exportHeaderLine;
         private readonly Func<T> _instantiator;
+        private readonly bool _checkForComments;
 
         /// <summary>
         /// The constructor
@@ -34,7 +35,9 @@ namespace AsciiImportExport
             _columns = columns;
 
             ColumnSeparator = columnSeparator;
-            CommentString = commentString;
+
+            CommentString = commentString ?? "";
+            _checkForComments = CommentString.Length > 0;
 
             _autosizeColumns = autosizeColumns;
             _exportHeaderLine = exportHeaderLine;
@@ -163,14 +166,19 @@ namespace AsciiImportExport
             try
             {
                 int count = lines.Count();
-                IDocumentColumn<T> lastColumn = _columns.Last();
 
                 for (; zeile < count; zeile++)
                 {
                     line = lines.ElementAt(zeile);
 
+                    if (_checkForComments)
+                    {
+                        int commentPos = line.IndexOf(CommentString, StringComparison.InvariantCulture);
+                        if (commentPos >= 0)
+                            line = line.Substring(0, commentPos);
+                    }
+
                     if (String.IsNullOrEmpty(line.Trim())) continue;
-                    if (line.StartsWith(CommentString)) continue;
 
                     T item = _instantiator();
 
@@ -186,21 +194,20 @@ namespace AsciiImportExport
                         }
                         else
                         {
-                            if (column == lastColumn)
+                            line = line.Trim();
+                            int indexOfSeparator = line.IndexOf(ColumnSeparator);
+                            if (indexOfSeparator >= 0)
                             {
-                                value = line.TrimEnd(new[] {" ", ColumnSeparator});
-                            }
-                            else
-                            {
-                                line = line.TrimStart();
-                                int indexOfSeparator = line.IndexOf(ColumnSeparator);
-                                if (indexOfSeparator < 0) break;
-                                value = line.Substring(0, indexOfSeparator);
+                                value = line.Substring(0, indexOfSeparator).Trim();
                                 int nextColumnIndex = indexOfSeparator + ColumnSeparator.Length;
                                 line = nextColumnIndex <= line.Length ? line.Substring(nextColumnIndex) : "";
+                            } else
+                            {
+                                value = line;
+                                line = "";
                             }
                         }
-                        column.Parse(item, value.Trim());
+                        column.Parse(item, value);
                     }
 
                     result.Add(item);

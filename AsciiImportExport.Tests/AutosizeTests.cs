@@ -25,37 +25,19 @@ namespace AsciiImportExport.Tests
 
 
         [Test]
-        public void SpaceExport()
-        {
-            Export(GetDefinition_With_Space_As_ColumnSeparator(), "Data\\space.txt");
-        }
-
-        [Test]
-        public void SpaceExportImportExport()
-        {
-            ExportImportExport(GetDefinition_With_Space_As_ColumnSeparator());
-        }
-
-        [Test]
-        public void SpaceImport()
-        {
-            Import(GetDefinition_With_Space_As_ColumnSeparator(), "Data\\space.txt");
-        }
-
-        [Test]
-        public void TabExport()
+        public void Export()
         {
             Export(GetDefinition_With_Tab_As_ColumnSeparator(), "Data\\tab.txt");
         }
 
         [Test]
-        public void TabExportImportExport()
+        public void ExportImportExport()
         {
             ExportImportExport(GetDefinition_With_Tab_As_ColumnSeparator());
         }
 
         [Test]
-        public void TabImport()
+        public void Import()
         {
             Import(GetDefinition_With_Tab_As_ColumnSeparator(), "Data\\tab.txt");
         }
@@ -88,26 +70,11 @@ namespace AsciiImportExport.Tests
             }
         }
 
-        private static DocumentFormatDefinition<Person> GetDefinition_With_Space_As_ColumnSeparator()
-        {
-            return new DocumentFormatDefinitionBuilder<Person>()
-                .SetColumnSeparator(" ")
-                .SetCommentString("!")
-                .SetAutosizeColumns(true)
-                .SetExportHeaderLine(false)
-                .AddColumn(x => x.Name)
-                .AddColumn(x => x.Gender, b => b.SetImportFunc(StringToGender).SetExportFunc(GenderToString))
-                .AddColumn(x => x.Height, "0.00", b => b.SetAlignment(ColumnAlignment.Right))
-                .AddColumn(x => x.Birthday, "yyyyMMdd")
-                .AddColumn(x => x.Memo)
-                .Build();
-        }
-
         private static DocumentFormatDefinition<Person> GetDefinition_With_Tab_As_ColumnSeparator()
         {
             return new DocumentFormatDefinitionBuilder<Person>()
                 .SetColumnSeparator("\t")
-                .SetCommentString("!")
+                .SetCommentString("#")
                 .SetAutosizeColumns(true)
                 .SetExportHeaderLine(false)
                 .AddColumn(x => x.Name)

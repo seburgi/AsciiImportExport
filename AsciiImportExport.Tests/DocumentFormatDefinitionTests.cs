@@ -71,7 +71,7 @@ namespace AsciiImportExport.Tests
         {
             return new DocumentFormatDefinitionBuilder<SimplePoco>()
                 .SetColumnSeparator("\t")
-                .SetCommentString("!")
+                .SetCommentString("#")
                 .SetAutosizeColumns(false)
                 .SetExportHeaderLine(false)
                 .AddColumn(x => x.StringProp)

@@ -1,4 +1,4 @@
-AsciiImportExport v0.4
+AsciiImportExport v0.5
 ======================================================================
 
 ## Overview
@@ -9,6 +9,7 @@ A .NET library providing fast and easy de/serialization of arbitrary column-base
   * v0.2 - Added DocumentColumnBuilder for better separation of concerns
   * v0.3 - Added comments, cleaned method names
   * v0.4 - Resolved some initialization problems in DocumentColumn
+  * v0.5 - Cleaned up column handling, fixed problems with comments, changed target framework to .NET 3.5 Client Profile
 
 ## Example
 
@@ -51,7 +52,7 @@ Now we define how the data will be exported / imported:
     {
         return new DocumentFormatDefinitionBuilder<Person>()
             .SetColumnSeparator("\t")
-            .SetCommentString("!")
+            .SetCommentString("#")
             .SetAutosizeColumns(true)
             .AddColumn(x => x.Name)
             .AddColumn(x => x.Gender, b => b.SetImportFunc(StringToGender).SetExportFunc(GenderToString))
@@ -90,7 +91,7 @@ Now we define how the data will be exported / imported:
 That is what we defined:
 
 * seperate columns by Tabs
-* lines starting with '!' are recognized as comments
+* lines starting with '#' are recognized as comments
 * automatically determine the width of a column
 * add new column for property Name
 * add new column for property Gender and use special import / export methods

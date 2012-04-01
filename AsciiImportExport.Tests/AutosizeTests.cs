@@ -13,17 +13,6 @@ namespace AsciiImportExport.Tests
     [TestFixture]
     internal class AutosizeTests
     {
-        public List<Person> GetPocoList()
-        {
-            return new List<Person>
-                       {
-                           new Person {Birthday = new DateTime(1983, 1, 29), Gender = Gender.Male, Height = 175.5, Name = "Peter", Memo = "Nice guy!"},
-                           new Person {Birthday = new DateTime(1931, 10, 5), Gender = Gender.Male, Height = 173.45, Name = "Paul", Memo = "Sometimes a litte grumpy."},
-                           new Person {Birthday = new DateTime(1980, 4, 12), Gender = Gender.Female, Height = 1193, Name = "Mary", Memo = "Tall!"},
-                       };
-        }
-
-
         [Test]
         public void Export()
         {
@@ -34,6 +23,16 @@ namespace AsciiImportExport.Tests
         public void ExportImportExport()
         {
             ExportImportExport(GetDefinition_With_Tab_As_ColumnSeparator());
+        }
+
+        public List<Person> GetPocoList()
+        {
+            return new List<Person>
+                       {
+                           new Person {Birthday = new DateTime(1983, 1, 29), Gender = Gender.Male, Height = 175.5, Name = "Peter", Memo = "Nice guy!"},
+                           new Person {Birthday = new DateTime(1931, 10, 5), Gender = Gender.Male, Height = 173.45, Name = "Paul", Memo = "Sometimes a litte grumpy."},
+                           new Person {Birthday = new DateTime(1980, 4, 12), Gender = Gender.Female, Height = 1193, Name = "Mary", Memo = "Tall!"},
+                       };
         }
 
         [Test]

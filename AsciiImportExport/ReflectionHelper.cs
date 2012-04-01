@@ -18,12 +18,12 @@ namespace AsciiImportExport
             {
                 return null;
             }
-            
+
             if (expression.Body is MemberExpression)
             {
                 return (MemberExpression) expression.Body;
             }
-            
+
             if (expression.Body is UnaryExpression)
             {
                 Expression operand = ((UnaryExpression) expression.Body).Operand;
@@ -36,7 +36,7 @@ namespace AsciiImportExport
                     return ((MethodCallExpression) operand).Object as MemberExpression;
                 }
             }
-            
+
             return null;
         }
     }

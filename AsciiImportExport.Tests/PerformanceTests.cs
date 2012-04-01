@@ -76,6 +76,7 @@ namespace AsciiImportExport.Tests
                 .SetCommentString("#")
                 .SetAutosizeColumns(true)
                 .SetExportHeaderLine(false)
+                .SetInstantiator(() => new Measurement())
                 .AddColumn(x => x.Name)
                 .AddColumn(x => x.DateTime)
                 .AddColumn(x => x.X, b => b.SetAlignment(ColumnAlignment.Right))

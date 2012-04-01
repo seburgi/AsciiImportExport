@@ -113,9 +113,9 @@ namespace AsciiImportExport
         /// </summary>
         /// <param name="exportValue">The value that will be exported (Default = empty string)</param>
         /// <returns></returns>
-        public DocumentFormatDefinitionBuilder<T> AddDummyColumn(string exportValue = "")
+        public DocumentFormatDefinitionBuilder<T> AddDummyColumn(string exportValue = null, int columnWidth = -1)
         {
-            return AddColumn(x => "", builder => builder.SetExportFunc(x => exportValue));
+            return AddColumn(x => "", builder => builder.SetExportFunc(x => exportValue).SetColumnWidth(columnWidth));
         }
 
         /// <summary>

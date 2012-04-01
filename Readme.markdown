@@ -1,4 +1,4 @@
-AsciiImportExport v0.5
+AsciiImportExport v0.6
 ======================================================================
 
 ## Overview
@@ -10,6 +10,7 @@ A .NET library providing fast and easy de/serialization of arbitrary column-base
   * v0.3 - Added comments, cleaned method names
   * v0.4 - Resolved some initialization problems in DocumentColumn
   * v0.5 - Cleaned up column handling, fixed problems with comments, changed target framework to .NET 3.5 Client Profile
+  * v0.6 - Fixed some smaller bugs, minor restructuring of public surface
 
 ## Example
 

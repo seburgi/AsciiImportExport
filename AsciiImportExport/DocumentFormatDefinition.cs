@@ -16,10 +16,10 @@ namespace AsciiImportExport
     public class DocumentFormatDefinition<T>
     {
         private readonly bool _autosizeColumns;
+        private readonly bool _checkForComments;
         private readonly List<IDocumentColumn<T>> _columns;
         private readonly bool _exportHeaderLine;
         private readonly Func<T> _instantiator;
-        private readonly bool _checkForComments;
 
         /// <summary>
         /// The constructor
@@ -73,7 +73,7 @@ namespace AsciiImportExport
             if (itemCount == 0) return "";
 
             var exportResults = new string[itemCount][];
-            var columnWidths = new List<int>();
+            List<int> columnWidths = _columns.Select(x => x.ColumnWidth).ToList();
 
             for (int i = 0; i < itemCount; i++)
             {
@@ -90,7 +90,11 @@ namespace AsciiImportExport
                 for (int i = 0; i < _columns.Count; i++)
                 {
                     int maxLength = exportResults.Select(t => t[i].Length).Max();
-                    columnWidths.Add(maxLength);
+
+                    if (_exportHeaderLine)
+                        maxLength = Math.Max(maxLength, _columns[i].Header.Length);
+
+                    columnWidths[i] = Math.Max(columnWidths[i], maxLength);
                 }
             }
 
@@ -100,15 +104,13 @@ namespace AsciiImportExport
             if (_exportHeaderLine)
             {
                 var lineSb = new StringBuilder();
-                foreach (var column in _columns)
+
+                for (int i = 0; i < _columns.Count; i++)
                 {
-                    lineSb.Append(column.FormattedHeader);
+                    lineSb.Append(_columns[i].GetFormattedHeader(columnWidths[i]));
                     lineSb.Append(ColumnSeparator);
                 }
                 sb.AppendLine(lineSb.ToString().TrimEnd(ColumnSeparator.ToArray()));
-
-                // Adjust width of first column due to additional length of comment string
-                if (_autosizeColumns) columnWidths[0] = Math.Max(columnWidths[0], _columns[0].FormattedHeader.Length + CommentString.Length);
             }
 
             for (int i = 0; i < exportResults.Length; i++)
@@ -159,17 +161,16 @@ namespace AsciiImportExport
         /// <returns></returns>
         public List<T> Import(IEnumerable<string> lines)
         {
-            var result = new List<T>();
+            int lineNr = 0;
 
-            int zeile = 0;
-            string line = null;
             try
             {
                 int count = lines.Count();
+                var result = new List<T>();
 
-                for (; zeile < count; zeile++)
+                for (lineNr = 0; lineNr < count; lineNr++)
                 {
-                    line = lines.ElementAt(zeile);
+                    string line = lines.ElementAt(lineNr);
 
                     if (_checkForComments)
                     {
@@ -178,13 +179,14 @@ namespace AsciiImportExport
                             line = line.Substring(0, commentPos);
                     }
 
-                    if (String.IsNullOrEmpty(line.Trim())) continue;
+                    if (line.Trim().Length == 0) continue;
 
                     T item = _instantiator();
 
                     foreach (var column in _columns)
                     {
                         if (line.Trim().Length == 0) break;
+
                         string value;
                         if (column.ColumnWidth > 0)
                         {
@@ -194,31 +196,32 @@ namespace AsciiImportExport
                         }
                         else
                         {
-                            line = line.Trim();
+                            line = line.TrimStart(new[] {' '});
                             int indexOfSeparator = line.IndexOf(ColumnSeparator);
                             if (indexOfSeparator >= 0)
                             {
-                                value = line.Substring(0, indexOfSeparator).Trim();
+                                value = line.Substring(0, indexOfSeparator);
                                 int nextColumnIndex = indexOfSeparator + ColumnSeparator.Length;
                                 line = nextColumnIndex <= line.Length ? line.Substring(nextColumnIndex) : "";
-                            } else
+                            }
+                            else
                             {
                                 value = line;
                                 line = "";
                             }
                         }
-                        column.Parse(item, value);
+                        column.Parse(item, value.Trim());
                     }
 
                     result.Add(item);
                 }
+
+                return result;
             }
             catch (ImportException ex)
             {
-                throw new ImportException(ex.ColumnName, ex.Value, ex, "Error during parsing of column '" + ex.ColumnName + "' at line " + (zeile + 1) + ": '" + line + "' column value '" + ex.Value + "'");
+                throw new ImportException(ex.ColumnName, ex.Value, ex, "Error during parsing of column '" + ex.ColumnName + "' at line " + (lineNr + 1) + ": column value '" + ex.Value + "'");
             }
-
-            return result;
         }
     }
 }

@@ -15,7 +15,7 @@ namespace AsciiImportExport.Tests
         {
             IDocumentColumn<SimplePoco> column = GetInt32PropColumn();
 
-            Assert.AreEqual("Int32Prop", column.FormattedHeader);
+            Assert.AreEqual("Int32Prop", column.GetFormattedHeader(-1));
         }
 
         [Test]
@@ -23,7 +23,7 @@ namespace AsciiImportExport.Tests
         {
             IDocumentColumn<SimplePoco> column = GetStringPropColumn();
 
-            Assert.AreEqual("IAmAStringProperty", column.FormattedHeader);
+            Assert.AreEqual("IAmAStringProperty", column.GetFormattedHeader(-1));
         }
 
 

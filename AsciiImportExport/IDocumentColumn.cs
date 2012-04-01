@@ -17,9 +17,14 @@ namespace AsciiImportExport
         int ColumnWidth { get; }
 
         /// <summary>
-        /// The formatted header of the column (correctly padded and aligned)
+        /// The header of the column
         /// </summary>
-        string FormattedHeader { get; }
+        string Header { get; }
+
+        /// <summary>
+        /// Format the header of the column correctly padded and aligned
+        /// </summary>
+        string GetFormattedHeader(int columnWidth);
 
         /// <summary>
         /// Parses the input string to a value of type TRet and assigns the value to the property of the item object

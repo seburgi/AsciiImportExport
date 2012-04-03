@@ -29,9 +29,9 @@ namespace AsciiImportExport.Tests
         {
             return new List<Person>
                        {
-                           new Person {Birthday = new DateTime(1983, 1, 29), Gender = Gender.Male, Height = 175.5, Name = "Peter", Memo = "Nice guy!"},
-                           new Person {Birthday = new DateTime(1931, 10, 5), Gender = Gender.Male, Height = 173.45, Name = "Paul", Memo = "Sometimes a litte grumpy."},
-                           new Person {Birthday = new DateTime(1980, 4, 12), Gender = Gender.Female, Height = 1193, Name = "Mary", Memo = "Tall!"},
+                           new Person {Birthday = new DateTime(1983, 1, 29), Gender = Gender.Male, Height = 175.5f, Name = "Peter", Memo = "Nice guy!"},
+                           new Person {Birthday = new DateTime(1931, 10, 5), Gender = Gender.Male, Height = 173.45f, Name = "Paul", Memo = "Sometimes a litte grumpy."},
+                           new Person {Birthday = new DateTime(1980, 4, 12), Gender = Gender.Female, Height = 1193f, Name = "Mary", Memo = "Tall!"},
                        };
         }
 
@@ -71,10 +71,8 @@ namespace AsciiImportExport.Tests
 
         private static DocumentFormatDefinition<Person> GetDefinition_With_Tab_As_ColumnSeparator()
         {
-            return new DocumentFormatDefinitionBuilder<Person>()
-                .SetColumnSeparator("\t")
+            return new DocumentFormatDefinitionBuilder<Person>("\t", true)
                 .SetCommentString("#")
-                .SetAutosizeColumns(true)
                 .SetExportHeaderLine(false)
                 .AddColumn(x => x.Name)
                 .AddColumn(x => x.Gender, b => b.SetImportFunc(StringToGender).SetExportFunc(GenderToString))
@@ -93,7 +91,7 @@ namespace AsciiImportExport.Tests
             {
                 Assert.AreEqual(expected[i].Birthday, result[i].Birthday);
                 Assert.AreEqual(expected[i].Gender, result[i].Gender);
-                Assert.AreEqual(expected[i].Height, result[i].Height);
+                Assert.AreEqual(expected[i].Height, result[i].Height, 0.001);
                 Assert.AreEqual(expected[i].Name, result[i].Name);
                 Assert.AreEqual(expected[i].Memo, result[i].Memo);
             }

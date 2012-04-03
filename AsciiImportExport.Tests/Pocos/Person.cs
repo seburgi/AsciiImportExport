@@ -10,7 +10,7 @@ namespace AsciiImportExport.Tests.Pocos
     {
         public DateTime Birthday { get; set; }
         public Gender Gender { get; set; }
-        public double Height { get; set; }
+        public float Height { get; set; }
         public string Memo { get; set; }
         public string Name { get; set; }
     }

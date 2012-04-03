@@ -16,7 +16,7 @@ namespace AsciiImportExport.Tests
         [Test]
         public void Test()
         {
-            const int count = 100000;
+            const int count = 1000000;
             List<Measurement> list = CreateList(count);
             DocumentFormatDefinition<Measurement> definition = GetDefinition();
 
@@ -71,14 +71,12 @@ namespace AsciiImportExport.Tests
 
         private DocumentFormatDefinition<Measurement> GetDefinition()
         {
-            return new DocumentFormatDefinitionBuilder<Measurement>()
-                .SetColumnSeparator("\t")
+            return new DocumentFormatDefinitionBuilder<Measurement>("\t", true)
                 .SetCommentString("#")
-                .SetAutosizeColumns(true)
                 .SetExportHeaderLine(false)
                 .SetInstantiator(() => new Measurement())
                 .AddColumn(x => x.Name)
-                .AddColumn(x => x.DateTime)
+                .AddColumn(x => x.DateTime, "dd.MM.yyyy HH:mm:ss")
                 .AddColumn(x => x.X, b => b.SetAlignment(ColumnAlignment.Right))
                 .AddColumn(x => x.Y, b => b.SetAlignment(ColumnAlignment.Right))
                 .AddColumn(x => x.Z, b => b.SetAlignment(ColumnAlignment.Right))

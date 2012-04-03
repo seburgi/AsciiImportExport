@@ -125,10 +125,8 @@ namespace AsciiImportExport.Tests
 
         private DocumentFormatDefinition<Location> GetDefinition(string commentString)
         {
-            return new DocumentFormatDefinitionBuilder<Location>()
-                .SetColumnSeparator(" ")
+            return new DocumentFormatDefinitionBuilder<Location>(" ", false)
                 .SetCommentString(commentString)
-                .SetAutosizeColumns(false)
                 .AddColumn(x => x.Name, b => b.SetColumnWidth(6))
                 .AddColumn(x => x.X, "0.00", b => b.SetColumnWidth(6))
                 .AddColumn(x => x.Y, "0.00", b => b.SetColumnWidth(7))

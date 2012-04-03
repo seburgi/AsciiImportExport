@@ -22,9 +22,12 @@ namespace AsciiImportExport
         string Header { get; }
 
         /// <summary>
-        /// Format the header of the column correctly padded and aligned
+        /// Returns the input string correctly padded to the specified length
         /// </summary>
-        string GetFormattedHeader(int columnWidth);
+        /// <param name="value">The input string</param>
+        /// <param name="columnWidth">The targeted length of the serialized string</param>
+        /// <returns></returns>
+        string Format(string value, int columnWidth);
 
         /// <summary>
         /// Parses the input string to a value of type TRet and assigns the value to the property of the item object

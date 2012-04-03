@@ -15,7 +15,7 @@ namespace AsciiImportExport.Tests
         {
             IDocumentColumn<SimplePoco> column = GetInt32PropColumn();
 
-            Assert.AreEqual("Int32Prop", column.GetFormattedHeader(-1));
+            Assert.AreEqual("Int32Prop", column.Header);
         }
 
         [Test]
@@ -23,7 +23,7 @@ namespace AsciiImportExport.Tests
         {
             IDocumentColumn<SimplePoco> column = GetStringPropColumn();
 
-            Assert.AreEqual("IAmAStringProperty", column.GetFormattedHeader(-1));
+            Assert.AreEqual("IAmAStringProperty", column.Header);
         }
 
 
@@ -72,13 +72,13 @@ namespace AsciiImportExport.Tests
 
         private static IDocumentColumn<SimplePoco> GetInt32PropColumn()
         {
-            var column = new DocumentColumn<SimplePoco, int>(x => x.Int32Prop, null, 0, -1, ColumnAlignment.Left, "0.0000", null, null, null, null, null);
+            var column = new DocumentColumn<SimplePoco, int>(x => x.Int32Prop, null, 0, -1, ColumnAlignment.Left, "0", null, null, null, null);
             return column;
         }
 
         private static IDocumentColumn<SimplePoco> GetStringPropColumn()
         {
-            var column = new DocumentColumn<SimplePoco, string>(x => x.StringProp, "IAmAStringProperty", null, -1, ColumnAlignment.Left, null, null, null, null, null, null);
+            var column = new DocumentColumn<SimplePoco, string>(x => x.StringProp, "IAmAStringProperty", null, -1, ColumnAlignment.Left, null, null, null, null, null);
             return column;
         }
 

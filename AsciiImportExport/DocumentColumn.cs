@@ -1,7 +1,6 @@
 ﻿#region using directives
 
 using System;
-using System.Globalization;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -18,15 +17,14 @@ namespace AsciiImportExport
     {
         private readonly string _booleanFalse;
         private readonly string _booleanTrue;
-        private readonly string _dateTimeStringFormat;
         private readonly object _defaultValue;
-        private readonly string _doubleStringFormat;
         private Func<TRet, string> _exportFunc;
         private readonly Func<T, TRet> _getValueFunc;
         private readonly string _header;
         private Func<string, TRet> _importFunc;
         private readonly bool _isDummyColumn;
         private readonly Action<T, TRet> _setValueFunc;
+        private readonly string _stringFormat;
         private readonly Type _type;
 
         /// <summary>
@@ -37,24 +35,22 @@ namespace AsciiImportExport
         /// <param name="defaultValue">The default value of the column.</param>
         /// <param name="columnWidth">The width of the column. Set -1 for auto width</param>
         /// <param name="alignment">The alignment of the data in the column.</param>
-        /// <param name="doubleStringFormat">This is the string format used when exporting numerical data.</param>
-        /// <param name="dateTimeStringFormat">This is the string format used when importing/exporting DateTime.</param>
+        /// <param name="stringFormat">This is the string format used when exporting numerical data.</param>
         /// <param name="booleanTrue">This string is used to represent the boolean value 'True'</param>
         /// <param name="booleanFalse">This string is used to represent the boolean value 'False'</param>
         /// <param name="importFunc">Custom import function that converts a string to a value of type TRet</param>
         /// <param name="exportFunc">Custom export function that converts a value of type TRet to a string</param>
-        public DocumentColumn(Expression<Func<T, TRet>> expression, string header, TRet defaultValue, int columnWidth, ColumnAlignment alignment, string doubleStringFormat, string dateTimeStringFormat, string booleanTrue, string booleanFalse, Func<string, TRet> importFunc, Func<TRet, string> exportFunc)
+        public DocumentColumn(Expression<Func<T, TRet>> expression, string header, TRet defaultValue, int columnWidth, ColumnAlignment alignment, string stringFormat, string booleanTrue, string booleanFalse, Func<string, TRet> importFunc, Func<TRet, string> exportFunc)
         {
             _header = header;
             _defaultValue = defaultValue;
-            _doubleStringFormat = doubleStringFormat;
+            _stringFormat = stringFormat;
             ColumnWidth = columnWidth;
             Alignment = alignment;
-            _dateTimeStringFormat = dateTimeStringFormat;
             _booleanTrue = booleanTrue;
             _booleanFalse = booleanFalse;
             _importFunc = importFunc;
-            _exportFunc = exportFunc != null ? v => Serialize(exportFunc(v)) : (Func<TRet, string>) null;
+            _exportFunc = exportFunc;
 
             _getValueFunc = expression.Compile();
 
@@ -91,12 +87,15 @@ namespace AsciiImportExport
         }
 
         /// <summary>
-        /// Format the header of the column correctly padded and aligned
+        /// Returns the input string correctly padded to the specified length
         /// </summary>
-        public string GetFormattedHeader(int columnWidth)
+        /// <param name="value">The input string</param>
+        /// <param name="columnWidth">The targeted length of the serialized string</param>
+        public string Format(string value, int columnWidth)
         {
-            string header = Serialize(_header, columnWidth);
-            return header;
+            int width = columnWidth >= 0 ? columnWidth : 0;
+
+            return (Alignment == ColumnAlignment.Right ? value.PadLeft(width) : value.PadRight(width));
         }
 
         /// <summary>
@@ -107,16 +106,11 @@ namespace AsciiImportExport
         public void Parse(T item, string value)
         {
             if (_isDummyColumn) return;
-            if (value == null) return;
+            if (String.IsNullOrEmpty(value)) return;
 
             if (_importFunc == null)
             {
-                if (_type == typeof (String)) _importFunc = s => (TRet) (object) s;
-                else if (_type == typeof (int) || _type == typeof (int?)) _importFunc = s => (TRet) (object) ParseInteger(s);
-                else if (_type == typeof (double) || _type == typeof (double?)) _importFunc = s => (TRet) (object) ParseDouble(s);
-                else if (_type == typeof (DateTime) || _type == typeof (DateTime?)) _importFunc = s => (TRet) (object) ParseDateTime(s);
-                else if (_type == typeof (Boolean) || _type == typeof (Boolean?)) _importFunc = s => (TRet) (object) ParseToBoolean(s);
-                else throw new InvalidOperationException("the column type '" + _type.FullName + "' is unknown");
+                _importFunc = s => (TRet) ServiceStackTextHelpers<TRet>.GetParseFn(_stringFormat, _booleanTrue)(s);
             }
 
             try
@@ -144,12 +138,7 @@ namespace AsciiImportExport
 
             if (_exportFunc == null)
             {
-                if (_type == typeof (String)) _exportFunc = v => Serialize(v as string);
-                else if (_type == typeof (Int32) || _type == typeof (Int32?)) _exportFunc = v => Serialize(v as int?);
-                else if (_type == typeof (Double) || _type == typeof (Double?)) _exportFunc = v => Serialize(v as double?);
-                else if (_type == typeof (Boolean) || _type == typeof (Boolean?)) _exportFunc = v => Serialize(v as Boolean?);
-                else if (_type == typeof (DateTime) || _type == typeof (DateTime?)) _exportFunc = v => Serialize(v as DateTime?);
-                else throw new InvalidOperationException("the column type '" + _type.FullName + "' is unknown");
+                _exportFunc = ret => ServiceStackTextHelpers<TRet>.GetSerializeFunc(_stringFormat, _booleanTrue, _booleanFalse)(ret);
             }
 
             return _exportFunc((TRet) value);
@@ -188,114 +177,6 @@ namespace AsciiImportExport
                 (
                     setterCall, instance, argument
                 ).Compile();
-        }
-
-        /// <summary>
-        /// Parses the input string to a DateTime
-        /// </summary>
-        /// <param name="value">The input string</param>
-        /// <returns></returns>
-        private DateTime? ParseDateTime(string value)
-        {
-            return value == null ? DateTime.MinValue : DateTime.ParseExact(value, _dateTimeStringFormat, CultureInfo.InvariantCulture.DateTimeFormat);
-        }
-
-        /// <summary>
-        /// Parses the input string to a double
-        /// </summary>
-        /// <param name="value">The input string</param>
-        /// <returns></returns>
-        private double? ParseDouble(string value)
-        {
-            return String.IsNullOrEmpty(value) ? (double?) _defaultValue : Double.Parse(value.Replace(',', '.'), CultureInfo.InvariantCulture.NumberFormat);
-        }
-
-        /// <summary>
-        /// Parses the input string to an <see cref="Int32"/>
-        /// </summary>
-        /// <param name="value">The input string</param>
-        /// <returns></returns>
-        private int? ParseInteger(string value)
-        {
-            return String.IsNullOrEmpty(value) ? (int?) _defaultValue : Int32.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
-        }
-
-        /// <summary>
-        /// Parses the input string to a boolean
-        /// </summary>
-        /// <param name="value">The input string</param>
-        /// <returns></returns>
-        private bool ParseToBoolean(string value)
-        {
-            if (value == _booleanTrue) return true;
-            if (value == _booleanFalse) return false;
-
-            if (_defaultValue != null) return (bool) _defaultValue;
-
-            throw new InvalidOperationException("invalid value '" + value + "' in boolean column '" + _header + "'");
-        }
-
-        /// <summary>
-        /// Serializes the input value to a string
-        /// </summary>
-        /// <param name="value">The input value bool?</param>
-        /// <returns></returns>
-        private string Serialize(bool? value)
-        {
-            return Serialize(!value.HasValue ? "" : (value.Value ? _booleanTrue : _booleanFalse));
-        }
-
-        /// <summary>
-        /// Serializes the input value to a string
-        /// </summary>
-        /// <param name="value">The input value of type DateTime?</param>
-        /// <returns></returns>
-        private string Serialize(DateTime? value)
-        {
-            return Serialize(!value.HasValue ? "" : value.Value.ToString(_dateTimeStringFormat, CultureInfo.InvariantCulture.DateTimeFormat));
-        }
-
-        /// <summary>
-        /// Serializes the input value to a string
-        /// </summary>
-        /// <param name="value">The input value of type double?</param>
-        /// <returns></returns>
-        private string Serialize(double? value)
-        {
-            return Serialize(!value.HasValue ? "" : value.Value.ToString(_doubleStringFormat, CultureInfo.InvariantCulture.NumberFormat));
-        }
-
-        /// <summary>
-        /// Serializes the input value to a string
-        /// </summary>
-        /// <param name="value">The input value of type int?</param>
-        /// <returns></returns>
-        private string Serialize(int? value)
-        {
-            return Serialize(!value.HasValue ? "" : value.Value.ToString(CultureInfo.InvariantCulture.NumberFormat));
-        }
-
-        /// <summary>
-        /// Serializes the input value to a string
-        /// </summary>
-        /// <param name="value">The input value of type string</param>
-        /// <returns></returns>
-        private string Serialize(string str)
-        {
-            return Serialize(str, ColumnWidth);
-        }
-
-        /// <summary>
-        /// Serializes the input value to a string of the specified length
-        /// </summary>
-        /// <param name="value">The input value of type string</param>
-        /// <param name="columnWidth">The targeted length of the serialized string</param>
-        /// <returns></returns>
-        private string Serialize(string value, int columnWidth)
-        {
-            int width = columnWidth >= 0 ? columnWidth : 0;
-
-            return (Alignment == ColumnAlignment.Right ? value.PadLeft(width) : value.PadRight(width));
         }
     }
 }

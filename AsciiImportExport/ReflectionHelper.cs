@@ -10,7 +10,7 @@ namespace AsciiImportExport
     /// <summary>
     // Copied from http://stackoverflow.com/questions/4474634/memberexpression-to-memberexpression
     /// </summary>
-    public static class ReflectionHelper
+    internal static class ReflectionHelper
     {
         public static MemberExpression GetMemberExpression<TValue, T>(Expression<Func<T, TValue>> expression)
         {

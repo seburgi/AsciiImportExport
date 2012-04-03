@@ -5,12 +5,13 @@ AsciiImportExport v0.6
 A .NET library providing fast and easy de/serialization of arbitrary column-based text data.
 
 ## Changelog
-  * v0.1 - Initial release
-  * v0.2 - Added DocumentColumnBuilder for better separation of concerns
-  * v0.3 - Added comments, cleaned method names
-  * v0.4 - Resolved some initialization problems in DocumentColumn
-  * v0.5 - Cleaned up column handling, fixed problems with comments, changed target framework to .NET 3.5 Client Profile
+  * v0.7 - Now supports all built-in value types, Massive performance improvements
   * v0.6 - Fixed some smaller bugs, minor restructuring of public surface
+  * v0.5 - Cleaned up column handling, fixed problems with comments, changed target framework to .NET 3.5 Client Profile
+  * v0.4 - Resolved some initialization problems in DocumentColumn
+  * v0.3 - Added comments, cleaned method names
+  * v0.2 - Added DocumentColumnBuilder for better separation of concerns
+  * v0.1 - Initial release
 
 ## Example
 
@@ -51,10 +52,8 @@ Now we define how the data will be exported / imported:
 
     private static DocumentFormatDefinition<Person> GetDefinition()
     {
-        return new DocumentFormatDefinitionBuilder<Person>()
-            .SetColumnSeparator("\t")
+        return new DocumentFormatDefinitionBuilder<Person>("\t", true)
             .SetCommentString("#")
-            .SetAutosizeColumns(true)
             .AddColumn(x => x.Name)
             .AddColumn(x => x.Gender, b => b.SetImportFunc(StringToGender).SetExportFunc(GenderToString))
             .AddColumn(x => x.Height, "0.00", b => b.SetAlignment(ColumnAlignment.Right))
@@ -92,8 +91,8 @@ Now we define how the data will be exported / imported:
 That is what we defined:
 
 * seperate columns by Tabs
-* lines starting with '#' are recognized as comments
 * automatically determine the width of a column
+* lines starting with '#' are recognized as comments
 * add new column for property Name
 * add new column for property Gender and use special import / export methods
 * add new column for property Height. Align the data of the column to the right and use a double precision of 2.

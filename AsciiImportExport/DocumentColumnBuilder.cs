@@ -19,13 +19,12 @@ namespace AsciiImportExport
         private string _booleanFalse = "F";
         private string _booleanTrue = "T";
         private int _columnWidth = -1;
-        private string _dateTimeStringFormat = "dd.MM.yyyy HH:mm:ss";
         private TRet _defaultValue;
-        private string _doubleStringFormat = "0.0000";
         private Func<TRet, string> _exportFunc;
         private readonly Expression<Func<T, TRet>> _expression;
         private string _header;
         private Func<string, TRet> _importFunc;
+        private string _stringFormat;
 
         /// <summary>
         /// The constructor
@@ -42,7 +41,7 @@ namespace AsciiImportExport
         /// <returns></returns>
         public DocumentColumn<T, TRet> Build()
         {
-            return new DocumentColumn<T, TRet>(_expression, _header, _defaultValue, _columnWidth, _alignment, _doubleStringFormat, _dateTimeStringFormat, _booleanTrue, _booleanFalse, _importFunc, _exportFunc);
+            return new DocumentColumn<T, TRet>(_expression, _header, _defaultValue, _columnWidth, _alignment, _stringFormat, _booleanTrue, _booleanFalse, _importFunc, _exportFunc);
         }
 
         /// <summary>
@@ -73,14 +72,6 @@ namespace AsciiImportExport
             return this;
         }
 
-        /// <summary>
-        /// Sets the string format used when importing/exporting DateTimes (Default = "dd.MM.yyyy HH:mm:ss")
-        /// </summary>
-        public DocumentColumnBuilder<T, TRet> SetDateTimeStringFormat(string dateTimeStringFormat)
-        {
-            _dateTimeStringFormat = dateTimeStringFormat;
-            return this;
-        }
 
         /// <summary>
         /// Sets the default value of the column (Default = default(TRet))
@@ -88,15 +79,6 @@ namespace AsciiImportExport
         public DocumentColumnBuilder<T, TRet> SetDefaultValue(TRet value)
         {
             _defaultValue = value;
-            return this;
-        }
-
-        /// <summary>
-        /// Sets the string format used when exporting numerical data (Default = "0.0000")
-        /// </summary>
-        public DocumentColumnBuilder<T, TRet> SetDoubleStringFormat(string doubleStringFormat)
-        {
-            _doubleStringFormat = doubleStringFormat;
             return this;
         }
 
@@ -124,6 +106,15 @@ namespace AsciiImportExport
         public DocumentColumnBuilder<T, TRet> SetImportFunc(Func<string, TRet> importFunc)
         {
             _importFunc = importFunc;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the string format used when exporting numerical data (Default = "0.0000")
+        /// </summary>
+        public DocumentColumnBuilder<T, TRet> SetStringFormat(string stringFormat)
+        {
+            _stringFormat = stringFormat;
             return this;
         }
     }

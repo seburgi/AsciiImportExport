@@ -107,7 +107,7 @@ namespace AsciiImportExport
 
                 for (int i = 0; i < _columns.Count; i++)
                 {
-                    lineSb.Append(_columns[i].GetFormattedHeader(columnWidths[i]));
+                    lineSb.Append(_columns[i].Format(_columns[i].Header, columnWidths[i]));
                     lineSb.Append(ColumnSeparator);
                 }
                 sb.AppendLine(lineSb.ToString().TrimEnd(ColumnSeparator.ToArray()));
@@ -118,21 +118,7 @@ namespace AsciiImportExport
                 var lineSb = new StringBuilder();
                 for (int j = 0; j < _columns.Count; j++)
                 {
-                    if (_autosizeColumns)
-                    {
-                        if (_columns[j].Alignment == ColumnAlignment.Right)
-                        {
-                            lineSb.Append(exportResults[i][j].PadLeft(columnWidths[j]));
-                        }
-                        else
-                        {
-                            lineSb.Append(exportResults[i][j].PadRight(columnWidths[j]));
-                        }
-                    }
-                    else
-                    {
-                        lineSb.Append(exportResults[i][j]);
-                    }
+                    lineSb.Append(_autosizeColumns ? _columns[j].Format(exportResults[i][j], columnWidths[j]) : _columns[j].Format(exportResults[i][j], _columns[j].ColumnWidth));
 
                     lineSb.Append(ColumnSeparator);
                 }
@@ -161,53 +147,69 @@ namespace AsciiImportExport
         /// <returns></returns>
         public List<T> Import(IEnumerable<string> lines)
         {
-            int lineNr = 0;
+            int lineNr = -1;
 
             try
             {
-                int count = lines.Count();
                 var result = new List<T>();
 
-                for (lineNr = 0; lineNr < count; lineNr++)
+                foreach (var line in lines)
                 {
-                    string line = lines.ElementAt(lineNr);
+                    lineNr++;
+
+                    int linePos = 0;
+                    int lineLength = line.Length;
 
                     if (_checkForComments)
                     {
                         int commentPos = line.IndexOf(CommentString, StringComparison.InvariantCulture);
                         if (commentPos >= 0)
-                            line = line.Substring(0, commentPos);
+                            lineLength = commentPos;
                     }
 
-                    if (line.Trim().Length == 0) continue;
+                    if (lineLength == 0) continue;
+                    while (linePos < lineLength)
+                    {
+                        if (line[linePos] == ' ')
+                            linePos++;
+                        else
+                            break;
+                    }
+                    if (linePos == lineLength) continue;
 
+                    linePos = 0;
                     T item = _instantiator();
 
                     foreach (var column in _columns)
                     {
-                        if (line.Trim().Length == 0) break;
+                        if (linePos >= lineLength) break;
 
                         string value;
                         if (column.ColumnWidth > 0)
                         {
-                            value = line.Substring(0, Math.Min(column.ColumnWidth, line.Length));
-                            int nextColumnIndex = column.ColumnWidth + ColumnSeparator.Length;
-                            line = nextColumnIndex <= line.Length ? line.Substring(nextColumnIndex) : "";
+                            value = line.Substring(linePos, Math.Min(column.ColumnWidth, lineLength - linePos));
+                            linePos += column.ColumnWidth + ColumnSeparator.Length;
                         }
                         else
                         {
-                            line = line.TrimStart(new[] {' '});
-                            int indexOfSeparator = line.IndexOf(ColumnSeparator);
+                            while (linePos < lineLength)
+                            {
+                                if (line[linePos] == ' ')
+                                    linePos++;
+                                else
+                                    break;
+                            }
+
+                            int indexOfSeparator = line.IndexOf(ColumnSeparator, linePos);
                             if (indexOfSeparator >= 0)
                             {
-                                value = line.Substring(0, indexOfSeparator);
-                                int nextColumnIndex = indexOfSeparator + ColumnSeparator.Length;
-                                line = nextColumnIndex <= line.Length ? line.Substring(nextColumnIndex) : "";
+                                value = line.Substring(linePos, indexOfSeparator - linePos);
+                                linePos = indexOfSeparator + ColumnSeparator.Length;
                             }
                             else
                             {
-                                value = line;
-                                line = "";
+                                value = line.Substring(linePos);
+                                linePos = lineLength;
                             }
                         }
                         column.Parse(item, value.Trim());

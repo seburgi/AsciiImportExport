@@ -69,10 +69,8 @@ namespace AsciiImportExport.Tests
 
         private static DocumentFormatDefinition<SimplePoco> GetPocoDefinition()
         {
-            return new DocumentFormatDefinitionBuilder<SimplePoco>()
-                .SetColumnSeparator("\t")
+            return new DocumentFormatDefinitionBuilder<SimplePoco>("\t", false)
                 .SetCommentString("#")
-                .SetAutosizeColumns(false)
                 .SetExportHeaderLine(false)
                 .AddColumn(x => x.StringProp)
                 .AddColumn(x => x.Int32Prop)

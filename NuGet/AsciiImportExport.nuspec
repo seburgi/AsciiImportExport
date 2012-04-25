@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
-    <version>0.7.0</version>
+    <version>0.8.0</version>
     <authors>Sebastian Burgstaller</authors>
     <owners>passionatedev</owners>
     <licenseUrl>https://github.com/seburgi/AsciiImportExport/blob/master/License.txt</licenseUrl>

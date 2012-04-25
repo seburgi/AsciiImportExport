@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ColumnAlignment.cs" />
+    <Compile Include="ExportException.cs" />
     <Compile Include="ServiceStackTextHelpers.cs" />
     <Compile Include="DocumentColumn.cs" />
     <Compile Include="DocumentColumnBuilder.cs" />

@@ -72,7 +72,7 @@ namespace AsciiImportExport.Tests
 
         private static IDocumentColumn<SimplePoco> GetInt32PropColumn()
         {
-            var column = new DocumentColumn<SimplePoco, int>(x => x.Int32Prop, null, 0, -1, ColumnAlignment.Left, "0", null, null, null, null);
+            var column = new DocumentColumn<SimplePoco, int>(x => x.Int32Prop, null, () => 0, -1, ColumnAlignment.Left, "0", null, null, null, null);
             return column;
         }
 

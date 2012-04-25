@@ -1,10 +1,11 @@
-AsciiImportExport v0.7
+AsciiImportExport v0.8
 ======================================================================
 
 ## Overview
 A .NET library providing fast and easy de/serialization of arbitrary column-based text data.
 
 ## Changelog
+  * v0.8 - Fixed column default value problems, added flag that indicates if exported lines terimate with the column separator, other small tweaks
   * v0.7 - Now supports all built-in value types, Massive performance improvements
   * v0.6 - Fixed some smaller bugs, minor restructuring of public surface
   * v0.5 - Cleaned up column handling, fixed problems with comments, changed target framework to .NET 3.5 Client Profile

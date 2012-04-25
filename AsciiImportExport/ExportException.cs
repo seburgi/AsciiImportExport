@@ -11,20 +11,20 @@ namespace AsciiImportExport
     /// <summary>
     /// This exception carries parsing error information
     /// </summary>
-    public class ImportException : Exception
+    public class ExportException : Exception
     {
         /// <summary>
         /// The constructor
         /// </summary>
         /// <param name="columnName">The column where the error happend</param>
-        /// <param name="value">The value that caused the parsing error</param>
+        /// <param name="item">The item that caused the error</param>
         /// <param name="ex">The original exception</param>
         /// <param name="message">Optional message</param>
-        public ImportException(string columnName, string value, Exception ex, string message = null)
+        public ExportException(string columnName, object item, Exception ex, string message = null)
             : base(message, ex)
         {
             ColumnName = columnName;
-            Value = value;
+            Item = item;
         }
 
         /// <summary>
@@ -33,8 +33,8 @@ namespace AsciiImportExport
         public string ColumnName { get; set; }
 
         /// <summary>
-        /// The value that caused the parsing error
+        /// The item that caused the export error
         /// </summary>
-        public string Value { get; set; }
+        public object Item { get; set; }
     }
 }

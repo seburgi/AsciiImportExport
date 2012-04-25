@@ -17,9 +17,10 @@ namespace AsciiImportExport
         private readonly bool _autosizeColumns;
         private readonly string _columnSeparator;
         private readonly List<IDocumentColumn<T>> _columns = new List<IDocumentColumn<T>>();
-        private string _commentString = "'";
+        private string _commentString;
         private bool _exportHeaderLine;
         private Func<T> _instantiator = () => new T();
+        private bool _lineEndsWithColumnSeparator;
 
         /// <summary>
         /// The constructor
@@ -127,11 +128,11 @@ namespace AsciiImportExport
         /// <returns></returns>
         public DocumentFormatDefinition<T> Build()
         {
-            return new DocumentFormatDefinition<T>(_columns, _columnSeparator, _commentString, _autosizeColumns, _exportHeaderLine, _instantiator);
+            return new DocumentFormatDefinition<T>(_columns, _columnSeparator, _commentString, _autosizeColumns, _exportHeaderLine, _instantiator, _lineEndsWithColumnSeparator);
         }
 
         /// <summary>
-        /// String that is used to identify the start of comments in the text (Default = ')
+        /// String that is used to identify the start of comments in the text (Default = No comments)
         /// </summary>
         public DocumentFormatDefinitionBuilder<T> SetCommentString(string commentString)
         {
@@ -140,11 +141,20 @@ namespace AsciiImportExport
         }
 
         /// <summary>
-        /// Defines if a header line shall be created during serialization (Default = False)
+        /// Defines if a header line shall be created during serialization (Default = false)
         /// </summary>
         public DocumentFormatDefinitionBuilder<T> SetExportHeaderLine(bool exportHeaderLine)
         {
             _exportHeaderLine = exportHeaderLine;
+            return this;
+        }
+
+        /// <summary>
+        /// Defines if during export each line shall be terminated with the column separator. (Default = false)
+        /// </summary>
+        public DocumentFormatDefinitionBuilder<T> SetLineEndsWithColumnSeparator(bool lineEndsWithColumnSeparator)
+        {
+            _lineEndsWithColumnSeparator = lineEndsWithColumnSeparator;
             return this;
         }
 

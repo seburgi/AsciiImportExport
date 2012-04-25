@@ -19,7 +19,7 @@ namespace AsciiImportExport
         private string _booleanFalse = "F";
         private string _booleanTrue = "T";
         private int _columnWidth = -1;
-        private TRet _defaultValue;
+        private Func<TRet> _defaultValue;
         private Func<TRet, string> _exportFunc;
         private readonly Expression<Func<T, TRet>> _expression;
         private string _header;
@@ -76,7 +76,7 @@ namespace AsciiImportExport
         /// <summary>
         /// Sets the default value of the column (Default = default(TRet))
         /// </summary>
-        public DocumentColumnBuilder<T, TRet> SetDefaultValue(TRet value)
+        public DocumentColumnBuilder<T, TRet> SetDefaultValue(Func<TRet> value)
         {
             _defaultValue = value;
             return this;

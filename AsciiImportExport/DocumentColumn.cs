@@ -17,7 +17,7 @@ namespace AsciiImportExport
     {
         private readonly string _booleanFalse;
         private readonly string _booleanTrue;
-        private readonly object _defaultValue;
+        private readonly Func<TRet> _getDefaultValueFunc;
         private Func<TRet, string> _exportFunc;
         private readonly Func<T, TRet> _getValueFunc;
         private readonly string _header;
@@ -32,7 +32,7 @@ namespace AsciiImportExport
         /// </summary>
         /// <param name="expression">Lambda expression that evaluates the property of the POCO you want to import/export with this column.</param>
         /// <param name="header">Header of the column. Will be set to the name of the property if left null.</param>
-        /// <param name="defaultValue">The default value of the column.</param>
+        /// <param name="getDefaultValueFunc">Returns the default value of the column. This is a function because it could also return new instances of complex types.</param>
         /// <param name="columnWidth">The width of the column. Set -1 for auto width</param>
         /// <param name="alignment">The alignment of the data in the column.</param>
         /// <param name="stringFormat">This is the string format used when exporting numerical data.</param>
@@ -40,10 +40,10 @@ namespace AsciiImportExport
         /// <param name="booleanFalse">This string is used to represent the boolean value 'False'</param>
         /// <param name="importFunc">Custom import function that converts a string to a value of type TRet</param>
         /// <param name="exportFunc">Custom export function that converts a value of type TRet to a string</param>
-        public DocumentColumn(Expression<Func<T, TRet>> expression, string header, TRet defaultValue, int columnWidth, ColumnAlignment alignment, string stringFormat, string booleanTrue, string booleanFalse, Func<string, TRet> importFunc, Func<TRet, string> exportFunc)
+        public DocumentColumn(Expression<Func<T, TRet>> expression, string header, Func<TRet> getDefaultValueFunc, int columnWidth, ColumnAlignment alignment, string stringFormat, string booleanTrue, string booleanFalse, Func<string, TRet> importFunc, Func<TRet, string> exportFunc)
         {
             _header = header;
-            _defaultValue = defaultValue;
+            _getDefaultValueFunc = getDefaultValueFunc;
             _stringFormat = stringFormat;
             ColumnWidth = columnWidth;
             Alignment = alignment;
@@ -60,10 +60,14 @@ namespace AsciiImportExport
                 _header = _header ?? me.Member.Name;
                 var propertyInfo = me.Member as PropertyInfo;
                 _type = propertyInfo.PropertyType;
-                _setValueFunc = GetValueSetter(propertyInfo);
+
+                var setMethod = propertyInfo.GetSetMethod();
+                if(setMethod != null)
+                    _setValueFunc = GetValueSetter(propertyInfo, setMethod);
             }
             else
             {
+                _header = _header ?? "";
                 _isDummyColumn = true;
             }
         }
@@ -106,16 +110,26 @@ namespace AsciiImportExport
         public void Parse(T item, string value)
         {
             if (_isDummyColumn) return;
-            if (String.IsNullOrEmpty(value)) return;
-
             if (_importFunc == null)
             {
                 _importFunc = s => (TRet) ServiceStackTextHelpers<TRet>.GetParseFn(_stringFormat, _booleanTrue)(s);
             }
-
+            
+            TRet v;
+            if (String.IsNullOrEmpty(value))
+            {
+                if(_getDefaultValueFunc == null) return;
+                    
+                v = _getDefaultValueFunc();
+            }
+            else
+            {
+                v = _importFunc(value);
+            }
+            
             try
             {
-                _setValueFunc(item, _importFunc(value));
+                _setValueFunc(item, v);
             }
             catch (Exception ex)
             {
@@ -134,14 +148,22 @@ namespace AsciiImportExport
 
             object value = _getValueFunc.Invoke(item);
 
-            if (value == null && _defaultValue != null) value = _defaultValue;
+            if (value == null && _getDefaultValueFunc != null) value = _getDefaultValueFunc();
+            if (value == null) return "";
 
             if (_exportFunc == null)
             {
                 _exportFunc = ret => ServiceStackTextHelpers<TRet>.GetSerializeFunc(_stringFormat, _booleanTrue, _booleanFalse)(ret);
             }
 
-            return _exportFunc((TRet) value);
+            try
+            {
+                return _exportFunc((TRet)value);
+            }
+            catch (Exception ex)
+            {
+                throw new ExportException(_header, item, ex);
+            }
         }
 
         /// <summary>
@@ -159,7 +181,7 @@ namespace AsciiImportExport
         /// <typeparam name="T"></typeparam>
         /// <param name="propertyInfo"></param>
         /// <returns></returns>
-        private static Action<T, TRet> GetValueSetter(PropertyInfo propertyInfo)
+        private static Action<T, TRet> GetValueSetter(PropertyInfo propertyInfo, MethodInfo setMethod)
         {
             if (typeof (T) != propertyInfo.DeclaringType)
             {
@@ -170,7 +192,7 @@ namespace AsciiImportExport
             ParameterExpression argument = Expression.Parameter(typeof (TRet), "a");
             MethodCallExpression setterCall = Expression.Call(
                 instance,
-                propertyInfo.GetSetMethod(),
+                setMethod,
                 Expression.Convert(argument, propertyInfo.PropertyType));
 
             return Expression.Lambda<Action<T, TRet>>

@@ -20,6 +20,7 @@ namespace AsciiImportExport
         private readonly List<IDocumentColumn<T>> _columns;
         private readonly bool _exportHeaderLine;
         private readonly Func<T> _instantiator;
+        private readonly bool _lineEndsWithColumnSeparator;
 
         /// <summary>
         /// The constructor
@@ -29,8 +30,9 @@ namespace AsciiImportExport
         /// <param name="commentString">String that is used to identify the start of comments in the text</param>
         /// <param name="autosizeColumns">Defines if the rows of a column shall all be of the same width</param>
         /// <param name="exportHeaderLine">Defines if a header line shall be created during serialization</param>
-        /// <param name="instantiator">Function that creates a new instance of type <see cref="T"/>. </param>
-        public DocumentFormatDefinition(List<IDocumentColumn<T>> columns, string columnSeparator, string commentString, bool autosizeColumns, bool exportHeaderLine, Func<T> instantiator)
+        /// <param name="instantiator">Function that creates a new instance of type <see cref="T"/>.</param>
+        /// <param name="lineEndsWithColumnSeparator">Defines if during export each line shall be terminated with the column separator.</param>
+        public DocumentFormatDefinition(List<IDocumentColumn<T>> columns, string columnSeparator, string commentString, bool autosizeColumns, bool exportHeaderLine, Func<T> instantiator, bool lineEndsWithColumnSeparator)
         {
             _columns = columns;
 
@@ -42,6 +44,7 @@ namespace AsciiImportExport
             _autosizeColumns = autosizeColumns;
             _exportHeaderLine = exportHeaderLine;
             _instantiator = instantiator;
+            _lineEndsWithColumnSeparator = lineEndsWithColumnSeparator;
         }
 
         /// <summary>
@@ -75,14 +78,22 @@ namespace AsciiImportExport
             var exportResults = new string[itemCount][];
             List<int> columnWidths = _columns.Select(x => x.ColumnWidth).ToList();
 
-            for (int i = 0; i < itemCount; i++)
+            int itemNr = 0;
+            try
             {
-                exportResults[i] = new string[_columns.Count];
-
-                for (int j = 0; j < _columns.Count; j++)
+                for (itemNr = 0; itemNr < itemCount; itemNr++)
                 {
-                    exportResults[i][j] = _columns[j].Serialize(items.ElementAt(i));
+                    exportResults[itemNr] = new string[_columns.Count];
+
+                    for (int j = 0; j < _columns.Count; j++)
+                    {
+                        exportResults[itemNr][j] = _columns[j].Serialize(items.ElementAt(itemNr));
+                    }
                 }
+            }
+            catch (ExportException ex)
+            {
+                throw new ExportException(ex.ColumnName, ex.Item, ex, "Error during export of column '" + ex.ColumnName + "' of item " + itemNr);
             }
 
             if (_autosizeColumns)
@@ -120,7 +131,8 @@ namespace AsciiImportExport
                 {
                     lineSb.Append(_autosizeColumns ? _columns[j].Format(exportResults[i][j], columnWidths[j]) : _columns[j].Format(exportResults[i][j], _columns[j].ColumnWidth));
 
-                    lineSb.Append(ColumnSeparator);
+                    if (j < _columns.Count-1 || _lineEndsWithColumnSeparator)
+                        lineSb.Append(ColumnSeparator);
                 }
                 sb.AppendLine(lineSb.ToString().TrimEnd());
             }

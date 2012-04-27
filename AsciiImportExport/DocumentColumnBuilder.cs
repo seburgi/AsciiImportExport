@@ -36,10 +36,10 @@ namespace AsciiImportExport
         }
 
         /// <summary>
-        /// Builds an initialized and ready to use instance of <see cref="DocumentColumn{T,TRet}"/>
+        /// Builds an initialized and ready to use instance of <see cref="IDocumentColumn{T}"/>
         /// </summary>
         /// <returns></returns>
-        public DocumentColumn<T, TRet> Build()
+        public IDocumentColumn<T> Build()
         {
             return new DocumentColumn<T, TRet>(_expression, _header, _defaultValue, _columnWidth, _alignment, _stringFormat, _booleanTrue, _booleanFalse, _importFunc, _exportFunc);
         }

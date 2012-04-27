@@ -50,7 +50,7 @@ ISO_NUM;ISO_2;ISO_3;NAME_GER;NAME_GER_OFF;NAME_ENG;NAME_ENG_OFF;STATUS;ASSOCIATE
 204;BJ;BEN;Benin;Republik Benin;Benin;Republic of Benin;1;souveräner Staat;BEN;N;N;Afrika;229;.bj;DY;1960;9999;U
 60;BM;BMU;Bermuda;Bermuda;Bermuda;Bermuda;2;GBR;GBR;N;N;Amerika;1441;.bm;GB;;;
 64;BT;BTN;Bhutan;Königreich Bhutan;Bhutan;Kingdom of Bhutan;1;souveräner Staat;BTN;N;N;Asien;975;.bt;BHT;2008;9999;V
-598;PG;PNG;Bismarck-Archipel;Bismarck-Archipel;Bismarck Archipelago;Bismarck Archipelago;3;PNG;PNG;N;N;Ozeanien;675;.pg;PNG ;;;
+598;PG;PNG;Bismarck-Archipel;Bismarck-Archipel;Bismarck Archipelago;Bismarck Archipelago;3;PNG;PNG;N;N;Ozeanien;675;.pg;PNG;;;
 68;BO;BOL;Bolivien;Plurinationaler Staat Bolivien;Bolivia;Plurinational State of Bolivia;1;souveräner Staat;BOL;N;N;Amerika;591;.bo;BOL;2009;9999;V
 535;BQ;BES;Bonaire, Saint Eustatius und Saba;Bonaire, Saint Eustatius und Saba;Bonaire, Saint Eustatius and Saba;Bonaire, Saint Eustatius and Saba;2;NLD;NLD;N;N;Amerika;599;.an;NA;2010;9999;
 392;JP;JPN;Bonininseln;Bonininseln;Bonin Islands;Bonin Islands;3;JPN;JPN;N;N;Asien;81;.jp;J;;;
@@ -62,7 +62,7 @@ ISO_NUM;ISO_2;ISO_3;NAME_GER;NAME_GER_OFF;NAME_ENG;NAME_ENG_OFF;STATUS;ASSOCIATE
 86;IO;IOT;Britisches Territorium im Indischen Ozean;Britisches Territorium im Indischen Ozean;British Indian Ocean Territory;British Indian Ocean Territory;2;GBR;GBR;N;N;Asien;246;.io;GB;;;
 96;BN;BRN;Brunei Darussalam;Sultanat Brunei Darussalam;Brunei Darussalam;State of Brunei;1;souveräner Staat;BRN;N;N;Asien;673;.bn;BRU;1984;9999;U
 100;BG;BGR;Bulgarien;Republik Bulgarien;Bulgaria;Republic of Bulgaria;1;souveräner Staat;BGR;J, seit 2007;J;Europa;359;.bg;BG;1991;9999;V
-280;DE;DEU;Bundesrepublik Deutschland ;Bundesrepublik Deutschland (Westdeutschland);West Germany;Federal Republic of Germany;0;;;;;Europa;49;.de;D;1949;1990;
+280;DE;DEU;Bundesrepublik Deutschland;Bundesrepublik Deutschland (Westdeutschland);West Germany;Federal Republic of Germany;0;;;;;Europa;49;.de;D;1949;1990;
 854;BF;BFA;Burkina Faso;Burkina Faso;Burkina Faso;Burkina Faso;1;souveräner Staat;BFA;N;N;Afrika;226;.bf;BF;1991;9999;V
 108;BI;BDI;Burundi;Republik Burundi;Burundi;Republic of Burundi;1;souveräner Staat;BDI;N;N;Afrika;257;.bi;RU;2005;9999;V
 276;DE;DEU;Büsingen am Hochrhein;Büsingen am Hochrhein;Büsingen am Hochrhein;Büsingen am Hochrhein;3;DEU;DEU;N;J;Europa;49;.de;D;;;
@@ -83,7 +83,7 @@ ISO_NUM;ISO_2;ISO_3;NAME_GER;NAME_GER_OFF;NAME_ENG;NAME_ENG_OFF;STATUS;ASSOCIATE
 188;CR;CRI;Costa Rica;Republik Costa Rica;Costa Rica;Republic of Costa Rica;1;souveräner Staat;CRI;N;N;Amerika;506;.cr;CR;1949;9999;V
 260;TF;ATF;Crozetinseln;Crozetinseln;Crozet Islands;Crozet Islands;2;FRA;FRA;N;N;Antarktis;262;.tf;F;;;
 531;CW;CUW;Curaçao;Curaçao;Curaçao;Curaçao;2;NLD;NLD;N;N;Amerika;599;.na;NA;2010;9999;
-392;JP;JPN;Daitoinseln ;Daitoinseln ;Daito Islands;Daito Islands;3;JPN;JPN;N;N;Asien;81;.jp;J;;;
+392;JP;JPN;Daitoinseln;Daitoinseln;Daito Islands;Daito Islands;3;JPN;JPN;N;N;Asien;81;.jp;J;;;
 208;DK;DNK;Dänemark;Königreich Dänemark;Denmark;Kingdom of Denmark;1;souveräner Staat;DNK;J, seit 1973;J;Europa;45;.dk;DK;1953;9999;V
 278;DD;DDR;Deutsche Demokratische Republik;Deutsche Demokratische Republik;East Germany;German Democratic Republic;0;;;;;Europa;37;.dd;DDR;1949;1990;
 276;DE;DEU;Deutschland;Bundesrepublik Deutschland;Germany;Federal Republic of Germany;1;souveräner Staat;DEU;J, seit 1958;J;Europa;49;.de;D;1990;9999;V
@@ -102,7 +102,7 @@ ISO_NUM;ISO_2;ISO_3;NAME_GER;NAME_GER_OFF;NAME_ENG;NAME_ENG_OFF;STATUS;ASSOCIATE
 232;ER;ERI;Eritrea;Staat Eritrea;Eritrea;State of Eritrea;1;souveräner Staat;ERI;N;N;Afrika;291;.er;ER;1997;9999;V
 233;EE;EST;Estland;Republik Estland;Estonia;Republic of Estonia;1;souveräner Staat;EST;J, seit 2004;J;Europa;372;.ee;EST;1992;9999;V
 260;TF;ATF;Europainsel;Europainsel;Europa Island;Europa Island;2;FRA;FRA;N;N;Antarktis;262;.tf;F;;;
-238;FK;FLK;Falklandinseln;Falklandinseln;Falkland Islands  ;Falkland Islands  ;2;GBR;GBR;N;N;Amerika;500;.fk;GB;;;
+238;FK;FLK;Falklandinseln;Falklandinseln;Falkland Islands;Falkland Islands;2;GBR;GBR;N;N;Amerika;500;.fk;GB;;;
 234;FO;FRO;Färöer;Färöer;Faeroe Islands;Faeroe Islands;2;DNK;DNK;N;N;Europa;298;.fo;FO;;;
 242;FJ;FJI;Fidschi;Republik Fidschi-Inseln;Fiji;Republic of Fiji;1;souveräner Staat;FJI;N;N;Ozeanien;679;.fj;FJI;1998;9999;V
 246;FI;FIN;Finnland;Republik Finnland;Finland;Republic of Finland;1;souveräner Staat;FIN;J, seit 1995;J;Europa;358;.fi;FIN;2000;9999;V
@@ -114,7 +114,7 @@ ISO_NUM;ISO_2;ISO_3;NAME_GER;NAME_GER_OFF;NAME_ENG;NAME_ENG_OFF;STATUS;ASSOCIATE
 266;GA;GAB;Gabun;Gabunische Republik;Gabon;Gabonese Republic;1;souveräner Staat;GAB;N;N;Afrika;241;.ga;G;1991;9999;V
 218;EC;ECU;Galápagosinseln;Galápagosinseln;Galápagos Islands;Galápagos Islands;3;ECU;ECU;N;N;Amerika;593;.ec;EC;;;
 270;GM;GMB;Gambia;Republik Gambia;Gambia;Republic of Gambia;1;souveräner Staat;GMB;N;N;Afrika;220;.gm;WAG;1997;9999;V
-258;PF;PYF;Gambierinseln ;Gambierinseln ;Gambier Islands;Gambier Islands;2;FRA;FRA;N;N;Ozeanien;689;.pf;F;;;
+258;PF;PYF;Gambierinseln;Gambierinseln;Gambier Islands;Gambier Islands;2;FRA;FRA;N;N;Ozeanien;689;.pf;F;;;
 275;PS;PSE;Gazastreifen;Gazastreifen;Gaza Strip;Gaza Strip;2;;;N;N;Asien;9727;.ps;AUT;;;
 268;GE;GEO;Georgien;Georgien;Georgia;Georgia;1;souveräner Staat;GEO;N;N;Asien;995;.ge;GE;1995;9999;V
 258;PF;PYF;Gesellschaftsinseln;Gesellschaftsinseln;Society Islands;Society Islands;2;FRA;FRA;N;N;Ozeanien;689;.pf;F;;;
@@ -175,7 +175,7 @@ ISO_NUM;ISO_2;ISO_3;NAME_GER;NAME_GER_OFF;NAME_ENG;NAME_ENG_OFF;STATUS;ASSOCIATE
 116;KH;KHM;Kambodscha;Königreich Kambodscha;Cambodia;Kingdom of Cambodia;1;souveräner Staat;KHM;N;N;Asien;855;.kh;K;1993;9999;V
 120;CM;CMR;Kamerun;Republik Kamerun;Cameroon;Republic of Cameroon;1;souveräner Staat;CMR;N;N;Afrika;237;.cm;CAM;1972;9999;V
 124;CA;CAN;Kanada;Kanada;Canada;Canada;1;souveräner Staat;CAN;N;N;Amerika;1;.ca;CDN;1982;9999;V
-724;ES;ESP;Kanarische Inseln ;Kanarische Inseln ;Canary Islands;Canary Islands;3;ESP;ESP;N;J;Afrika;34;.es;E;;;
+724;ES;ESP;Kanarische Inseln;Kanarische Inseln;Canary Islands;Canary Islands;3;ESP;ESP;N;J;Afrika;34;.es;E;;;
 132;CV;CPV;Kap Verde;Republik Kap Verde;Cape Verde;Republic of Cape Verde;1;souveräner Staat;CPV;N;N;Afrika;238;.cv;CV;1992;9999;V
 31;AZ;AZE;Karki;Karki;Karki;Karki;3;AZE;AZE;N;N;Asien;994;.az;AZ;;;
 398;KZ;KAZ;Kasachstan;Republik Kasachstan;Kazakhstan;Republic of Kazakhstan;1;souveräner Staat;KAZ;N;N;Asien;7;.kz;KZ;1995;9999;V
@@ -207,7 +207,7 @@ ISO_NUM;ISO_2;ISO_3;NAME_GER;NAME_GER_OFF;NAME_ENG;NAME_ENG_OFF;STATUS;ASSOCIATE
 458;MY;MYS;Labuan;Labuan;Labuan;Labuan;3;MYS;MYS;N;N;Asien;60;.my;MAL;;;
 798;TV;TUV;Laguneninseln;Laguneninseln;Lagoon Island;Lagoon Island;3;TUV;TUV;N;N;Ozeanien;688;.tv;TUV;;;
 418;LA;LAO;Laos;Demokratische Volksrepublik Laos;Laos;Lao People's Democratic Republic;1;souveräner Staat;LAO;N;N;Asien;856;.la;LAO;1991;9999;V
-312;GP;GLP;Les Saintes ;Les Saintes ;Les Saintes ;Les Saintes ;2;FRA;FRA;N;J;Amerika;590;.gp;F;;;
+312;GP;GLP;Les Saintes;Les Saintes;Les Saintes;Les Saintes;2;FRA;FRA;N;J;Amerika;590;.gp;F;;;
 426;LS;LSO;Lesotho;Königreich Lesotho;Lesotho;Kingdom of Lesotho;1;souveräner Staat;LSO;N;N;Afrika;266;.ls;LS;1993;9999;V
 428;LV;LVA;Lettland;Republik Lettland;Latvia;Republic of Latvia;1;souveräner Staat;LVA;J, seit 2004;J;Europa;371;.lv;LV;1991;9999;U
 422;LB;LBN;Libanon;Libanesische Republik;Lebanon;Republic of Lebanon;1;souveräner Staat;LBN;N;N;Asien;961;.lb;RL;1943;9999;U
@@ -241,14 +241,14 @@ ISO_NUM;ISO_2;ISO_3;NAME_GER;NAME_GER_OFF;NAME_ENG;NAME_ENG_OFF;STATUS;ASSOCIATE
 807;MK;MKD;Mazedonien;Republik Mazedonien;Macedonia;Republic of Macedonia;1;souveräner Staat;MKD;N;N;Europa;389;.mk;MK;1991;9999;U
 334;HM;HMD;McDonaldinseln;McDonaldinseln;McDonald Islands;McDonald Islands;2;AUS;AUS;N;N;Antarktis;672;.hm;AUS;;;
 724;ES;ESP;Melilla;Melilla;Melilla;Melilla;3;ESP;ESP;N;J;Afrika;34;.es;E;;;
-484;MX;MEX;Mexiko;Vereinigte Mexikanische Staaten;Mexico;United Mexican States ;1;souveräner Staat;MEX;N;N;Amerika;52;.mx;MEX;1917;9999;V
+484;MX;MEX;Mexiko;Vereinigte Mexikanische Staaten;Mexico;United Mexican States;1;souveräner Staat;MEX;N;N;Amerika;52;.mx;MEX;1917;9999;V
 581;UM;UMI;Midwayinseln;Midwayinseln;Midway Islands;Midway Islands;2;USA;USA;N;N;Ozeanien;697;.us;USA;;;
 583;FM;FSM;Mikronesien;Föderierte Staaten von Mikronesien;Micronesia;Federated States of Micronesia;1;souveräner Staat;FSM;N;N;Ozeanien;691;.fm;FSM;1986;9999;U
 666;PM;SPM;Miquelon;Miquelon;Miquelon;Miquelon;2;FRA;FRA;N;N;Amerika;508;.pm;F;;;
 498;MD;MDA;Moldau;Republik Moldova;Moldova;Republic of Moldova;1;souveräner Staat;MDA;N;N;Europa;373;.md;MD;1994;9999;V
 492;MC;MCO;Monaco;Fürstentum Monaco;Monaco;Principality of Monaco;1;souveräner Staat;MCO;N;N;Europa;377;.mc;MC;1962;9999;V
 496;MN;MNG;Mongolei;Mongolische Volksrepublik;Mongolia;Mongolia;1;souveräner Staat;MNG;N;N;Asien;976;.mn;MGL;1992;9999;V
-499;ME;MNE;Montenegro ;Republik Montenegro;Montenegro ;Republic of Montenegro;1;souveräner Staat;MNE;N;N;Europa;382;.me;MNE;2007;9999;U
+499;ME;MNE;Montenegro;Republik Montenegro;Montenegro;Republic of Montenegro;1;souveräner Staat;MNE;N;N;Europa;382;.me;MNE;2007;9999;U
 500;MS;MSR;Montserrat;Montserrat;Monserrat;Monserrat;2;GBR;GBR;N;N;Amerika;1664;.ms;GB;;;
 508;MZ;MOZ;Mosambik;Republik Mosambik;Mozambique;Republic of Mozambique;1;souveräner Staat;MOZ;N;N;Afrika;258;.mz;MOC;1992;9999;V
 512;OM;OMN;Musandam;Musandam-Halbinsel;Musandam Peninsula;Musandam Peninsula;3;OMN;OMN;N;N;Asien;968;.om;OM;;;
@@ -306,9 +306,9 @@ ISO_NUM;ISO_2;ISO_3;NAME_GER;NAME_GER_OFF;NAME_ENG;NAME_ENG_OFF;STATUS;ASSOCIATE
 784;AE;ARE;Ras al Chaima;Emirat Ras al Chaima;Ras al-Khaimah;Emirate of Ras al-Khaimah;3;ARE;ARE;N;N;Asien;971;.ae;UAE;;;
 70;BA;BIH;Republika Srpska;Republika Srpska;Republika Srpska;Republika Srpska;3;BIH;BIH;N;N;Europa;387;.ba;BIH;;;
 638;RE;REU;Réunion;Réunion;Réunion;Réunion;2;FRA;FRA;N;J;Afrika;262;.re;F;;;
-504;MA;MAR;Río de Oro ;Río de Oro ;Río de Oro ;Río de Oro ;3;MAR;MAR;N;N;Afrika;212;.ma;MA;;;
+504;MA;MAR;Río de Oro;Río de Oro;Río de Oro;Río de Oro;3;MAR;MAR;N;N;Afrika;212;.ma;MA;;;
 392;JP;JPN;Riukiuinseln;Riukiuinseln;Ryukyu Islands;Ryukyu Islands;3;JPN;JPN;N;N;Asien;81;.jp;J;;;
-170;CO;COL;Roncador;Roncador;Roncador Bank ;Roncador Bank ;3;COL;COL;N;N;Amerika;57;.co;CO;;;
+170;CO;COL;Roncador;Roncador;Roncador Bank;Roncador Bank;3;COL;COL;N;N;Amerika;57;.co;CO;;;
 554;NZ;NZL;Ross-Nebengebiet;Ross-Nebengebiet;Ross Dependency;Ross Dependency;3;NZL;NZL;N;N;Antarktis;64;.nz;NZ;;;
 646;RW;RWA;Ruanda;Republik Ruanda;Rwanda;Republic of Rwanda;1;souveräner Staat;RWA;N;N;Afrika;250;.rw;RWA;2003;9999;V
 642;RO;ROU;Rumänien;Rumänien;Romania;Romania;1;souveräner Staat;ROU;J, seit 2007;J;Europa;40;.ro;RO;1991;9999;V
@@ -320,7 +320,7 @@ ISO_NUM;ISO_2;ISO_3;NAME_GER;NAME_GER_OFF;NAME_ENG;NAME_ENG_OFF;STATUS;ASSOCIATE
 659;KN;KNA;Saint Kitts und Nevis;Föderation von Saint Kitts und Nevis;Saint Kitts and Nevis;Federation of Saint Kitts and Nevis;1;souveräner Staat;KNA;N;N;Amerika;1869;.kn;KAN;1983;9999;V
 662;LC;LCA;Saint Lucia;Saint Lucia;Saint Lucia;Saint Lucia;1;souveräner Staat;LCA;N;N;Amerika;1758;.lc;WL;1979;9999;V
 663;MF;MAF;Saint Martin;Saint Martin;Saint Martin;Saint Martin;2;FRA;FRA;N;J;Amerika;590;.gp;F;;;
-260;TF;ATF;Saint Paul ;Saint Paul Insel;Saint Paul Island;Saint Paul Island;2;FRA;FRA;N;N;Antarktis;262;.tf;F;;;
+260;TF;ATF;Saint Paul;Saint Paul Insel;Saint Paul Island;Saint Paul Island;2;FRA;FRA;N;N;Antarktis;262;.tf;F;;;
 666;PM;SPM;Saint Pierre und Miquelon;Saint Pierre und Miquelon;Saint Pierre und Miquelon;Territorial Collectivity of Saint Pierre und Miquelon;2;FRA;FRA;N;N;Amerika;508;.pm;F;;;
 670;VC;VCT;Saint Vincent und die Grenadinen;Saint Vincent und die Grenadinen;Saint Vincent and the Grenadinen;Saint Vincent and the Grenadinen;1;souveräner Staat;VCT;N;N;Amerika;1784;.vc;WV;1979;9999;V
 90;SB;SLB;Salomonen;Salomonen;Solomon Islands;Solomon Islands;1;souveräner Staat;SLB;N;N;Ozeanien;677;.sb;SOL;1978;9999;V
@@ -328,7 +328,7 @@ ISO_NUM;ISO_2;ISO_3;NAME_GER;NAME_GER_OFF;NAME_ENG;NAME_ENG_OFF;STATUS;ASSOCIATE
 882;WS;WSM;Samoa;Unabhängiger Staat Samoa;Samoa;Independent State of Samoa;1;souveräner Staat;WSM;N;N;Ozeanien;685;.ws;WS;1965;9999;V
 674;SM;SMR;San Marino;Republik San Marino;San Marino;Republic of San Marino;1;souveräner Staat;SMR;N;N;Europa;378;.sm;RSM;1600;9999;V
 834;TZ;TZA;Sansibar;Sansibar;Zanzibar;Zanzibar;3;TZA;TZA;N;N;Afrika;255;.tz;EAT;;;
-678;ST;STP;São Tomé und Princípe;Demokratische Republik São Tomé und Princípe ;São Tomé und Princípe;Democratic Republic of São Tomé und Princípe;1;souveräner Staat;STP;N;N;Afrika;239;.st;STP;1990;9999;V
+678;ST;STP;São Tomé und Princípe;Demokratische Republik São Tomé und Princípe;São Tomé und Princípe;Democratic Republic of São Tomé und Princípe;1;souveräner Staat;STP;N;N;Afrika;239;.st;STP;1990;9999;V
 458;MY;MYS;Sarawak;Sarawak;Sarawak;Sarawak;3;MYS;MYS;N;N;Asien;60;.my;MAL;;;
 831;GG;GGY;Sark;Sark;Sark;Sark;2;GBR;GBR;N;N;Europa;441481;.gg;GBG;;;
 762;TJ;TJK;Sarvan;Sarvan;Sarvan;Sarvan;3;TJK;TJK;N;N;Asien;992;.tj;TJ;;;
@@ -336,20 +336,20 @@ ISO_NUM;ISO_2;ISO_3;NAME_GER;NAME_GER_OFF;NAME_ENG;NAME_ENG_OFF;STATUS;ASSOCIATE
 682;SA;SAU;Saudi-Arabien;Königreich Saudi-Arabien;Saudi Arabia;Kingdom of Saudi Arabia;1;souveräner Staat;SAU;N;N;Asien;966;.sa;SA;1992;9999;V
 784;AE;ARE;Schardscha;Emirat Schardscha;Sharjah;Emirate of Sharjah;3;ARE;ARE;N;N;Asien;971;.ae;UAE;;;
 826;GB;GBR;Schottland;Schottland;Scotland;Scotland;3;GBR;GBR;N;J;Europa;44;.uk;GB;;;
-340;HN;HND;Schwaneninseln ;Schwaneninseln ;Swan Islands;Swan Islands;3;HND;HND;N;N;Amerika;504;.hn;HN;;;
+340;HN;HND;Schwaneninseln;Schwaneninseln;Swan Islands;Swan Islands;3;HND;HND;N;N;Amerika;504;.hn;HN;;;
 752;SE;SWE;Schweden;Königreich Schweden;Sweden;Kingdom of Sweden;1;souveräner Staat;SWE;J, seit 1995;J;Europa;46;.se;S;1975;9999;V
 756;CH;CHE;Schweiz;Schweizerische Eidgenossenschaft;Switzerland;Swiss Confederation;1;souveräner Staat;CHE;N;N;Europa;41;.ch;CH;1874;9999;V
 686;SN;SEN;Senegal;Republik Senegal;Senegal;Republic of Senegal;1;souveräner Staat;SEN;N;N;Afrika;221;.sn;SN;2001;9999;V
-688;RS;SRB;Serbien ;Republik Serbien;Serbia ;Republic of Serbia;1;souveräner Staat;SRB;N;N;Europa;381;.rs;SRB;2008;9999;T
+688;RS;SRB;Serbien;Republik Serbien;Serbia;Republic of Serbia;1;souveräner Staat;SRB;N;N;Europa;381;.rs;SRB;2008;9999;T
 891;CS;SCG;Serbien und Montenegro;Bundesrepublik Jugoslawien;Serbia and Montenegro;State Union of Serbia and Montenegro;0;;;;;Europa;381;.yu;SCG;2003;2006;
-170;CO;COL;Serranabank;Serranabank;Serrana Bank ;Serrana Bank ;3;COL;COL;N;N;Amerika;57;.co;CO;;;
+170;CO;COL;Serranabank;Serranabank;Serrana Bank;Serrana Bank;3;COL;COL;N;N;Amerika;57;.co;CO;;;
 690;SC;SYC;Seychellen;Republik Seychellen;Seychelles;Republic of Seychelles;1;souveräner Staat;SYC;N;N;Afrika;248;.sc;SY;1993;9999;V
 860;UZ;UZB;Shohimardon;Shohimardon;Shohimardon;Shohimardon;3;UZB;UZB;N;N;Asien;998;.uz;UZ;;;
 694;SL;SLE;Sierra Leone;Republik Sierra Leone;Sierra Leone;Republic of Sierra Leone;1;souveräner Staat;SLE;N;N;Afrika;232;.sl;WAL;1991;9999;V
 356;IN;IND;Sikkim;Sikkim;Sikkim;Sikkim;3;IND;IND;N;N;Asien;91;.in;IND;;;
 716;ZW;ZWE;Simbabwe;Republik Simbabwe;Zimbabwe;Republic of Zimbabwe;1;souveräner Staat;ZWE;N;N;Afrika;263;.zw;ZW;1980;9999;U
 702;SG;SGP;Singapur;Republik Singapur;Singapore;Republic of Singapore;1;souveräner Staat;SGP;N;N;Asien;65;.sg;SGP;1965;9999;U
-534;SX;SXM;Sint Maarten ;Sint Maarten ;Sint Maarten ;Sint Maarten ;2;NLD;NLD;N;N;Amerika;1721;.an;NA;2010;9999;
+534;SX;SXM;Sint Maarten;Sint Maarten;Sint Maarten;Sint Maarten;2;NLD;NLD;N;N;Amerika;1721;.an;NA;2010;9999;
 703;SK;SVK;Slowakei;Slowakische Republik;Slovakia;Slovak Republic;1;souveräner Staat;SVK;J, seit 2004;J;Europa;421;.sk;SK;1993;9999;V
 705;SI;SVN;Slowenien;Republik Slowenien;Slovenia;Republic of Slovenia;1;souveräner Staat;SVN;J, seit 2004;J;Europa;386;.si;SLO;1991;9999;V
 887;YE;YEM;Sokotra;Sokotra;Socotra;Socotra;3;YEM;YEM;N;N;Asien;967;.ye;YAR;;;
@@ -366,9 +366,9 @@ ISO_NUM;ISO_2;ISO_3;NAME_GER;NAME_GER_OFF;NAME_ENG;NAME_ENG_OFF;STATUS;ASSOCIATE
 736;SD;SDN;Sudan;Republik Sudan;Sudan;Republic of the Sudan;0;;;;;Afrika;249;.sd;SUD;2005;2011;V
 729;SD;SDN;Sudan;Republik Sudan;Sudan;Republic of the Sudan;1;souveräner Staat;SDN;N;N;Afrika;249;.sd;SUD;2011;9999;T
 239;GS;SGS;Südgeorgien;Südgeorgien und die Südlichen Sandwichinseln;South Georgia;South Georgia and the South Sandwich Islands;2;GBR;GBR;N;N;Antarktis;44;.gs;GB;;;
-239;GS;SGS;Südliche Orkneyinseln ;Südliche Orkneyinseln ;South Orkney Islands;South Orkney Islands;2;GBR;GBR;N;N;Antarktis;44;.gs;GB;;;
+239;GS;SGS;Südliche Orkneyinseln;Südliche Orkneyinseln;South Orkney Islands;South Orkney Islands;2;GBR;GBR;N;N;Antarktis;44;.gs;GB;;;
 239;GS;SGS;Südliche Sandwichinseln;Südgeorgien und die Südlichen Sandwichinseln;South Sandwich Islands;South Georgia and the South Sandwich Islands;2;GBR;GBR;N;N;Antarktis;44;.gs;GB;;;
-10;AQ;ATA;Südliche Shetlandinseln ;Südliche Shetlandinseln ;South Shetland Island;South Shetland Island;2;GBR;GBR;N;N;Antarktis;672;.aq;GB;;;
+10;AQ;ATA;Südliche Shetlandinseln;Südliche Shetlandinseln;South Shetland Island;South Shetland Island;2;GBR;GBR;N;N;Antarktis;672;.aq;GB;;;
 728;SS;SSD;Südsudan;Republik Südsudan;South Sudan;Republic of South Sudan;1;souveräner Staat;SSD;N;N;Afrika;211;.ss;SSD;2011;9999;U=V
 740;SR;SUR;Suriname;Republik Suriname;Suriname;Republic of Suriname;1;souveräner Staat;SUR;N;N;Amerika;597;.sr;SME;1987;9999;V
 744;SJ;SJM;Svalbard und Jan Mayen;Svalbard und Jan Mayen;Svalbard and Jan Mayen Islands;Svalbard and Jan Mayen Islands;2;NOR;NOR;N;N;Europa;47;.no;N;;;
@@ -376,7 +376,7 @@ ISO_NUM;ISO_2;ISO_3;NAME_GER;NAME_GER_OFF;NAME_ENG;NAME_ENG_OFF;STATUS;ASSOCIATE
 760;SY;SYR;Syrien;Arabische Republik Syrien;Syria;Syrian Arab Republic;1;souveräner Staat;SYR;N;N;Asien;963;.sy;SYR;1973;9999;V
 762;TJ;TJK;Tadschikistan;Republik Tadschikistan;Tajikistan;Republic of Tajikistan;1;souveräner Staat;TJK;N;N;Asien;992;.tj;TJ;1994;9999;V
 258;PF;PYF;Tahiti;Tahiti;Tahiti;Tahiti;2;FRA;FRA;N;N;Ozeanien;689;.pf;F;;;
-158;TW;TWN;Taiwan;Republik China ;Taiwan;Republic of China;2;CHN;TWN;N;N;Asien;886;.tw;RC;1949;9999;
+158;TW;TWN;Taiwan;Republik China;Taiwan;Republic of China;2;CHN;TWN;N;N;Asien;886;.tw;RC;1949;9999;
 834;TZ;TZA;Tanganjika;Tanganjika;Tanganjika;Tanganjika;3;TZA;TZA;N;N;Afrika;255;.tz;EAT;;;
 834;TZ;TZA;Tansania;Vereinigte Republik Tansania;Tanzania;United Republic of Tanzania;1;souveräner Staat;TZA;N;N;Afrika;255;.tz;EAT;1977;9999;V
 764;TH;THA;Thailand;Königreich Thailand;Thailand;Kingdom of Thailand;1;souveräner Staat;THA;N;N;Asien;66;.th;T;2007;9999;V
@@ -394,7 +394,7 @@ ISO_NUM;ISO_2;ISO_3;NAME_GER;NAME_GER_OFF;NAME_ENG;NAME_ENG_OFF;STATUS;ASSOCIATE
 86;IO;IOT;Tschagos-Archipel;Britisches Territorium im Indischen Ozean;Chagos Archipelago;British Territory in the Indian Ocean;2;GBR;GBR;N;N;Asien;246;.io;GB;;;
 203;CZ;CZE;Tschechien;Tschechische Republik;Czech Republic;Czech Republic;1;souveräner Staat;CZE;J, seit 2004;J;Europa;420;.cz;CZ;1993;9999;V
 200;CS;CSK;Tschechoslowakei;Tschechoslowakei;Czechoslovakia;Czechoslovakia;0;;;;;Europa;42;.cs;CS;1918;1992;
-258;PF;PYF;Tuamotuinseln ;Tuamotuinseln ;Tuamotu Archipelago;Tuamotu Archipelago;2;FRA;FRA;N;N;Ozeanien;689;.pf;F;;;
+258;PF;PYF;Tuamotuinseln;Tuamotuinseln;Tuamotu Archipelago;Tuamotu Archipelago;2;FRA;FRA;N;N;Ozeanien;689;.pf;F;;;
 258;PF;PYF;Tubuaiinseln;Tubuaiinseln;Tubuai Islands;Tubuai Islands;2;FRA;FRA;N;N;Ozeanien;689;.pf;F;;;
 788;TN;TUN;Tunesien;Tunesische Republik;Tunisia;Tunisiaan Republic;1;souveräner Staat;TUN;N;N;Afrika;216;.tn;TN;1959;9999;V
 792;TR;TUR;Türkei;Republik Türkei;Turkey;Republic of Turkey;1;souveräner Staat;TUR;N;N;Asien;90;.tr;TR;1982;9999;V
@@ -420,7 +420,7 @@ ISO_NUM;ISO_2;ISO_3;NAME_GER;NAME_GER_OFF;NAME_ENG;NAME_ENG_OFF;STATUS;ASSOCIATE
 704;VN;VNM;Vietnam (Nord);Demokratische Republik Vietnam;North Vietnam;Democratic Republic of Vietnam;0;;;;;Asien;84;;;1955;1975;
 714;VD;VDR;Vietnam (Süd);Republik Vietnam;South Vietam;Republic of Vietnam;0;;;;;Asien;84;;;1955;1975;
 762;TJ;TJK;Vorukh;Vorukh;Vorukh;Vorukh;3;TJK;TJK;N;N;Asien;992;.tj;TJ;;;
-392;JP;JPN;Vulkaninseln ;Vulkaninseln ;Volcano Islands;Volcano Islands;3;JPN;JPN;N;N;Asien;81;.jp;J;;;
+392;JP;JPN;Vulkaninseln;Vulkaninseln;Volcano Islands;Volcano Islands;3;JPN;JPN;N;N;Asien;81;.jp;J;;;
 581;UM;UMI;Wakeinseln;Wakeinseln;Wake Island;Wake Island;2;USA;USA;N;N;Ozeanien;1;.us;USA;;;
 826;GB;GBR;Wales;Wales;Wales;Wales;3;GBR;GBR;N;J;Europa;44;.uk;GB;;;
 876;WF;WLF;Wallis und Futuna;Wallis und Futuna;Wallis and Futuna Islands;Territory of the Wallis and Futuna Islands;2;FRA;FRA;N;N;Ozeanien;681;.wf;F;;;

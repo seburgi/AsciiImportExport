@@ -14,7 +14,7 @@ namespace AsciiImportExport.Tests
         [Test]
         public void ExportMultiplePocos()
         {
-            DocumentFormatDefinition<SimplePoco> definition = GetPocoDefinition();
+            IDocumentFormatDefinition<SimplePoco> definition = GetPocoDefinition();
 
             var pocoList = new List<SimplePoco>
                                {
@@ -30,7 +30,7 @@ namespace AsciiImportExport.Tests
         [Test]
         public void ExportPoco()
         {
-            DocumentFormatDefinition<SimplePoco> definition = GetPocoDefinition();
+            IDocumentFormatDefinition<SimplePoco> definition = GetPocoDefinition();
 
             var poco = new SimplePoco {Int32Prop = Int32PropValue1, StringProp = StringPropValue1};
             string result = definition.Export(new List<SimplePoco> {poco});
@@ -41,7 +41,7 @@ namespace AsciiImportExport.Tests
         [Test]
         public void ImportMultiplePocos()
         {
-            DocumentFormatDefinition<SimplePoco> definition = GetPocoDefinition();
+            IDocumentFormatDefinition<SimplePoco> definition = GetPocoDefinition();
 
             List<SimplePoco> result = definition.Import(StringPropValue1 + "\t" + Int32PropValue1 + "\r\n" + StringPropValue2 + "\t" + Int32PropValue2);
 
@@ -58,7 +58,7 @@ namespace AsciiImportExport.Tests
         [Test]
         public void ImportPoco()
         {
-            DocumentFormatDefinition<SimplePoco> definition = GetPocoDefinition();
+            IDocumentFormatDefinition<SimplePoco> definition = GetPocoDefinition();
 
             List<SimplePoco> result = definition.Import(StringPropValue1 + "\t" + Int32PropValue1);
 
@@ -67,7 +67,7 @@ namespace AsciiImportExport.Tests
             Assert.AreEqual(Int32PropValue1, result[0].Int32Prop);
         }
 
-        private static DocumentFormatDefinition<SimplePoco> GetPocoDefinition()
+        private static IDocumentFormatDefinition<SimplePoco> GetPocoDefinition()
         {
             return new DocumentFormatDefinitionBuilder<SimplePoco>("\t", false)
                 .SetCommentString("#")

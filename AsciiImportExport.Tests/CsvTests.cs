@@ -15,7 +15,7 @@ namespace AsciiImportExport.Tests
         [Test]
         public void ExportTest()
         {
-            DocumentFormatDefinition<Location> definition = GetDefinition();
+            IDocumentFormatDefinition<Location> definition = GetDefinition();
 
             List<Location> importResult = definition.Import(ExampleCsv);
 
@@ -35,7 +35,7 @@ namespace AsciiImportExport.Tests
         [Test]
         public void ImportTest()
         {
-            DocumentFormatDefinition<Location> definition = GetDefinition();
+            IDocumentFormatDefinition<Location> definition = GetDefinition();
 
             List<Location> importResult = definition.Import(ExampleCsv);
 
@@ -54,7 +54,7 @@ namespace AsciiImportExport.Tests
             Assert.AreEqual(z, location.Z);
         }
 
-        private DocumentFormatDefinition<Location> GetDefinition()
+        private IDocumentFormatDefinition<Location> GetDefinition()
         {
             return new DocumentFormatDefinitionBuilder<Location>(";", false)
                 .SetExportHeaderLine(false)

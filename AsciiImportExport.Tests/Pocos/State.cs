@@ -19,7 +19,7 @@ namespace AsciiImportExport.Tests.Pocos
         public string NAME_ENG_OFF { get; set; }
         public string NAME_GER { get; set; }
         public string NAME_GER_OFF { get; set; }
-        public bool PART_OF_EU { get; set; }
+        public bool? PART_OF_EU { get; set; }
         public string PREFIX { get; set; }
         public int STATUS { get; set; }
         public string TLD { get; set; }

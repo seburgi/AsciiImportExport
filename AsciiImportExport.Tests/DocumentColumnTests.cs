@@ -72,14 +72,17 @@ namespace AsciiImportExport.Tests
 
         private static IDocumentColumn<SimplePoco> GetInt32PropColumn()
         {
-            var column = new DocumentColumn<SimplePoco, int>(x => x.Int32Prop, null, () => 0, -1, ColumnAlignment.Left, "0", null, null, null, null);
-            return column;
+            var builder = new DocumentColumnBuilder<SimplePoco, int>(x => x.Int32Prop);
+                
+                //, null, () => 0, -1, ColumnAlignment.Left, "0", null, null, null, null);
+            return builder.Build();
         }
 
         private static IDocumentColumn<SimplePoco> GetStringPropColumn()
         {
-            var column = new DocumentColumn<SimplePoco, string>(x => x.StringProp, "IAmAStringProperty", null, -1, ColumnAlignment.Left, null, null, null, null, null);
-            return column;
+            var builder = new DocumentColumnBuilder<SimplePoco, string>(x => x.StringProp).SetHeader("IAmAStringProperty");
+                //, null, -1, ColumnAlignment.Left, null, null, null, null, null);
+            return builder.Build();
         }
 
         private const string StringPropValue = "Hello!";

@@ -126,7 +126,7 @@ namespace AsciiImportExport
         /// Builds an initialized and ready to use instance of <see cref="DocumentFormatDefinition{T}"/>
         /// </summary>
         /// <returns></returns>
-        public DocumentFormatDefinition<T> Build()
+        public IDocumentFormatDefinition<T> Build()
         {
             return new DocumentFormatDefinition<T>(_columns, _columnSeparator, _commentString, _autosizeColumns, _exportHeaderLine, _instantiator, _lineEndsWithColumnSeparator);
         }
@@ -150,20 +150,20 @@ namespace AsciiImportExport
         }
 
         /// <summary>
-        /// Defines if during export each line shall be terminated with the column separator. (Default = false)
-        /// </summary>
-        public DocumentFormatDefinitionBuilder<T> SetLineEndsWithColumnSeparator(bool lineEndsWithColumnSeparator)
-        {
-            _lineEndsWithColumnSeparator = lineEndsWithColumnSeparator;
-            return this;
-        }
-
-        /// <summary>
         /// Function that creates a new instance of type <see cref="T"/>.
         /// </summary>
         public DocumentFormatDefinitionBuilder<T> SetInstantiator(Func<T> func)
         {
             _instantiator = func;
+            return this;
+        }
+
+        /// <summary>
+        /// Defines if during export each line shall be terminated with the column separator. (Default = false)
+        /// </summary>
+        public DocumentFormatDefinitionBuilder<T> SetLineEndsWithColumnSeparator(bool lineEndsWithColumnSeparator)
+        {
+            _lineEndsWithColumnSeparator = lineEndsWithColumnSeparator;
             return this;
         }
     }

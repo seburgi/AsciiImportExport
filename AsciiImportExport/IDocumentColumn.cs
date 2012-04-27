@@ -1,3 +1,9 @@
+#region using directives
+
+using System;
+
+#endregion
+
 namespace AsciiImportExport
 {
     /// <summary>

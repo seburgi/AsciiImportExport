@@ -23,7 +23,7 @@ namespace AsciiImportExport.Tests
 003-02 345.77  324.21 123.94
 ";
 
-            DocumentFormatDefinition<Location> definition = GetDefinition(null);
+            IDocumentFormatDefinition<Location> definition = GetDefinition(null);
 
             List<Location> importList = definition.Import(importData);
 
@@ -51,7 +51,7 @@ namespace AsciiImportExport.Tests
 #003-02 345.77  324.21 123.94
 ";
 
-            DocumentFormatDefinition<Location> definition = GetDefinition("#");
+            IDocumentFormatDefinition<Location> definition = GetDefinition("#");
 
             List<Location> importList = definition.Import(importData);
 
@@ -76,7 +76,7 @@ namespace AsciiImportExport.Tests
 003-02 #345.77  324.21 123.94
 ";
 
-            DocumentFormatDefinition<Location> definition = GetDefinition("#");
+            IDocumentFormatDefinition<Location> definition = GetDefinition("#");
 
             List<Location> importList = definition.Import(importData);
 
@@ -101,7 +101,7 @@ namespace AsciiImportExport.Tests
 003-02 345.77  324.21 123.94
 ";
 
-            DocumentFormatDefinition<Location> definition = GetDefinition("#");
+            IDocumentFormatDefinition<Location> definition = GetDefinition("#");
 
             List<Location> importList = definition.Import(importData);
 
@@ -123,7 +123,7 @@ namespace AsciiImportExport.Tests
             Assert.AreEqual(z, location.Z);
         }
 
-        private DocumentFormatDefinition<Location> GetDefinition(string commentString)
+        private IDocumentFormatDefinition<Location> GetDefinition(string commentString)
         {
             return new DocumentFormatDefinitionBuilder<Location>(" ", false)
                 .SetCommentString(commentString)

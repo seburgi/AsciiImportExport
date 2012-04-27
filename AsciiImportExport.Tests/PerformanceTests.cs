@@ -16,9 +16,9 @@ namespace AsciiImportExport.Tests
         [Test]
         public void Test()
         {
-            const int count = 1000000;
+            const int count = 100000;
             List<Measurement> list = CreateList(count);
-            DocumentFormatDefinition<Measurement> definition = GetDefinition();
+            IDocumentFormatDefinition<Measurement> definition = GetDefinition();
 
             Stopwatch sw = Stopwatch.StartNew();
             string exportResult = definition.Export(list);
@@ -69,7 +69,7 @@ namespace AsciiImportExport.Tests
             return list;
         }
 
-        private DocumentFormatDefinition<Measurement> GetDefinition()
+        private IDocumentFormatDefinition<Measurement> GetDefinition()
         {
             return new DocumentFormatDefinitionBuilder<Measurement>("\t", true)
                 .SetCommentString("#")

@@ -13,7 +13,7 @@ namespace AsciiImportExport
     /// Holds all the format information necessary to import/export columnbased text data
     /// </summary>
     /// <typeparam name="T">The type of the POCO you want to import/export</typeparam>
-    public class DocumentFormatDefinition<T>
+    internal class DocumentFormatDefinition<T> : IDocumentFormatDefinition<T>
     {
         private readonly bool _autosizeColumns;
         private readonly bool _checkForComments;
@@ -25,7 +25,7 @@ namespace AsciiImportExport
         /// <summary>
         /// The constructor
         /// </summary>
-        /// <param name="columns">List of columns of type <see cref="DocumentColumn{T,TRet}"/> defining the structure of a document</param>
+        /// <param name="columns">List of columns of type <see cref="IDocumentColumn{T}"/> defining the structure of a document</param>
         /// <param name="columnSeparator">String that is used to separate columns in the text</param>
         /// <param name="commentString">String that is used to identify the start of comments in the text</param>
         /// <param name="autosizeColumns">Defines if the rows of a column shall all be of the same width</param>
@@ -53,7 +53,7 @@ namespace AsciiImportExport
         public string ColumnSeparator { get; private set; }
 
         /// <summary>
-        /// Enumerable list of columns of type <see cref="DocumentColumn{T,TRet}"/> defining the structure of a document
+        /// Enumerable list of columns of type <see cref="IDocumentColumn{T}"/> defining the structure of a document
         /// </summary>
         public IEnumerable<IDocumentColumn<T>> Columns
         {
@@ -131,7 +131,7 @@ namespace AsciiImportExport
                 {
                     lineSb.Append(_autosizeColumns ? _columns[j].Format(exportResults[i][j], columnWidths[j]) : _columns[j].Format(exportResults[i][j], _columns[j].ColumnWidth));
 
-                    if (j < _columns.Count-1 || _lineEndsWithColumnSeparator)
+                    if (j < _columns.Count - 1 || _lineEndsWithColumnSeparator)
                         lineSb.Append(ColumnSeparator);
                 }
                 sb.AppendLine(lineSb.ToString().TrimEnd());

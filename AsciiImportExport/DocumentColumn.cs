@@ -13,7 +13,7 @@ namespace AsciiImportExport
     /// </summary>
     /// <typeparam name="T">The type of the POCO you want to import/export</typeparam>
     /// <typeparam name="TRet">The type of the columns data</typeparam>
-    public class DocumentColumn<T, TRet> : IDocumentColumn<T>
+    internal class DocumentColumn<T, TRet> : IDocumentColumn<T>
     {
         private readonly string _booleanFalse;
         private readonly string _booleanTrue;

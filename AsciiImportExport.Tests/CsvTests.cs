@@ -57,7 +57,6 @@ namespace AsciiImportExport.Tests
         private IDocumentFormatDefinition<Location> GetDefinition()
         {
             return new DocumentFormatDefinitionBuilder<Location>(";", false)
-                .SetExportHeaderLine(false)
                 .SetLineEndsWithColumnSeparator(true)
                 .AddColumn(x => x.Name)
                 .AddColumn(x => x.X, "0.000##")

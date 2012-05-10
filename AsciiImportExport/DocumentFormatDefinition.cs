@@ -19,6 +19,7 @@ namespace AsciiImportExport
         private readonly bool _checkForComments;
         private readonly List<IDocumentColumn<T>> _columns;
         private readonly bool _exportHeaderLine;
+        private readonly string _headerLinePraefix;
         private readonly Func<T> _instantiator;
         private readonly bool _lineEndsWithColumnSeparator;
 
@@ -30,9 +31,10 @@ namespace AsciiImportExport
         /// <param name="commentString">String that is used to identify the start of comments in the text</param>
         /// <param name="autosizeColumns">Defines if the rows of a column shall all be of the same width</param>
         /// <param name="exportHeaderLine">Defines if a header line shall be created during serialization</param>
+        /// <param name="headerLinePraefix">Optional praefix for the header line</param>
         /// <param name="instantiator">Function that creates a new instance of type <see cref="T"/>.</param>
         /// <param name="lineEndsWithColumnSeparator">Defines if during export each line shall be terminated with the column separator.</param>
-        public DocumentFormatDefinition(List<IDocumentColumn<T>> columns, string columnSeparator, string commentString, bool autosizeColumns, bool exportHeaderLine, Func<T> instantiator, bool lineEndsWithColumnSeparator)
+        public DocumentFormatDefinition(List<IDocumentColumn<T>> columns, string columnSeparator, string commentString, bool autosizeColumns, bool exportHeaderLine, string headerLinePraefix, Func<T> instantiator, bool lineEndsWithColumnSeparator)
         {
             _columns = columns;
 
@@ -43,6 +45,7 @@ namespace AsciiImportExport
 
             _autosizeColumns = autosizeColumns;
             _exportHeaderLine = exportHeaderLine;
+            _headerLinePraefix = headerLinePraefix ?? "";
             _instantiator = instantiator;
             _lineEndsWithColumnSeparator = lineEndsWithColumnSeparator;
         }
@@ -103,7 +106,9 @@ namespace AsciiImportExport
                     int maxLength = exportResults.Select(t => t[i].Length).Max();
 
                     if (_exportHeaderLine)
-                        maxLength = Math.Max(maxLength, _columns[i].Header.Length);
+                    {
+                        maxLength = i==0 ? Math.Max(maxLength, _headerLinePraefix.Length + _columns[i].Header.Length) : Math.Max(maxLength, _columns[i].Header.Length);
+                    }
 
                     columnWidths[i] = Math.Max(columnWidths[i], maxLength);
                 }
@@ -115,13 +120,22 @@ namespace AsciiImportExport
             if (_exportHeaderLine)
             {
                 var lineSb = new StringBuilder();
-
                 for (int i = 0; i < _columns.Count; i++)
                 {
-                    lineSb.Append(_columns[i].Format(_columns[i].Header, columnWidths[i]));
-                    lineSb.Append(ColumnSeparator);
+                    if(i==0)
+                    {
+                        lineSb.Append(_headerLinePraefix);
+                        lineSb.Append(_columns[i].Format(_columns[i].Header, columnWidths[i] - _headerLinePraefix.Length));
+                    }
+                    else
+                    {
+                        lineSb.Append(_columns[i].Format(_columns[i].Header, columnWidths[i]));                       
+                    }
+
+                    if (i < _columns.Count - 1 || _lineEndsWithColumnSeparator)
+                        lineSb.Append(ColumnSeparator);
                 }
-                sb.AppendLine(lineSb.ToString().TrimEnd(ColumnSeparator.ToArray()));
+                sb.AppendLine(lineSb.ToString().TrimEnd());
             }
 
             for (int i = 0; i < exportResults.Length; i++)

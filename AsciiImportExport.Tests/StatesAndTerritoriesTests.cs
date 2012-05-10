@@ -22,7 +22,6 @@ namespace AsciiImportExport.Tests
             // 'N'                the state is not a member of the EU, so leave the property Year empty
             // 'J, seit yyyy'     the state is a member of the EU, so set property Year accordingly
             IDocumentFormatDefinition<State.MemberOfEU> memberOfEuColumnDefinition = new DocumentFormatDefinitionBuilder<State.MemberOfEU>(",", false)
-                .SetExportHeaderLine(false)
                 .SetLineEndsWithColumnSeparator(false)
                 .AddColumn(x => x.IsMember, "J", "N")
                 .AddColumn(x => x.Year, builder => builder
@@ -36,8 +35,8 @@ namespace AsciiImportExport.Tests
 
 
             IDocumentFormatDefinition<State> definition = new DocumentFormatDefinitionBuilder<State>(";", false)
-                .SetExportHeaderLine(true)
                 .SetInstantiator(() => new State())
+                .SetExportHeaderLine(true)
                 .AddColumn(x => x.ISO_NUM)
                 .AddColumn(x => x.ISO_2)
                 .AddColumn(x => x.ISO_3)

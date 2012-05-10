@@ -15,14 +15,14 @@ namespace AsciiImportExport.Tests
         [Test]
         public void Export()
         {
-            string result = GetDefinition_With_Tab_As_ColumnSeparator().Export(GetPocoList());
+            string result = GetDefinition().Export(GetPocoList());
             Assert.AreEqual(Text, result);
         }
 
         [Test]
         public void ExportImportExport()
         {
-            IDocumentFormatDefinition<Person> definition = GetDefinition_With_Tab_As_ColumnSeparator();
+            IDocumentFormatDefinition<Person> definition = GetDefinition();
             string exportData1 = definition.Export(GetPocoList());
             List<Person> importResult = definition.Import(exportData1);
             string exportData2 = definition.Export(importResult);
@@ -33,7 +33,7 @@ namespace AsciiImportExport.Tests
         [Test]
         public void Import()
         {
-            List<Person> result = GetDefinition_With_Tab_As_ColumnSeparator().Import(Text);
+            List<Person> result = GetDefinition().Import(Text);
             List<Person> expected = GetPocoList();
 
             for (int i = 0; i < result.Count; i++)
@@ -59,16 +59,16 @@ namespace AsciiImportExport.Tests
             }
         }
 
-        private static IDocumentFormatDefinition<Person> GetDefinition_With_Tab_As_ColumnSeparator()
+        private static IDocumentFormatDefinition<Person> GetDefinition()
         {
             return new DocumentFormatDefinitionBuilder<Person>("\t", true)
                 .SetCommentString("#")
-                .SetExportHeaderLine(false)
+                .SetExportHeaderLine(true, "# ")
                 .AddColumn(x => x.Name)
                 .AddColumn(x => x.Gender, b => b.SetImportFunc(StringToGender).SetExportFunc(GenderToString))
                 .AddColumn(x => x.Height, "0.00", b => b.SetAlignment(ColumnAlignment.Right))
                 .AddColumn(x => x.Birthday, "yyyyMMdd")
-                .AddColumn(x => x.Memo)
+                .AddColumn(x => x.Memo, b => b.SetHeader("Description"))
                 .Build();
         }
 
@@ -95,10 +95,11 @@ namespace AsciiImportExport.Tests
             }
         }
 
-        private const string Text = 
-@"Peter	M	 175.50	19830129	Nice guy!
-Paul 	M	 173.45	19311005	Sometimes a litte grumpy.
-Mary 	F	1193.00	19800412	Tall!";
+        private const string Text =
+@"# Name	Gender	 Height	Birthday	Description
+Peter 	M     	 175.50	19830129	Nice guy!
+Paul  	M     	 173.45	19311005	Sometimes a litte grumpy.
+Mary  	F     	1193.00	19800412	Tall!";
 
     }
 }

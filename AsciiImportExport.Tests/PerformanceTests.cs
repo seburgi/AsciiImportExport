@@ -73,7 +73,6 @@ namespace AsciiImportExport.Tests
         {
             return new DocumentFormatDefinitionBuilder<Measurement>("\t", true)
                 .SetCommentString("#")
-                .SetExportHeaderLine(false)
                 .SetInstantiator(() => new Measurement())
                 .AddColumn(x => x.Name)
                 .AddColumn(x => x.DateTime, "dd.MM.yyyy HH:mm:ss")

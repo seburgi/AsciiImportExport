@@ -21,6 +21,7 @@ namespace AsciiImportExport
         private bool _exportHeaderLine;
         private Func<T> _instantiator = () => new T();
         private bool _lineEndsWithColumnSeparator;
+        private string _headerLinePraefix;
 
         /// <summary>
         /// The constructor
@@ -128,7 +129,7 @@ namespace AsciiImportExport
         /// <returns></returns>
         public IDocumentFormatDefinition<T> Build()
         {
-            return new DocumentFormatDefinition<T>(_columns, _columnSeparator, _commentString, _autosizeColumns, _exportHeaderLine, _instantiator, _lineEndsWithColumnSeparator);
+            return new DocumentFormatDefinition<T>(_columns, _columnSeparator, _commentString, _autosizeColumns, _exportHeaderLine, _headerLinePraefix, _instantiator, _lineEndsWithColumnSeparator);
         }
 
         /// <summary>
@@ -143,9 +144,13 @@ namespace AsciiImportExport
         /// <summary>
         /// Defines if a header line shall be created during serialization (Default = false)
         /// </summary>
-        public DocumentFormatDefinitionBuilder<T> SetExportHeaderLine(bool exportHeaderLine)
+        /// <param name="exportHeaderLine">Defines if a header line shall be created during serialization (Default = false)</param>
+        /// <param name="headerLinePraefix">Optional praefix for the header line (Default = empty string)</param>
+        /// <returns></returns>
+        public DocumentFormatDefinitionBuilder<T> SetExportHeaderLine(bool exportHeaderLine, string headerLinePraefix = "")
         {
             _exportHeaderLine = exportHeaderLine;
+            _headerLinePraefix = headerLinePraefix;
             return this;
         }
 

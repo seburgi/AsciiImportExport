@@ -1,4 +1,4 @@
-AsciiImportExport v0.10
+AsciiImportExport v0.11
 ======================================================================
 
 ## Overview

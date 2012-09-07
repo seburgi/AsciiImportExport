@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using AsciiImportExport.Tests.Pocos;
 using NUnit.Framework;
 
@@ -24,7 +25,7 @@ namespace AsciiImportExport.Tests
         {
             IDocumentFormatDefinition<Person> definition = GetDefinition();
             string exportData1 = definition.Export(GetPocoList());
-            List<Person> importResult = definition.Import(exportData1);
+            List<Person> importResult = definition.Import(new StringReader(exportData1));
             string exportData2 = definition.Export(importResult);
 
             Assert.AreEqual(exportData1, exportData2);
@@ -33,7 +34,7 @@ namespace AsciiImportExport.Tests
         [Test]
         public void Import()
         {
-            List<Person> result = GetDefinition().Import(Text);
+            List<Person> result = GetDefinition().Import(new StringReader(Text));
             List<Person> expected = GetPocoList();
 
             for (int i = 0; i < result.Count; i++)

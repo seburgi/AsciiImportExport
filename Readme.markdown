@@ -5,6 +5,7 @@ AsciiImportExport v0.10
 A .NET library providing fast and easy de/serialization of arbitrary column-based text data.
 
 ## Changelog
+  * v0.11 - Improved performance and memory usage of import with the use of TextReader
   * v0.10 - Added optional praefix for header line when exporting
   * v0.9  - Hiding DocumentColumn and DocumentFormatDefinition behind interfaces
   * v0.8  - Fixed column default value problems, added flag that indicates if exported lines terminate with the column separator, other small tweaks
@@ -126,8 +127,11 @@ Which will yield:
 
 No surprises here!
 
-	public List<Person> Import(string data)
+	public void ExportAndImport(List<Person> list)
 	{
 	    IDocumentFormatDefinition<Person> definition = GetDefinition();
-	    return definition.Import(data);
+		
+		string exportResult = definition.Export(list);
+	    
+		List<Person> importResult = definition.Import(new StringReader(exportResult));
 	}

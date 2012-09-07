@@ -1,6 +1,7 @@
 ﻿#region using directives
 
 using System.Collections.Generic;
+using System.IO;
 using AsciiImportExport.Tests.Pocos;
 using NUnit.Framework;
 
@@ -43,7 +44,7 @@ namespace AsciiImportExport.Tests
         {
             IDocumentFormatDefinition<SimplePoco> definition = GetPocoDefinition();
 
-            List<SimplePoco> result = definition.Import(StringPropValue1 + "\t" + Int32PropValue1 + "\r\n" + StringPropValue2 + "\t" + Int32PropValue2);
+            List<SimplePoco> result = definition.Import(new StringReader(StringPropValue1 + "\t" + Int32PropValue1 + "\r\n" + StringPropValue2 + "\t" + Int32PropValue2));
 
             Assert.AreEqual(2, result.Count);
 
@@ -60,7 +61,7 @@ namespace AsciiImportExport.Tests
         {
             IDocumentFormatDefinition<SimplePoco> definition = GetPocoDefinition();
 
-            List<SimplePoco> result = definition.Import(StringPropValue1 + "\t" + Int32PropValue1);
+            List<SimplePoco> result = definition.Import(new StringReader(StringPropValue1 + "\t" + Int32PropValue1));
 
             Assert.AreEqual(1, result.Count);
             Assert.AreEqual(StringPropValue1, result[0].StringProp);

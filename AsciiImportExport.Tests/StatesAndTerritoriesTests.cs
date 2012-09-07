@@ -48,7 +48,7 @@ namespace AsciiImportExport.Tests
                 .AddColumn(x => x.ASSOCIATED)
                 .AddColumn(x => x.DOCUMENT)
                 .AddColumn(x => x.EU_MEMBER, builder => builder
-                    .SetImportFunc(s => memberOfEuColumnDefinition.Import(s).Single())
+                    .SetImportFunc(s => memberOfEuColumnDefinition.Import(new StringReader(s)).Single())
                     .SetExportFunc(m => memberOfEuColumnDefinition.Export(new [] { m }).TrimEnd(',')))
                 .AddColumn(x => x.PART_OF_EU, "J", "N")
                 .AddColumn(x => x.CONTINENT)
@@ -67,19 +67,21 @@ namespace AsciiImportExport.Tests
         public void Import()
         {
             IDocumentFormatDefinition<State> definition = GetDefinition();
-            string fileContent = File.ReadAllText("Data\\states.csv", Encoding.GetEncoding(1252));
 
-            List<State> allStates = definition.Import(fileContent.Split(new[] {"\r\n", "\n"}, StringSplitOptions.RemoveEmptyEntries).Skip(1));
-            List<State> membersOfEu = allStates.Where(x => x.EU_MEMBER != null && x.EU_MEMBER.IsMember).OrderBy(x => x.EU_MEMBER.Year).ThenBy(x => x.NAME_ENG).ToList();
-
-            Console.WriteLine("Members of EU: " + membersOfEu.Count);
-
-            foreach (var euCountry in membersOfEu)
+            using (var reader = new StreamReader("Data\\states.csv", Encoding.GetEncoding(1252)))
             {
-                Console.WriteLine(euCountry.NAME_ENG + " (" + euCountry.EU_MEMBER.Year + ")");
-            }
+                List<State> allStates = definition.Import(reader, 1);
+                List<State> membersOfEu = allStates.Where(x => x.EU_MEMBER != null && x.EU_MEMBER.IsMember).OrderBy(x => x.EU_MEMBER.Year).ThenBy(x => x.NAME_ENG).ToList();
 
-            Assert.AreEqual(27, membersOfEu.Count);
+                Console.WriteLine("Members of EU: " + membersOfEu.Count);
+
+                foreach (var euCountry in membersOfEu)
+                {
+                    Console.WriteLine(euCountry.NAME_ENG + " (" + euCountry.EU_MEMBER.Year + ")");
+                }
+
+                Assert.AreEqual(27, membersOfEu.Count);
+            }
         }
 
 
@@ -87,13 +89,16 @@ namespace AsciiImportExport.Tests
         public void ImportExport()
         {
             IDocumentFormatDefinition<State> definition = GetDefinition();
-            string fileContent = File.ReadAllText("Data\\states.csv", Encoding.GetEncoding(1252));
-            
-            List<State> allStates = definition.Import(fileContent.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries).Skip(1));
-            
-            var exportResult = definition.Export(allStates);
-            
-            Assert.AreEqual(fileContent, exportResult);
+            using (var reader = new StreamReader("Data\\states.csv", Encoding.GetEncoding(1252)))
+            {
+                string fileContent = reader.ReadToEnd();
+
+                List<State> allStates = definition.Import(new StringReader(fileContent), 1);
+
+                var exportResult = definition.Export(allStates);
+
+                Assert.AreEqual(fileContent, exportResult);
+            }
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿#region using directives
 
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using AsciiImportExport.Tests.Pocos;
 using NUnit.Framework;
@@ -25,7 +26,7 @@ namespace AsciiImportExport.Tests
 
             IDocumentFormatDefinition<Location> definition = GetDefinition(null);
 
-            List<Location> importList = definition.Import(importData);
+            List<Location> importList = definition.Import(new StringReader(importData));
 
             Assert.AreEqual(6, importList.Count());
 
@@ -53,7 +54,7 @@ namespace AsciiImportExport.Tests
 
             IDocumentFormatDefinition<Location> definition = GetDefinition("#");
 
-            List<Location> importList = definition.Import(importData);
+            List<Location> importList = definition.Import(new StringReader(importData));
 
             Assert.AreEqual(6, importList.Count());
 
@@ -78,7 +79,7 @@ namespace AsciiImportExport.Tests
 
             IDocumentFormatDefinition<Location> definition = GetDefinition("#");
 
-            List<Location> importList = definition.Import(importData);
+            List<Location> importList = definition.Import(new StringReader(importData));
 
             Assert.AreEqual(6, importList.Count());
 
@@ -103,7 +104,7 @@ namespace AsciiImportExport.Tests
 
             IDocumentFormatDefinition<Location> definition = GetDefinition("#");
 
-            List<Location> importList = definition.Import(importData);
+            List<Location> importList = definition.Import(new StringReader(importData));
 
             Assert.AreEqual(6, importList.Count());
 

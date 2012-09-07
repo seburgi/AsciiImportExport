@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -9,10 +10,6 @@ using System.Text;
 
 namespace AsciiImportExport
 {
-    /// <summary>
-    /// Holds all the format information necessary to import/export columnbased text data
-    /// </summary>
-    /// <typeparam name="T">The type of the POCO you want to import/export</typeparam>
     internal class DocumentFormatDefinition<T> : IDocumentFormatDefinition<T>
     {
         private readonly bool _autosizeColumns;
@@ -23,17 +20,6 @@ namespace AsciiImportExport
         private readonly Func<T> _instantiator;
         private readonly bool _lineEndsWithColumnSeparator;
 
-        /// <summary>
-        /// The constructor
-        /// </summary>
-        /// <param name="columns">List of columns of type <see cref="IDocumentColumn{T}"/> defining the structure of a document</param>
-        /// <param name="columnSeparator">String that is used to separate columns in the text</param>
-        /// <param name="commentString">String that is used to identify the start of comments in the text</param>
-        /// <param name="autosizeColumns">Defines if the rows of a column shall all be of the same width</param>
-        /// <param name="exportHeaderLine">Defines if a header line shall be created during serialization</param>
-        /// <param name="headerLinePraefix">Optional praefix for the header line</param>
-        /// <param name="instantiator">Function that creates a new instance of type <see cref="T"/>.</param>
-        /// <param name="lineEndsWithColumnSeparator">Defines if during export each line shall be terminated with the column separator.</param>
         public DocumentFormatDefinition(List<IDocumentColumn<T>> columns, string columnSeparator, string commentString, bool autosizeColumns, bool exportHeaderLine, string headerLinePraefix, Func<T> instantiator, bool lineEndsWithColumnSeparator)
         {
             _columns = columns;
@@ -50,29 +36,15 @@ namespace AsciiImportExport
             _lineEndsWithColumnSeparator = lineEndsWithColumnSeparator;
         }
 
-        /// <summary>
-        /// String that is used to separate columns in the text
-        /// </summary>
         public string ColumnSeparator { get; private set; }
 
-        /// <summary>
-        /// Enumerable list of columns of type <see cref="IDocumentColumn{T}"/> defining the structure of a document
-        /// </summary>
         public IEnumerable<IDocumentColumn<T>> Columns
         {
             get { return _columns; }
         }
 
-        /// <summary>
-        /// String that is used to identify the start of comments in the text
-        /// </summary>
         public string CommentString { get; private set; }
 
-        /// <summary>
-        /// Serializes an enumerable list of type <see cref="T"/> to a string
-        /// </summary>
-        /// <param name="items"></param>
-        /// <returns></returns>
         public string Export(IEnumerable<T> items)
         {
             int itemCount = items.Count();
@@ -154,24 +126,7 @@ namespace AsciiImportExport
             return sb.ToString().TrimEnd('\r', '\n');
         }
 
-        /// <summary>
-        /// Parses a string to a generic List of type <see cref="T"/>
-        /// </summary>
-        /// <param name="fileContent">The input string</param>
-        /// <returns></returns>
-        public List<T> Import(string fileContent)
-        {
-            string[] lines = fileContent.Split(new[] {"\r\n", "\n"}, StringSplitOptions.None);
-
-            return Import(lines);
-        }
-
-        /// <summary>
-        /// Parses an enumerable list of strings to a generic List of type <see cref="T"/>
-        /// </summary>
-        /// <param name="lines">The rows of a document</param>
-        /// <returns></returns>
-        public List<T> Import(IEnumerable<string> lines)
+        public List<T> Import(TextReader reader, int skipLines = 0)
         {
             int lineNr = -1;
 
@@ -179,9 +134,13 @@ namespace AsciiImportExport
             {
                 var result = new List<T>();
 
-                foreach (var line in lines)
+                while (reader.Peek() != -1)
                 {
+                    string line = reader.ReadLine();
+
                     lineNr++;
+
+                    if(skipLines > lineNr) continue;
 
                     int linePos = 0;
                     int lineLength = line.Length;

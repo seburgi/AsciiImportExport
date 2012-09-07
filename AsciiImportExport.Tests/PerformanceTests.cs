@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using AsciiImportExport.Tests.Pocos;
 using NUnit.Framework;
 
@@ -30,7 +31,7 @@ namespace AsciiImportExport.Tests
             Console.WriteLine();
 
             sw = Stopwatch.StartNew();
-            List<Measurement> importList = definition.Import(exportResult);
+            List<Measurement> importList = definition.Import(new StringReader(exportResult));
             sw.Stop();
 
             Console.WriteLine(sw.ElapsedMilliseconds);

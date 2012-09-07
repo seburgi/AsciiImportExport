@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using AsciiImportExport.Tests.Pocos;
 using NUnit.Framework;
 
@@ -17,7 +18,7 @@ namespace AsciiImportExport.Tests
         {
             IDocumentFormatDefinition<Location> definition = GetDefinition();
 
-            List<Location> importResult = definition.Import(ExampleCsv);
+            List<Location> importResult = definition.Import(new StringReader(ExampleCsv));
 
             string exportResult = definition.Export(importResult);
 
@@ -37,7 +38,7 @@ namespace AsciiImportExport.Tests
         {
             IDocumentFormatDefinition<Location> definition = GetDefinition();
 
-            List<Location> importResult = definition.Import(ExampleCsv);
+            List<Location> importResult = definition.Import(new StringReader(ExampleCsv));
 
             Assert.AreEqual(14, importResult.Count);
 

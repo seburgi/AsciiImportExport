@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 #endregion
 
@@ -29,24 +30,18 @@ namespace AsciiImportExport
         string CommentString { get; }
 
         /// <summary>
-        /// Serializes an enumerable list of type <see cref="T"/> to a string
+        /// Serializes an enumerable list of the desired type to a string
         /// </summary>
         /// <param name="items"></param>
         /// <returns></returns>
         string Export(IEnumerable<T> items);
 
         /// <summary>
-        /// Parses a string to a generic List of type <see cref="T"/>
+        /// Deserializes a string to a list of the desired type
         /// </summary>
-        /// <param name="fileContent">The input string</param>
+        /// <param name="reader">The text reader</param>
+        /// <param name="skipLines">Tells the importer to skip a certain amount of lines at the beginning of a file.</param>
         /// <returns></returns>
-        List<T> Import(string fileContent);
-
-        /// <summary>
-        /// Parses an enumerable list of strings to a generic List of type <see cref="T"/>
-        /// </summary>
-        /// <param name="lines">The rows of a document</param>
-        /// <returns></returns>
-        List<T> Import(IEnumerable<string> lines);
+        List<T> Import(TextReader reader, int skipLines = 0);
     }
 }

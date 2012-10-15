@@ -68,7 +68,7 @@ Now we define how the data will be exported / imported:
             .Build();
     }
     
-    private static string GenderToString(Gender gender)
+    private static string GenderToString(Person p, Gender gender)
     {
         switch (gender)
         {

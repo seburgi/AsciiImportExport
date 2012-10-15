@@ -13,7 +13,7 @@ namespace AsciiImportExport
         private readonly string _booleanFalse;
         private readonly string _booleanTrue;
         private readonly Func<TRet> _getDefaultValueFunc;
-        private Func<TRet, string> _exportFunc;
+        private Func<T, TRet, string> _exportFunc;
         private readonly Func<T, TRet> _getValueFunc;
         private readonly string _header;
         private Func<string, TRet> _importFunc;
@@ -22,7 +22,7 @@ namespace AsciiImportExport
         private readonly string _stringFormat;
         private readonly Type _type;
 
-        public DocumentColumn(Expression<Func<T, TRet>> expression, string header, Func<TRet> getDefaultValueFunc, int columnWidth, ColumnAlignment alignment, string stringFormat, string booleanTrue, string booleanFalse, Func<string, TRet> importFunc, Func<TRet, string> exportFunc)
+        public DocumentColumn(Expression<Func<T, TRet>> expression, string header, Func<TRet> getDefaultValueFunc, int columnWidth, ColumnAlignment alignment, string stringFormat, string booleanTrue, string booleanFalse, Func<string, TRet> importFunc, Func<T, TRet, string> exportFunc)
         {
             _header = header;
             _getDefaultValueFunc = getDefaultValueFunc;
@@ -111,12 +111,13 @@ namespace AsciiImportExport
 
             if (_exportFunc == null)
             {
-                _exportFunc = ret => ServiceStackTextHelpers<TRet>.GetSerializeFunc(_stringFormat, _booleanTrue, _booleanFalse)(ret);
+                //_exportFunc = (item, ret) => ServiceStackTextHelpers<TRet>.GetSerializeFunc(_stringFormat, _booleanTrue, _booleanFalse)(ret);
+                _exportFunc = (x, ret) => ServiceStackTextHelpers<TRet>.GetSerializeFunc(_stringFormat, _booleanTrue, _booleanFalse)(ret);
             }
 
             try
             {
-                return _exportFunc((TRet)value);
+                return _exportFunc(item, (TRet)value);
             }
             catch (Exception ex)
             {

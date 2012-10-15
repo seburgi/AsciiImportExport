@@ -20,7 +20,7 @@ namespace AsciiImportExport
         private string _booleanTrue = "T";
         private int _columnWidth = -1;
         private Func<TRet> _defaultValue;
-        private Func<TRet, string> _exportFunc;
+        private Func<T, TRet, string> _exportFunc;
         private readonly Expression<Func<T, TRet>> _expression;
         private string _header;
         private Func<string, TRet> _importFunc;
@@ -85,7 +85,7 @@ namespace AsciiImportExport
         /// <summary>
         /// Sets a custom export function that converts a value of type TRet to a string
         /// </summary>
-        public DocumentColumnBuilder<T, TRet> SetExportFunc(Func<TRet, string> exportFunc)
+        public DocumentColumnBuilder<T, TRet> SetExportFunc(Func<T, TRet, string> exportFunc)
         {
             _exportFunc = exportFunc;
             return this;

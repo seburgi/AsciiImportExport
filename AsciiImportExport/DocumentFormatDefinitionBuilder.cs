@@ -110,7 +110,7 @@ namespace AsciiImportExport
         /// <returns></returns>
         public DocumentFormatDefinitionBuilder<T> AddDummyColumn(string exportValue)
         {
-            return AddColumn(x => "", builder => builder.SetExportFunc(x => exportValue).SetColumnWidth(exportValue.Length));
+            return AddColumn(x => "", builder => builder.SetExportFunc((item, x) => exportValue).SetColumnWidth(exportValue.Length));
         }
 
         /// <summary>
@@ -120,7 +120,7 @@ namespace AsciiImportExport
         /// <returns></returns>
         public DocumentFormatDefinitionBuilder<T> AddDummyColumn(int columnWidth)
         {
-            return AddColumn(x => "", builder => builder.SetExportFunc(x => "").SetColumnWidth(columnWidth));
+            return AddColumn(x => "", builder => builder.SetExportFunc((item, x) => "").SetColumnWidth(columnWidth));
         }
 
         /// <summary>

@@ -30,7 +30,7 @@ namespace AsciiImportExport.Tests
                                                                               string year = s.Substring(5);
                                                                               return Int32.Parse(year);
                                                                           })
-                                                       .SetExportFunc(i => i.HasValue ? " seit " + i.Value : ""))
+                                                       .SetExportFunc((x,i) => i.HasValue ? " seit " + i.Value : ""))
                 .Build();
 
 
@@ -49,7 +49,7 @@ namespace AsciiImportExport.Tests
                 .AddColumn(x => x.DOCUMENT)
                 .AddColumn(x => x.EU_MEMBER, builder => builder
                     .SetImportFunc(s => memberOfEuColumnDefinition.Import(new StringReader(s)).Single())
-                    .SetExportFunc(m => memberOfEuColumnDefinition.Export(new [] { m }).TrimEnd(',')))
+                    .SetExportFunc((item, m) => memberOfEuColumnDefinition.Export(new [] { m }).TrimEnd(',')))
                 .AddColumn(x => x.PART_OF_EU, "J", "N")
                 .AddColumn(x => x.CONTINENT)
                 .AddColumn(x => x.PREFIX)

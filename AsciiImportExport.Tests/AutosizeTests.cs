@@ -47,7 +47,7 @@ namespace AsciiImportExport.Tests
             }
         }
 
-        private static string GenderToString(Gender gender)
+        private static string GenderToString(Person p, Gender gender)
         {
             switch (gender)
             {

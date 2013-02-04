@@ -12,16 +12,17 @@ namespace AsciiImportExport
     /// Helps to build a <see cref="DocumentFormatDefinition{T}"/>. Call Build() at the end of the method-chain.
     /// </summary>
     /// <typeparam name="T">The type of the POCO you want to import/export.</typeparam>
-    public class DocumentFormatDefinitionBuilder<T> where T : new()
+    public class DocumentFormatDefinitionBuilder<T>
     {
         private readonly bool _autosizeColumns;
         private readonly string _columnSeparator;
         private readonly List<IDocumentColumn<T>> _columns = new List<IDocumentColumn<T>>();
         private string _commentString;
         private bool _exportHeaderLine;
-        private Func<T> _instantiator = () => new T();
+        private Func<T> _instantiator;
         private bool _lineEndsWithColumnSeparator;
         private string _headerLinePraefix;
+
 
         /// <summary>
         /// The constructor
@@ -32,6 +33,9 @@ namespace AsciiImportExport
         {
             _columnSeparator = columnSeparator;
             _autosizeColumns = autoSizeColumns;
+
+            var defaultInitializer = ServiceStackTextHelpers.GetConstructorMethodToCache(typeof (T));
+            _instantiator = () => (T) defaultInitializer();
         }
 
         /// <summary>

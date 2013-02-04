@@ -50,7 +50,7 @@ namespace AsciiImportExport.Tests
             }
         }
 
-        private List<Measurement> CreateList(int count)
+        private static List<Measurement> CreateList(int count)
         {
             var list = new List<Measurement>();
             var r = new Random();
@@ -74,7 +74,6 @@ namespace AsciiImportExport.Tests
         {
             return new DocumentFormatDefinitionBuilder<Measurement>("\t", true)
                 .SetCommentString("#")
-                .SetInstantiator(() => new Measurement())
                 .AddColumn(x => x.Name)
                 .AddColumn(x => x.DateTime, "dd.MM.yyyy HH:mm:ss")
                 .AddColumn(x => x.X, b => b.SetAlignment(ColumnAlignment.Right))

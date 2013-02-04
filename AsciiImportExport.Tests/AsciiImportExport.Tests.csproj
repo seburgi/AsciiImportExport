@@ -55,6 +55,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommentTests.cs" />
+    <Compile Include="NoDefaultConstructorTests.cs" />
+    <Compile Include="CultureInfoTests.cs" />
+    <Compile Include="Pocos\GpsLocation.cs" />
     <Compile Include="Pocos\SimplePoco.cs" />
     <Compile Include="Pocos\Person.cs" />
     <Compile Include="AutosizeTests.cs" />

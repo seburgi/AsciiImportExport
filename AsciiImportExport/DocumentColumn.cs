@@ -1,6 +1,7 @@
 ﻿#region using directives
 
 using System;
+using System.Globalization;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -18,15 +19,18 @@ namespace AsciiImportExport
         private readonly string _header;
         private Func<string, TRet> _importFunc;
         private readonly bool _isDummyColumn;
-        private readonly Action<T, TRet> _setValueFunc;
+        private Action<T, TRet> _setValueFunc;
         private readonly string _stringFormat;
+        private readonly IFormatProvider _provider;
         private readonly Type _type;
+        private readonly PropertyInfo _propertyInfo;
 
-        public DocumentColumn(Expression<Func<T, TRet>> expression, string header, Func<TRet> getDefaultValueFunc, int columnWidth, ColumnAlignment alignment, string stringFormat, string booleanTrue, string booleanFalse, Func<string, TRet> importFunc, Func<T, TRet, string> exportFunc)
+        public DocumentColumn(Expression<Func<T, TRet>> expression, string header, Func<TRet> getDefaultValueFunc, int columnWidth, ColumnAlignment alignment, string stringFormat, IFormatProvider provider, string booleanTrue, string booleanFalse, Func<string, TRet> importFunc, Func<T, TRet, string> exportFunc)
         {
             _header = header;
             _getDefaultValueFunc = getDefaultValueFunc;
             _stringFormat = stringFormat;
+            _provider = provider;
             ColumnWidth = columnWidth;
             Alignment = alignment;
             _booleanTrue = booleanTrue;
@@ -40,12 +44,8 @@ namespace AsciiImportExport
             if (me != null)
             {
                 _header = _header ?? me.Member.Name;
-                var propertyInfo = me.Member as PropertyInfo;
-                _type = propertyInfo.PropertyType;
-
-                var setMethod = propertyInfo.GetSetMethod();
-                if(setMethod != null)
-                    _setValueFunc = GetValueSetter(propertyInfo, setMethod);
+                _propertyInfo = me.Member as PropertyInfo;
+                _type = _propertyInfo.PropertyType;
             }
             else
             {
@@ -75,23 +75,31 @@ namespace AsciiImportExport
             if (_isDummyColumn) return;
             if (_importFunc == null)
             {
-                _importFunc = s => (TRet) ServiceStackTextHelpers<TRet>.GetParseFn(_stringFormat, _booleanTrue)(s);
+                _importFunc = s => (TRet) ServiceStackTextHelpers.GetParseFn<TRet>(_stringFormat, _booleanTrue, _provider)(s);
             }
-            
-            TRet v;
-            if (String.IsNullOrEmpty(value))
-            {
-                if(_getDefaultValueFunc == null) return;
-                    
-                v = _getDefaultValueFunc();
-            }
-            else
-            {
-                v = _importFunc(value);
-            }
-            
+
             try
             {
+                TRet v;
+
+                if (String.IsNullOrEmpty(value))
+                {
+                    if(_getDefaultValueFunc == null) return;
+                    
+                    v = _getDefaultValueFunc();
+                }
+                else
+                {
+                    v = _importFunc(value);
+                }
+
+                if (_setValueFunc == null)
+                {
+                    var setMethod = _propertyInfo.GetSetMethod(true);
+                    if (setMethod != null)
+                        _setValueFunc = GetValueSetter(_propertyInfo, setMethod);
+                }
+
                 _setValueFunc(item, v);
             }
             catch (Exception ex)
@@ -111,8 +119,7 @@ namespace AsciiImportExport
 
             if (_exportFunc == null)
             {
-                //_exportFunc = (item, ret) => ServiceStackTextHelpers<TRet>.GetSerializeFunc(_stringFormat, _booleanTrue, _booleanFalse)(ret);
-                _exportFunc = (x, ret) => ServiceStackTextHelpers<TRet>.GetSerializeFunc(_stringFormat, _booleanTrue, _booleanFalse)(ret);
+                _exportFunc = (x, ret) => ServiceStackTextHelpers.GetSerializeFunc<TRet>(_stringFormat, _booleanTrue, _booleanFalse, _provider)(ret);
             }
 
             try
@@ -132,12 +139,7 @@ namespace AsciiImportExport
 
         private static Action<T, TRet> GetValueSetter(PropertyInfo propertyInfo, MethodInfo setMethod)
         {
-            if (typeof (T) != propertyInfo.DeclaringType)
-            {
-                throw new ArgumentException();
-            }
-
-            ParameterExpression instance = Expression.Parameter(propertyInfo.DeclaringType, "i");
+            ParameterExpression instance = Expression.Parameter(typeof(T), "i");
             ParameterExpression argument = Expression.Parameter(typeof (TRet), "a");
             MethodCallExpression setterCall = Expression.Call(
                 instance,

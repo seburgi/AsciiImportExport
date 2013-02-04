@@ -5,6 +5,7 @@ AsciiImportExport v0.12
 A .NET library providing fast and easy de/serialization of arbitrary column-based text data.
 
 ## Changelog
+  * v0.20 - Now supports types without default constructor, IFormatProvider for columns, better import performance, small Bugfixes
   * v0.12 - Custom export functions now have access to the item to export
   * v0.11 - Improved performance and memory usage of import with the use of TextReader
   * v0.10 - Added optional praefix for header line when exporting

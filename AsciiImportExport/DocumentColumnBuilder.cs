@@ -1,6 +1,7 @@
 #region using directives
 
 using System;
+using System.Globalization;
 using System.Linq.Expressions;
 
 #endregion
@@ -25,6 +26,7 @@ namespace AsciiImportExport
         private string _header;
         private Func<string, TRet> _importFunc;
         private string _stringFormat;
+        private IFormatProvider _provider = CultureInfo.InvariantCulture;
 
         /// <summary>
         /// The constructor
@@ -41,7 +43,7 @@ namespace AsciiImportExport
         /// <returns></returns>
         public IDocumentColumn<T> Build()
         {
-            return new DocumentColumn<T, TRet>(_expression, _header, _defaultValue, _columnWidth, _alignment, _stringFormat, _booleanTrue, _booleanFalse, _importFunc, _exportFunc);
+            return new DocumentColumn<T, TRet>(_expression, _header, _defaultValue, _columnWidth, _alignment, _stringFormat, _provider, _booleanTrue, _booleanFalse, _importFunc, _exportFunc);
         }
 
         /// <summary>
@@ -106,6 +108,15 @@ namespace AsciiImportExport
         public DocumentColumnBuilder<T, TRet> SetImportFunc(Func<string, TRet> importFunc)
         {
             _importFunc = importFunc;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the format information of the column
+        /// </summary>
+        public DocumentColumnBuilder<T, TRet> SetFormatProvider(IFormatProvider provider)
+        {
+            _provider = provider;
             return this;
         }
 

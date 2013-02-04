@@ -2,6 +2,7 @@
 
 using System;
 using System.Globalization;
+using System.Runtime.Serialization;
 
 #endregion
 
@@ -12,7 +13,7 @@ namespace AsciiImportExport
     /// A lot of this classes logic was copied and customized from the ServiceStack.Text project
     /// </summary>
     /// <typeparam name="TRet">The type of the columns data</typeparam>
-    internal static class ServiceStackTextHelpers<TRet>
+    internal static class ServiceStackTextHelpers
     {
         /// <summary>
         /// Returns a parsing function for built-in types
@@ -20,7 +21,7 @@ namespace AsciiImportExport
         /// </summary>
         /// <param name="stringFormat">The string format used for DateTime parsing</param>
         /// <param name="booleanTrue">The string that identifies a boolean true value</param>
-        public static Func<string, object> GetParseFn(string stringFormat, string booleanTrue)
+        public static Func<string, object> GetParseFn<TRet>(string stringFormat, string booleanTrue, IFormatProvider provider)
         {
             //Note the generic typeof(T) is faster than using var type = typeof(T)
             if (typeof (TRet) == typeof (string))
@@ -38,16 +39,16 @@ namespace AsciiImportExport
             if (typeof (TRet) == typeof (long))
                 return value => long.Parse(value);
             if (typeof (TRet) == typeof (float))
-                return value => float.Parse(value, CultureInfo.InvariantCulture);
+                return value => float.Parse(value, provider);
             if (typeof (TRet) == typeof (double))
-                return value => double.Parse(value, CultureInfo.InvariantCulture);
+                return value => double.Parse(value, provider);
             if (typeof (TRet) == typeof (decimal))
-                return value => decimal.Parse(value, CultureInfo.InvariantCulture);
+                return value => decimal.Parse(value, provider);
 
             if (typeof (TRet) == typeof (Guid))
                 return value => new Guid(value);
             if (typeof (TRet) == typeof (DateTime))
-                return value => DateTime.ParseExact(value, stringFormat, CultureInfo.InvariantCulture);
+                return value => DateTime.ParseExact(value, stringFormat, provider);
             if (typeof (TRet) == typeof (TimeSpan))
                 return value => TimeSpan.Parse(value);
 
@@ -76,14 +77,14 @@ namespace AsciiImportExport
             if (typeof (TRet) == typeof (long?))
                 return value => value == null ? (long?) null : long.Parse(value);
             if (typeof (TRet) == typeof (float?))
-                return value => value == null ? (float?) null : float.Parse(value, CultureInfo.InvariantCulture);
+                return value => value == null ? (float?)null : float.Parse(value, provider);
             if (typeof (TRet) == typeof (double?))
-                return value => value == null ? (double?) null : double.Parse(value, CultureInfo.InvariantCulture);
+                return value => value == null ? (double?)null : double.Parse(value, provider);
             if (typeof (TRet) == typeof (decimal?))
-                return value => value == null ? (decimal?) null : decimal.Parse(value, CultureInfo.InvariantCulture);
+                return value => value == null ? (decimal?)null : decimal.Parse(value, provider);
 
             if (typeof (TRet) == typeof (DateTime?))
-                return value => value == null ? (DateTime?) null : DateTime.ParseExact(value, stringFormat, CultureInfo.InvariantCulture);
+                return value => value == null ? (DateTime?)null : DateTime.ParseExact(value, stringFormat, provider);
             if (typeof (TRet) == typeof (TimeSpan?))
                 return value => value == null ? (TimeSpan?) null : TimeSpan.Parse(value);
             if (typeof (TRet) == typeof (Guid?))
@@ -111,7 +112,7 @@ namespace AsciiImportExport
         /// <param name="stringFormat">The string format used for formatting of DateTime or numeric values</param>
         /// <param name="booleanTrue">The string that identifies a boolean true value</param>
         /// <param name="booleanFalse">The string that identifies a boolean false value</param>
-        public static Func<object, string> GetSerializeFunc(string stringFormat, string booleanTrue, string booleanFalse)
+        public static Func<object, string> GetSerializeFunc<TRet>(string stringFormat, string booleanTrue, string booleanFalse, IFormatProvider provider)
         {
             if (typeof (TRet) == typeof (byte)
                 || typeof (TRet) == typeof (short)
@@ -135,15 +136,15 @@ namespace AsciiImportExport
                 return v => ((Guid) v).ToString("N");
 
             if (typeof (TRet) == typeof (float))
-                return v => ((float) v).ToString(stringFormat, CultureInfo.InvariantCulture);
+                return v => ((float)v).ToString(stringFormat, provider);
 
 
             if (typeof (TRet) == typeof (double))
-                return v => ((double) v).ToString(stringFormat, CultureInfo.InvariantCulture);
+                return v => ((double)v).ToString(stringFormat, provider);
 
 
             if (typeof (TRet) == typeof (decimal))
-                return v => ((decimal) v).ToString(stringFormat, CultureInfo.InvariantCulture);
+                return v => ((decimal)v).ToString(stringFormat, provider);
 
 
             if (typeof (TRet) == typeof (byte?)
@@ -168,15 +169,15 @@ namespace AsciiImportExport
 
 
             if (typeof (TRet) == typeof (float?))
-                return v => v == null ? "" : ((float) v).ToString(stringFormat, CultureInfo.InvariantCulture);
+                return v => v == null ? "" : ((float)v).ToString(stringFormat, provider);
 
 
             if (typeof (TRet) == typeof (double?))
-                return v => v == null ? "" : ((double) v).ToString(stringFormat, CultureInfo.InvariantCulture);
+                return v => v == null ? "" : ((double)v).ToString(stringFormat, provider);
 
 
             if (typeof (TRet) == typeof (decimal?))
-                return v => v == null ? "" : ((decimal) v).ToString(stringFormat, CultureInfo.InvariantCulture);
+                return v => v == null ? "" : ((decimal)v).ToString(stringFormat, provider);
 
 
             if (typeof (TRet).IsEnum || typeof (TRet).UnderlyingSystemType.IsEnum)
@@ -197,5 +198,44 @@ namespace AsciiImportExport
             var intVal = (int) enumFlagValue;
             return intVal.ToString();
         }
+
+        public static EmptyCtorDelegate GetConstructorMethodToCache(Type type)
+        {
+            var emptyCtor = type.GetConstructor(Type.EmptyTypes);
+            if (emptyCtor != null)
+            {
+
+#if MONOTOUCH || c|| XBOX
+				return () => Activator.CreateInstance(type);
+                
+#elif WINDOWS_PHONE
+                return Expression.Lambda<EmptyCtorDelegate>(Expression.New(type)).Compile();
+#else
+#if SILVERLIGHT
+                var dm = new System.Reflection.Emit.DynamicMethod("MyCtor", type, Type.EmptyTypes);
+#else
+                var dm = new System.Reflection.Emit.DynamicMethod("MyCtor", type, Type.EmptyTypes, typeof(ServiceStackTextHelpers).Module, true);
+#endif
+                var ilgen = dm.GetILGenerator();
+                ilgen.Emit(System.Reflection.Emit.OpCodes.Nop);
+                ilgen.Emit(System.Reflection.Emit.OpCodes.Newobj, emptyCtor);
+                ilgen.Emit(System.Reflection.Emit.OpCodes.Ret);
+
+                return (EmptyCtorDelegate)dm.CreateDelegate(typeof(EmptyCtorDelegate));
+#endif
+            }
+
+#if (SILVERLIGHT && !WINDOWS_PHONE) || XBOX
+            return () => Activator.CreateInstance(type);
+#elif WINDOWS_PHONE
+            return Expression.Lambda<EmptyCtorDelegate>(Expression.New(type)).Compile();
+#else
+            //Anonymous types don't have empty constructors
+            return () => FormatterServices.GetUninitializedObject(type);
+#endif
+        }
+
+        public delegate EmptyCtorDelegate EmptyCtorFactoryDelegate(Type type);
+        public delegate object EmptyCtorDelegate();
     }
 }

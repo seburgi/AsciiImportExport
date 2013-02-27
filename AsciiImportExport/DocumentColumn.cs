@@ -15,6 +15,8 @@ namespace AsciiImportExport
         private readonly string _booleanTrue;
         private readonly Func<TRet> _getDefaultValueFunc;
         private Func<T, TRet, string> _exportFunc;
+        private readonly char? _fillChar;
+        private readonly bool _throwOnColumnOverflow;
         private readonly Func<T, TRet> _getValueFunc;
         private readonly string _header;
         private Func<string, TRet> _importFunc;
@@ -25,7 +27,7 @@ namespace AsciiImportExport
         private readonly Type _type;
         private readonly PropertyInfo _propertyInfo;
 
-        public DocumentColumn(Expression<Func<T, TRet>> expression, string header, Func<TRet> getDefaultValueFunc, int columnWidth, ColumnAlignment alignment, string stringFormat, IFormatProvider provider, string booleanTrue, string booleanFalse, Func<string, TRet> importFunc, Func<T, TRet, string> exportFunc)
+        public DocumentColumn(Expression<Func<T, TRet>> expression, string header, Func<TRet> getDefaultValueFunc, int columnWidth, ColumnAlignment alignment, string stringFormat, IFormatProvider provider, string booleanTrue, string booleanFalse, Func<string, TRet> importFunc, Func<T, TRet, string> exportFunc, char? fillChar, bool throwOnColumnOverflow)
         {
             _header = header;
             _getDefaultValueFunc = getDefaultValueFunc;
@@ -37,6 +39,8 @@ namespace AsciiImportExport
             _booleanFalse = booleanFalse;
             _importFunc = importFunc;
             _exportFunc = exportFunc;
+            _fillChar = fillChar;
+            _throwOnColumnOverflow = throwOnColumnOverflow;
 
             _getValueFunc = expression.Compile();
 
@@ -67,7 +71,7 @@ namespace AsciiImportExport
         {
             int width = columnWidth >= 0 ? columnWidth : 0;
 
-            return (Alignment == ColumnAlignment.Right ? value.PadLeft(width) : value.PadRight(width));
+            return (Alignment == ColumnAlignment.Right ? value.PadLeft(width, _fillChar ?? ' ') : value.PadRight(width, _fillChar ?? ' '));
         }
 
         public void Parse(T item, string value)
@@ -124,7 +128,10 @@ namespace AsciiImportExport
 
             try
             {
-                return _exportFunc(item, (TRet)value);
+                var exportedValue = _exportFunc(item, (TRet) value);
+                if(_throwOnColumnOverflow && exportedValue.Length > ColumnWidth)
+                    throw new OverflowException(string.Format("Column data width ({0}) exceded maximum column width ({1})", exportedValue.Length, ColumnWidth));
+                return exportedValue;
             }
             catch (Exception ex)
             {

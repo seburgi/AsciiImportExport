@@ -27,6 +27,8 @@ namespace AsciiImportExport
         private Func<string, TRet> _importFunc;
         private string _stringFormat;
         private IFormatProvider _provider = CultureInfo.InvariantCulture;
+        private char? _fillChar;
+        private bool _throwOnColumnOverflow;
 
         /// <summary>
         /// The constructor
@@ -43,7 +45,7 @@ namespace AsciiImportExport
         /// <returns></returns>
         public IDocumentColumn<T> Build()
         {
-            return new DocumentColumn<T, TRet>(_expression, _header, _defaultValue, _columnWidth, _alignment, _stringFormat, _provider, _booleanTrue, _booleanFalse, _importFunc, _exportFunc);
+            return new DocumentColumn<T, TRet>(_expression, _header, _defaultValue, _columnWidth, _alignment, _stringFormat, _provider, _booleanTrue, _booleanFalse, _importFunc, _exportFunc, _fillChar, _throwOnColumnOverflow);
         }
 
         /// <summary>
@@ -127,6 +129,17 @@ namespace AsciiImportExport
         {
             _stringFormat = stringFormat;
             return this;
+        }
+
+        public DocumentColumnBuilder<T, TRet> SetFillChar(char fillChar)
+        {
+            _fillChar = fillChar;
+            return this;
+        }
+
+        public void ThrowOnOverflow()
+        {
+            _throwOnColumnOverflow = true;
         }
     }
 }

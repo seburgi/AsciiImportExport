@@ -19,8 +19,9 @@ namespace AsciiImportExport
         private readonly string _headerLinePraefix;
         private readonly Func<T> _instantiator;
         private readonly bool _lineEndsWithColumnSeparator;
+        private readonly bool _trimLineEnds;
 
-        public DocumentFormatDefinition(List<IDocumentColumn<T>> columns, string columnSeparator, string commentString, bool autosizeColumns, bool exportHeaderLine, string headerLinePraefix, Func<T> instantiator, bool lineEndsWithColumnSeparator)
+        public DocumentFormatDefinition(List<IDocumentColumn<T>> columns, string columnSeparator, string commentString, bool autosizeColumns, bool exportHeaderLine, string headerLinePraefix, Func<T> instantiator, bool lineEndsWithColumnSeparator, bool trimLineEnds)
         {
             _columns = columns;
 
@@ -34,6 +35,7 @@ namespace AsciiImportExport
             _headerLinePraefix = headerLinePraefix ?? "";
             _instantiator = instantiator;
             _lineEndsWithColumnSeparator = lineEndsWithColumnSeparator;
+            _trimLineEnds = trimLineEnds;
         }
 
         public string ColumnSeparator { get; private set; }
@@ -120,7 +122,12 @@ namespace AsciiImportExport
                     if (j < _columns.Count - 1 || _lineEndsWithColumnSeparator)
                         lineSb.Append(ColumnSeparator);
                 }
-                sb.AppendLine(lineSb.ToString().TrimEnd());
+                var line = lineSb.ToString();
+                if (_trimLineEnds)
+                {
+                    line = line.TrimEnd();
+                }
+                sb.AppendLine(line);
             }
 
             return sb.ToString().TrimEnd('\r', '\n');

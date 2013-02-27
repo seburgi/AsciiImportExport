@@ -22,6 +22,7 @@ namespace AsciiImportExport
         private Func<T> _instantiator;
         private bool _lineEndsWithColumnSeparator;
         private string _headerLinePraefix;
+        private bool _trimLineEnds = true;
 
 
         /// <summary>
@@ -133,7 +134,7 @@ namespace AsciiImportExport
         /// <returns></returns>
         public IDocumentFormatDefinition<T> Build()
         {
-            return new DocumentFormatDefinition<T>(_columns, _columnSeparator, _commentString, _autosizeColumns, _exportHeaderLine, _headerLinePraefix, _instantiator, _lineEndsWithColumnSeparator);
+            return new DocumentFormatDefinition<T>(_columns, _columnSeparator, _commentString, _autosizeColumns, _exportHeaderLine, _headerLinePraefix, _instantiator, _lineEndsWithColumnSeparator, _trimLineEnds);
         }
 
         /// <summary>
@@ -173,6 +174,12 @@ namespace AsciiImportExport
         public DocumentFormatDefinitionBuilder<T> SetLineEndsWithColumnSeparator(bool lineEndsWithColumnSeparator)
         {
             _lineEndsWithColumnSeparator = lineEndsWithColumnSeparator;
+            return this;
+        }
+
+        public DocumentFormatDefinitionBuilder<T> SetTrimLineEnds(bool trimLineEnds)
+        {
+            _trimLineEnds = trimLineEnds;
             return this;
         }
     }

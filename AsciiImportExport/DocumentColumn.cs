@@ -130,7 +130,7 @@ namespace AsciiImportExport
             {
                 var exportedValue = _exportFunc(item, (TRet) value);
                 if(_throwOnColumnOverflow && exportedValue.Length > ColumnWidth)
-                    throw new OverflowException(string.Format("Column data width ({0}) exceded maximum column width ({1})", exportedValue.Length, ColumnWidth));
+                    throw new OverflowException(string.Format("Column data width ({0}) exceeded maximum column width ({1})", exportedValue.Length, ColumnWidth));
                 return exportedValue;
             }
             catch (Exception ex)

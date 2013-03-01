@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
-    <version>0.20.0</version>
+    <version>0.21.0</version>
     <authors>Sebastian Burgstaller</authors>
     <owners>passionatedev</owners>
     <licenseUrl>https://github.com/seburgi/AsciiImportExport/blob/master/License.txt</licenseUrl>
@@ -11,7 +11,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A .NET library providing fast and easy de/serialization of arbitrary column-based text data.</description>
     <summary>A .NET library providing fast and easy de/serialization of arbitrary column-based text data.</summary>
-    <copyright>Sebastian Burgstaller 2012</copyright>
+    <copyright>Sebastian Burgstaller 2013</copyright>
     <tags>CSV TXT Import Export ASCII Serializer</tags>
   </metadata>
   <files>

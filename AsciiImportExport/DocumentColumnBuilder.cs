@@ -1,10 +1,7 @@
-#region using directives
-
 using System;
 using System.Globalization;
 using System.Linq.Expressions;
-
-#endregion
+using System.Reflection;
 
 namespace AsciiImportExport
 {
@@ -20,14 +17,15 @@ namespace AsciiImportExport
         private string _booleanFalse = "F";
         private string _booleanTrue = "T";
         private int _columnWidth = -1;
-        private Func<TRet> _defaultValue;
-        private Func<T, TRet, string> _exportFunc;
+        private Func<object> _defaultValue;
+        private Func<T, object, string> _exportFunc;
         private readonly Expression<Func<T, TRet>> _expression;
+        private char _fillChar = ' ';
         private string _header;
-        private Func<string, TRet> _importFunc;
-        private string _stringFormat;
+        private Func<string, object> _importFunc;
+        private PropertyInfo _propertyInfo;
         private IFormatProvider _provider = CultureInfo.InvariantCulture;
-        private char? _fillChar;
+        private string _stringFormat;
         private bool _throwOnColumnOverflow;
 
         /// <summary>
@@ -40,12 +38,40 @@ namespace AsciiImportExport
         }
 
         /// <summary>
+        /// The constructor
+        /// </summary>
+        /// <param name="propertyInfo">The property's PropertyInfo you want to import/export with this column</param>
+        public DocumentColumnBuilder(PropertyInfo propertyInfo)
+        {
+            _propertyInfo = propertyInfo;
+        }
+
+        /// <summary>
         /// Builds an initialized and ready to use instance of <see cref="IDocumentColumn{T}"/>
         /// </summary>
         /// <returns></returns>
         public IDocumentColumn<T> Build()
         {
-            return new DocumentColumn<T, TRet>(_expression, _header, _defaultValue, _columnWidth, _alignment, _stringFormat, _provider, _booleanTrue, _booleanFalse, _importFunc, _exportFunc, _fillChar, _throwOnColumnOverflow);
+            if (_expression != null)
+            {
+                MemberExpression me = Helpers.GetMemberExpression(_expression);
+                if (me != null)
+                {
+                    _propertyInfo = me.Member as PropertyInfo;
+                }
+            }
+
+            if (String.IsNullOrEmpty(_stringFormat))
+            {
+                Type columnType = _propertyInfo == null ? typeof (TRet) : _propertyInfo.PropertyType;
+
+                if (columnType == typeof (DateTime) || columnType == typeof (DateTime?))
+                    _stringFormat = DEFAULT_DATETIME_STRING_FORMAT;
+                else
+                    _stringFormat = DEFAULT_NUMERIC_STRING_FORMAT;
+            }
+
+            return new DocumentColumn<T>(_propertyInfo, _header, _defaultValue, _columnWidth, _alignment, _stringFormat, _provider, _booleanTrue, _booleanFalse, _importFunc, _exportFunc, _fillChar, _throwOnColumnOverflow);
         }
 
         /// <summary>
@@ -76,13 +102,12 @@ namespace AsciiImportExport
             return this;
         }
 
-
         /// <summary>
         /// Sets the default value of the column (Default = default(TRet))
         /// </summary>
         public DocumentColumnBuilder<T, TRet> SetDefaultValue(Func<TRet> value)
         {
-            _defaultValue = value;
+            _defaultValue = Convert(value);
             return this;
         }
 
@@ -91,7 +116,25 @@ namespace AsciiImportExport
         /// </summary>
         public DocumentColumnBuilder<T, TRet> SetExportFunc(Func<T, TRet, string> exportFunc)
         {
-            _exportFunc = exportFunc;
+            _exportFunc = Convert(exportFunc);
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the fill character to use for a column (Default = ' ')
+        /// </summary>
+        public DocumentColumnBuilder<T, TRet> SetFillChar(char fillChar)
+        {
+            _fillChar = fillChar;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the format information of the column
+        /// </summary>
+        public DocumentColumnBuilder<T, TRet> SetFormatProvider(IFormatProvider provider)
+        {
+            _provider = provider;
             return this;
         }
 
@@ -109,16 +152,7 @@ namespace AsciiImportExport
         /// </summary>
         public DocumentColumnBuilder<T, TRet> SetImportFunc(Func<string, TRet> importFunc)
         {
-            _importFunc = importFunc;
-            return this;
-        }
-
-        /// <summary>
-        /// Sets the format information of the column
-        /// </summary>
-        public DocumentColumnBuilder<T, TRet> SetFormatProvider(IFormatProvider provider)
-        {
-            _provider = provider;
+            _importFunc = Convert(importFunc);
             return this;
         }
 
@@ -131,15 +165,40 @@ namespace AsciiImportExport
             return this;
         }
 
-        public DocumentColumnBuilder<T, TRet> SetFillChar(char fillChar)
-        {
-            _fillChar = fillChar;
-            return this;
-        }
-
         public void ThrowOnOverflow()
         {
             _throwOnColumnOverflow = true;
         }
+
+        private Func<object> Convert(Func<TRet> myActionT)
+        {
+            if (myActionT == null) return null;
+
+            return () => myActionT();
+        }
+
+        private Func<T, object, string> Convert(Func<T, TRet, string> myActionT)
+        {
+            if (myActionT == null) return null;
+
+            return (arg, o) => myActionT(arg, (TRet) o);
+        }
+
+        private Func<string, object> Convert(Func<string, TRet> myActionT)
+        {
+            if (myActionT == null) return null;
+
+            return s => myActionT(s);
+        }
+
+        /// <summary>
+        /// Default StringFormat for DateTime
+        /// </summary>
+        public const string DEFAULT_DATETIME_STRING_FORMAT = "dd.MM.yyyy HH:mm:ss";
+
+        /// <summary>
+        /// Default StringFormat for numeric types
+        /// </summary>
+        public const string DEFAULT_NUMERIC_STRING_FORMAT = "0.###########";
     }
 }

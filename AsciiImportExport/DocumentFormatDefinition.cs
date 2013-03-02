@@ -1,12 +1,9 @@
-﻿#region using directives
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
-
-#endregion
 
 namespace AsciiImportExport
 {
@@ -81,7 +78,7 @@ namespace AsciiImportExport
 
                     if (_exportHeaderLine)
                     {
-                        maxLength = i==0 ? Math.Max(maxLength, _headerLinePraefix.Length + _columns[i].Header.Length) : Math.Max(maxLength, _columns[i].Header.Length);
+                        maxLength = i == 0 ? Math.Max(maxLength, _headerLinePraefix.Length + _columns[i].Header.Length) : Math.Max(maxLength, _columns[i].Header.Length);
                     }
 
                     columnWidths[i] = Math.Max(columnWidths[i], maxLength);
@@ -96,14 +93,14 @@ namespace AsciiImportExport
                 var lineSb = new StringBuilder();
                 for (int i = 0; i < _columns.Count; i++)
                 {
-                    if(i==0)
+                    if (i == 0)
                     {
                         lineSb.Append(_headerLinePraefix);
                         lineSb.Append(_columns[i].Format(_columns[i].Header, columnWidths[i] - _headerLinePraefix.Length));
                     }
                     else
                     {
-                        lineSb.Append(_columns[i].Format(_columns[i].Header, columnWidths[i]));                       
+                        lineSb.Append(_columns[i].Format(_columns[i].Header, columnWidths[i]));
                     }
 
                     if (i < _columns.Count - 1 || _lineEndsWithColumnSeparator)
@@ -122,7 +119,7 @@ namespace AsciiImportExport
                     if (j < _columns.Count - 1 || _lineEndsWithColumnSeparator)
                         lineSb.Append(ColumnSeparator);
                 }
-                var line = lineSb.ToString();
+                string line = lineSb.ToString();
                 if (_trimLineEnds)
                 {
                     line = line.TrimEnd();
@@ -147,7 +144,7 @@ namespace AsciiImportExport
 
                     lineNr++;
 
-                    if(skipLines > lineNr) continue;
+                    if (skipLines > lineNr) continue;
 
                     int linePos = 0;
                     int lineLength = line.Length;

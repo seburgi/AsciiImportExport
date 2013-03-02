@@ -1,10 +1,4 @@
-﻿#region using directives
-
-
-
-#endregion
-
-using System;
+﻿using System;
 
 namespace AsciiImportExport
 {

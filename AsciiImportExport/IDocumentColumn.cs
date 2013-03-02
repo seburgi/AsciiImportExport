@@ -1,9 +1,3 @@
-#region using directives
-
-using System;
-
-#endregion
-
 namespace AsciiImportExport
 {
     /// <summary>
@@ -25,7 +19,7 @@ namespace AsciiImportExport
         /// <summary>
         /// The header of the column
         /// </summary>
-        string Header { get; }
+        string Header { get; set; }
 
         /// <summary>
         /// Returns the input string correctly padded to the specified length

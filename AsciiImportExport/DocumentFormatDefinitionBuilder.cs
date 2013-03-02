@@ -1,10 +1,8 @@
-﻿#region using directives
-
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
-
-#endregion
+using System.Reflection;
 
 namespace AsciiImportExport
 {
@@ -19,11 +17,10 @@ namespace AsciiImportExport
         private readonly List<IDocumentColumn<T>> _columns = new List<IDocumentColumn<T>>();
         private string _commentString;
         private bool _exportHeaderLine;
+        private string _headerLinePraefix;
         private Func<T> _instantiator;
         private bool _lineEndsWithColumnSeparator;
-        private string _headerLinePraefix;
         private bool _trimLineEnds = true;
-
 
         /// <summary>
         /// The constructor
@@ -35,7 +32,7 @@ namespace AsciiImportExport
             _columnSeparator = columnSeparator;
             _autosizeColumns = autoSizeColumns;
 
-            var defaultInitializer = ServiceStackTextHelpers.GetConstructorMethodToCache(typeof (T));
+            ServiceStackTextHelpers.EmptyCtorDelegate defaultInitializer = ServiceStackTextHelpers.GetConstructorMethodToCache(typeof (T));
             _instantiator = () => (T) defaultInitializer();
         }
 
@@ -94,11 +91,50 @@ namespace AsciiImportExport
         /// </summary>
         /// <typeparam name="TRet">The type of the columns data</typeparam>
         /// <param name="expression">Lambda expression that evaluates the property of the POCO you want to import/export with this column</param>
+        /// <param name="stringFormat">String format of the property</param>
         /// <param name="customization">Action that enables additionial customizations of the <see cref="DocumentColumnBuilder{T,TRet}"/></param>
         /// <returns></returns>
         public DocumentFormatDefinitionBuilder<T> AddColumn<TRet>(Expression<Func<T, TRet>> expression, string stringFormat, Action<DocumentColumnBuilder<T, TRet>> customization = null)
         {
             DocumentColumnBuilder<T, TRet> builder = new DocumentColumnBuilder<T, TRet>(expression).SetStringFormat(stringFormat);
+
+            if (customization != null)
+                customization(builder);
+
+            _columns.Add(builder.Build());
+
+            return this;
+        }
+
+        /// <summary>
+        /// Adds a new column
+        /// </summary>
+        /// <param name="propertyInfo">The property's PropertyInfo you want to import/export with this column</param>
+        /// <param name="stringFormat">String format of the property</param>
+        /// <param name="customization">Action that enables additionial customizations of the <see cref="DocumentColumnBuilder{T,TRet}"/></param>
+        /// <returns></returns>
+        public DocumentFormatDefinitionBuilder<T> AddColumn(PropertyInfo propertyInfo, Action<DocumentColumnBuilder<T, object>> customization = null)
+        {
+            var builder = new DocumentColumnBuilder<T, object>(propertyInfo);
+
+            if (customization != null)
+                customization(builder);
+
+            _columns.Add(builder.Build());
+
+            return this;
+        }
+
+        /// <summary>
+        /// Adds a new column
+        /// </summary>
+        /// <param name="propertyInfo">The property's PropertyInfo you want to import/export with this column</param>
+        /// <param name="stringFormat">String format of the property</param>
+        /// <param name="customization">Action that enables additionial customizations of the <see cref="DocumentColumnBuilder{T,TRet}"/></param>
+        /// <returns></returns>
+        public DocumentFormatDefinitionBuilder<T> AddColumn(PropertyInfo propertyInfo, string stringFormat, Action<DocumentColumnBuilder<T, object>> customization = null)
+        {
+            DocumentColumnBuilder<T, object> builder = new DocumentColumnBuilder<T, object>(propertyInfo).SetStringFormat(stringFormat);
 
             if (customization != null)
                 customization(builder);
@@ -115,7 +151,7 @@ namespace AsciiImportExport
         /// <returns></returns>
         public DocumentFormatDefinitionBuilder<T> AddDummyColumn(string exportValue)
         {
-            return AddColumn(x => "", builder => builder.SetExportFunc((item, x) => exportValue).SetColumnWidth(exportValue.Length));
+            return AddColumn<string>(null, builder => builder.SetExportFunc((item, x) => exportValue).SetColumnWidth(exportValue.Length));
         }
 
         /// <summary>
@@ -125,7 +161,23 @@ namespace AsciiImportExport
         /// <returns></returns>
         public DocumentFormatDefinitionBuilder<T> AddDummyColumn(int columnWidth)
         {
-            return AddColumn(x => "", builder => builder.SetExportFunc((item, x) => "").SetColumnWidth(columnWidth));
+            return AddColumn<string>(null, builder => builder.SetExportFunc((item, x) => "").SetColumnWidth(columnWidth));
+        }
+
+        /// <summary>
+        /// Automatically builds a ready to use instance of <see cref="DocumentFormatDefinition{T}"/> with columns for all public propertys of the provided type/>
+        /// </summary>
+        /// <param name="columnSeparator">String that is used to separate columns in the text</param>
+        /// <param name="autoSizeColumns">Defines if the rows of a column shall all be of the same width</param>
+        /// <param name="commentString">String that is used to identify the start of comments in the text (Default = No comments)</param>
+        /// <param name="exportHeaderLine">Defines if a header line shall be created during serialization (Default = false)</param>
+        /// <param name="headerLinePraefix">Optional praefix for the header line (Default = empty string)</param>
+        /// <returns></returns>
+        public static IDocumentFormatDefinition<T> AutoBuild(string columnSeparator, bool autoSizeColumns, string commentString, bool exportHeaderLine, string headerLinePraefix = "")
+        {
+            List<PropertyInfo> propertyList = typeof (T).GetProperties(BindingFlags.Public | BindingFlags.Instance).ToList();
+
+            return Build(propertyList, columnSeparator, autoSizeColumns, commentString, exportHeaderLine, headerLinePraefix);
         }
 
         /// <summary>
@@ -135,6 +187,30 @@ namespace AsciiImportExport
         public IDocumentFormatDefinition<T> Build()
         {
             return new DocumentFormatDefinition<T>(_columns, _columnSeparator, _commentString, _autosizeColumns, _exportHeaderLine, _headerLinePraefix, _instantiator, _lineEndsWithColumnSeparator, _trimLineEnds);
+        }
+
+        /// <summary>
+        /// Builds a ready to use instance of <see cref="DocumentFormatDefinition{T}"/> with columns for all properties in the provided property list />
+        /// </summary>
+        /// <param name="propertyList">List of properties to import / export</param>
+        /// <param name="columnSeparator">String that is used to separate columns in the text</param>
+        /// <param name="autoSizeColumns">Defines if the rows of a column shall all be of the same width</param>
+        /// <param name="commentString">String that is used to identify the start of comments in the text (Default = No comments)</param>
+        /// <param name="exportHeaderLine">Defines if a header line shall be created during serialization (Default = false)</param>
+        /// <param name="headerLinePraefix">Optional praefix for the header line (Default = empty string)</param>
+        /// <returns></returns>
+        public static IDocumentFormatDefinition<T> Build(List<PropertyInfo> propertyList, string columnSeparator, bool autoSizeColumns, string commentString, bool exportHeaderLine, string headerLinePraefix = "")
+        {
+            DocumentFormatDefinitionBuilder<T> builder = new DocumentFormatDefinitionBuilder<T>(columnSeparator, autoSizeColumns)
+                .SetCommentString(commentString)
+                .SetExportHeaderLine(exportHeaderLine, headerLinePraefix);
+
+            foreach (var property in propertyList)
+            {
+                builder.AddColumn(property);
+            }
+
+            return builder.Build();
         }
 
         /// <summary>
@@ -177,6 +253,9 @@ namespace AsciiImportExport
             return this;
         }
 
+        /// <summary>
+        /// Defines if line endings get trimmed during export. (Default = true)
+        /// </summary>
         public DocumentFormatDefinitionBuilder<T> SetTrimLineEnds(bool trimLineEnds)
         {
             _trimLineEnds = trimLineEnds;

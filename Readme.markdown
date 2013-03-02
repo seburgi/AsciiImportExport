@@ -1,10 +1,11 @@
-AsciiImportExport v0.21
+AsciiImportExport v0.22
 ======================================================================
 
 ## Overview
 A .NET library providing fast and easy de/serialization of arbitrary column-based text data.
 
 ## Changelog
+  * v0.22 - Now supports creation of columns with PropertyInfo, which enables automatic document format building
   * v0.21 - Configurable fill char, line end trim made optional, max column width validation
   * v0.20 - Now supports types without default constructor, IFormatProvider for columns, better import performance, small Bugfixes
   * v0.12 - Custom export functions now have access to the item to export

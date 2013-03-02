@@ -1,10 +1,5 @@
-#region using directives
-
-using System;
 using System.Collections.Generic;
 using System.IO;
-
-#endregion
 
 namespace AsciiImportExport
 {

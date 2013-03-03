@@ -14,8 +14,8 @@ namespace AsciiImportExport
     public class DocumentColumnBuilder<T, TRet>
     {
         private ColumnAlignment _alignment = ColumnAlignment.Left;
-        private string _booleanFalse = "F";
-        private string _booleanTrue = "T";
+        private string _booleanFalse = GlobalConfig.DefaultBooleanFalseString;
+        private string _booleanTrue = GlobalConfig.DefaultBooleanTrueString;
         private int _columnWidth = -1;
         private Func<object> _defaultValue;
         private Func<T, object, string> _exportFunc;

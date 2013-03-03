@@ -137,6 +137,9 @@ namespace AsciiImportExport
             {
                 var result = new List<T>();
 
+                var columns = new List<IDocumentColumn<T>>();
+
+
                 while (reader.Peek() != -1)
                 {
                     string line = reader.ReadLine();
@@ -151,11 +154,16 @@ namespace AsciiImportExport
                     if (_checkForComments)
                     {
                         int commentPos = line.IndexOf(CommentString, StringComparison.InvariantCulture);
+
+                        // If comment was found, decrease line length
                         if (commentPos >= 0)
                             lineLength = commentPos;
                     }
 
+                    // if line length is 0, we can jump to next line
                     if (lineLength == 0) continue;
+
+                    // check if line only consists of white spaces
                     while (linePos < lineLength)
                     {
                         if (line[linePos] == ' ')
@@ -163,8 +171,11 @@ namespace AsciiImportExport
                         else
                             break;
                     }
+                    
+                    // if empty line, jump to next line
                     if (linePos == lineLength) continue;
 
+                    // now that we confirmed that the line is not empty, we can start the import
                     linePos = 0;
                     T item = _instantiator();
 

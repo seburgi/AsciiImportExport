@@ -46,11 +46,13 @@
     <OutputPath>bin\Release\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="System" />
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ColumnAlignment.cs" />
     <Compile Include="ExportException.cs" />
+    <Compile Include="GlobalConfig.cs" />
     <Compile Include="IDocumentFormatDefinition.cs" />
     <Compile Include="DocumentColumn.cs" />
     <Compile Include="DocumentColumnBuilder.cs" />

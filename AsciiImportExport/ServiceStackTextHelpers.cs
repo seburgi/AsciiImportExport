@@ -214,7 +214,12 @@ namespace AsciiImportExport
             if (type == typeof (Guid))
                 return value => new Guid(value);
             if (type == typeof (DateTime))
-                return value => DateTime.ParseExact(value, stringFormat, provider);
+            {
+                return String.IsNullOrEmpty(stringFormat) ? 
+                    (Func<string, object>) (value => DateTime.Parse(value, provider)) : 
+                    (value => DateTime.ParseExact(value, stringFormat, provider));
+            }
+
             if (type == typeof (TimeSpan))
                 return value => TimeSpan.Parse(value);
 
@@ -250,7 +255,12 @@ namespace AsciiImportExport
                 return value => value == null ? (decimal?) null : decimal.Parse(value, provider);
 
             if (type == typeof (DateTime?))
-                return value => value == null ? (DateTime?) null : DateTime.ParseExact(value, stringFormat, provider);
+            {
+                return String.IsNullOrEmpty(stringFormat) ?
+                    (Func<string, object>)(value => value == null ? (DateTime?) null : DateTime.Parse(value, provider)) :
+                    (value => value == null ? (DateTime?) null : DateTime.ParseExact(value, stringFormat, provider));
+            }
+
             if (type == typeof (TimeSpan?))
                 return value => value == null ? (TimeSpan?) null : TimeSpan.Parse(value);
             if (type == typeof (Guid?))

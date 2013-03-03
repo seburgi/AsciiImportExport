@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 
 namespace AsciiImportExport
@@ -213,6 +212,11 @@ namespace AsciiImportExport
             {
                 throw new ImportException(ex.ColumnName, ex.Value, ex, "Error during parsing of column '" + ex.ColumnName + "' at line " + (lineNr + 1) + ": column value '" + ex.Value + "'");
             }
+        }
+
+        public List<T> Import(string text, int skipLines = 0)
+        {
+            return Import(new StringReader(text), skipLines);
         }
     }
 }

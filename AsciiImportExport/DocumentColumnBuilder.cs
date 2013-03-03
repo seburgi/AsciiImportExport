@@ -24,7 +24,7 @@ namespace AsciiImportExport
         private string _header;
         private Func<string, object> _importFunc;
         private PropertyInfo _propertyInfo;
-        private IFormatProvider _provider = CultureInfo.InvariantCulture;
+        private IFormatProvider _provider = GlobalConfig.DefaultFormatProvider;
         private string _stringFormat;
         private bool _throwOnColumnOverflow;
 
@@ -66,9 +66,9 @@ namespace AsciiImportExport
                 Type columnType = _propertyInfo == null ? typeof (TRet) : _propertyInfo.PropertyType;
 
                 if (columnType == typeof (DateTime) || columnType == typeof (DateTime?))
-                    _stringFormat = DEFAULT_DATETIME_STRING_FORMAT;
+                    _stringFormat = GlobalConfig.DefaultDatetimeStringFormat;
                 else
-                    _stringFormat = DEFAULT_NUMERIC_STRING_FORMAT;
+                    _stringFormat = GlobalConfig.DefaultNumericStringFormat;
             }
 
             return new DocumentColumn<T>(_propertyInfo, _header, _defaultValue, _columnWidth, _alignment, _stringFormat, _provider, _booleanTrue, _booleanFalse, _importFunc, _exportFunc, _fillChar, _throwOnColumnOverflow);
@@ -190,15 +190,5 @@ namespace AsciiImportExport
 
             return s => myActionT(s);
         }
-
-        /// <summary>
-        /// Default StringFormat for DateTime
-        /// </summary>
-        public const string DEFAULT_DATETIME_STRING_FORMAT = "dd.MM.yyyy HH:mm:ss";
-
-        /// <summary>
-        /// Default StringFormat for numeric types
-        /// </summary>
-        public const string DEFAULT_NUMERIC_STRING_FORMAT = "0.###########";
     }
 }

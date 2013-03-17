@@ -18,9 +18,10 @@ namespace AsciiImportExport
         private Action<T, object> _setValueFunc;
         private readonly string _stringFormat;
         private readonly bool _throwOnColumnOverflow;
+        private readonly bool _exportQuotedString;
         private readonly Type _type;
 
-        public DocumentColumn(PropertyInfo propertyInfo, string header, Func<object> getDefaultValueFunc, int columnWidth, ColumnAlignment alignment, string stringFormat, IFormatProvider provider, string booleanTrue, string booleanFalse, Func<string, object> importFunc, Func<T, object, string> exportFunc, char fillChar, bool throwOnColumnOverflow)
+        public DocumentColumn(PropertyInfo propertyInfo, string header, Func<object> getDefaultValueFunc, int columnWidth, ColumnAlignment alignment, string stringFormat, IFormatProvider provider, string booleanTrue, string booleanFalse, Func<string, object> importFunc, Func<T, object, string> exportFunc, char fillChar, bool throwOnColumnOverflow, bool exportQuotedString)
         {
             _propertyInfo = propertyInfo;
             Header = header;
@@ -35,6 +36,7 @@ namespace AsciiImportExport
             _exportFunc = exportFunc;
             _fillChar = fillChar;
             _throwOnColumnOverflow = throwOnColumnOverflow;
+            _exportQuotedString = exportQuotedString;
 
             if (_propertyInfo != null)
             {
@@ -65,6 +67,12 @@ namespace AsciiImportExport
 
         public void Parse(T item, string value)
         {
+            // Remove unneeded quotes
+            if (value.Length >= 2 && value[0] == '"' && value[value.Length - 1] == '"')
+            {
+                value = value.Substring(1, value.Length - 2).Replace("\"\"", "\"");
+            }
+            
             if (_isDummyColumn) return;
             if (_importFunc == null)
             {
@@ -110,14 +118,16 @@ namespace AsciiImportExport
 
             if (_exportFunc == null)
             {
-                _exportFunc = (x, ret) => ServiceStackTextHelpers.GetSerializeFunc(_propertyInfo.PropertyType, _stringFormat, _booleanTrue, _booleanFalse, _provider)(ret);
+                _exportFunc = (x, ret) => ServiceStackTextHelpers.GetSerializeFunc(_propertyInfo.PropertyType, _stringFormat, _booleanTrue, _booleanFalse, _provider, _exportQuotedString)(ret);
             }
 
             try
             {
                 string exportedValue = _exportFunc(item, value);
+
                 if (_throwOnColumnOverflow && exportedValue.Length > ColumnWidth)
                     throw new OverflowException(string.Format("Column data width ({0}) exceeded maximum column width ({1})", exportedValue.Length, ColumnWidth));
+
                 return exportedValue;
             }
             catch (Exception ex)

@@ -148,7 +148,7 @@ namespace AsciiImportExport
 
                     if (skipLines > lineNr) continue;
 
-                    int linePos = 0;
+                    int posInLine = 0;
                     int lineLength = line.Length;
 
                     if (_checkForComments)
@@ -164,51 +164,69 @@ namespace AsciiImportExport
                     if (lineLength == 0) continue;
 
                     // check if line only consists of white spaces
-                    while (linePos < lineLength)
+                    while (posInLine < lineLength)
                     {
-                        if (line[linePos] == ' ')
-                            linePos++;
+                        if (line[posInLine] == ' ')
+                            posInLine++;
                         else
                             break;
                     }
                     
                     // if empty line, jump to next line
-                    if (linePos == lineLength) continue;
+                    if (posInLine == lineLength) continue;
 
                     // now that we confirmed that the line is not empty, we can start the import
-                    linePos = 0;
+                    posInLine = 0;
                     T item = _instantiator();
 
                     foreach (var column in _columns)
                     {
-                        if (linePos >= lineLength) break;
+                        if (posInLine >= lineLength) break;
 
                         string value;
                         if (column.ColumnWidth > 0)
                         {
-                            value = line.Substring(linePos, Math.Min(column.ColumnWidth, lineLength - linePos));
-                            linePos += column.ColumnWidth + ColumnSeparator.Length;
+                            value = line.Substring(posInLine, Math.Min(column.ColumnWidth, lineLength - posInLine));
+                            posInLine += column.ColumnWidth + ColumnSeparator.Length;
                         }
                         else
                         {
-                            while (linePos < lineLength)
+                            while (posInLine < lineLength)
                             {
-                                if (line[linePos] == ' ')
-                                    linePos++;
+                                if (line[posInLine] == ' ')
+                                    posInLine++;
                                 else
                                     break;
                             }
 
-                            int indexOfSeparator = line.IndexOf(ColumnSeparator, linePos);
-                            if (indexOfSeparator >= 0)
+                            int posOfSeparator = 0;
+                            int tmp = posInLine;
+                            bool isColumnSeparator = true;
+                            
+                            do
                             {
-                                value = line.Substring(linePos, indexOfSeparator - linePos);
-                                linePos = indexOfSeparator + ColumnSeparator.Length;
+                                posOfSeparator = line.IndexOf(ColumnSeparator, posInLine);
+                                if(posOfSeparator < 0) break;
+
+                                for (; posInLine < posOfSeparator; posInLine++)
+                                {
+                                    if (line[posInLine] == '"')
+                                        isColumnSeparator = !isColumnSeparator;
+                                }
+
+                                posInLine++;
+                            } while (!isColumnSeparator && posInLine < lineLength);
+
+                            posInLine = tmp;
+                            if (posOfSeparator >= 0)
+                            {
+                                value = line.Substring(posInLine, posOfSeparator - posInLine);
+                                posInLine = posOfSeparator + ColumnSeparator.Length;
                             }
                             else
                             {
-                                value = line.Substring(linePos);
-                                linePos = lineLength;
+                                value = line.Substring(posInLine);
+                                posInLine = lineLength;
                             }
                         }
                         column.Parse(item, value.Trim());

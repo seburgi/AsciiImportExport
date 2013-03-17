@@ -27,6 +27,8 @@ namespace AsciiImportExport
         private IFormatProvider _provider = GlobalConfig.DefaultFormatProvider;
         private string _stringFormat;
         private bool _throwOnColumnOverflow;
+        private bool _exportQuotedString;
+
 
         /// <summary>
         /// The constructor
@@ -44,6 +46,16 @@ namespace AsciiImportExport
         public DocumentColumnBuilder(PropertyInfo propertyInfo)
         {
             _propertyInfo = propertyInfo;
+        }
+
+        /// <summary>
+        /// Defines if strings shall be written with enclosing quotes. Quotes contained in the string itself, get exported twice, to keep the information consistent. (Default = false)
+        /// </summary>
+        /// <returns></returns>
+        public DocumentColumnBuilder<T,TRet> SetExportQuotedStrings(bool exportQuotedString)
+        {
+            _exportQuotedString = exportQuotedString;
+            return this;
         }
 
         /// <summary>
@@ -71,7 +83,7 @@ namespace AsciiImportExport
                     _stringFormat = GlobalConfig.DefaultNumericStringFormat;
             }
 
-            return new DocumentColumn<T>(_propertyInfo, _header, _defaultValue, _columnWidth, _alignment, _stringFormat, _provider, _booleanTrue, _booleanFalse, _importFunc, _exportFunc, _fillChar, _throwOnColumnOverflow);
+            return new DocumentColumn<T>(_propertyInfo, _header, _defaultValue, _columnWidth, _alignment, _stringFormat, _provider, _booleanTrue, _booleanFalse, _importFunc, _exportFunc, _fillChar, _throwOnColumnOverflow, _exportQuotedString);
         }
 
         /// <summary>

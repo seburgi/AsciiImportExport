@@ -288,7 +288,7 @@ namespace AsciiImportExport
         /// <param name="stringFormat">The string format used for formatting of DateTime or numeric values</param>
         /// <param name="booleanTrue">The string that identifies a boolean true value</param>
         /// <param name="booleanFalse">The string that identifies a boolean false value</param>
-        public static Func<object, string> GetSerializeFunc(Type type, string stringFormat, string booleanTrue, string booleanFalse, IFormatProvider provider)
+        public static Func<object, string> GetSerializeFunc(Type type, string stringFormat, string booleanTrue, string booleanFalse, IFormatProvider provider, bool exportQuotedStrings)
         {
             if (type == typeof (byte)
                 || type == typeof (short)
@@ -348,6 +348,9 @@ namespace AsciiImportExport
 
             if (type.IsEnum || type.UnderlyingSystemType.IsEnum)
                 return type.GetCustomAttributes(typeof (FlagsAttribute), false).Length > 0 ? (Func<object, string>) WriteEnumFlags : v => WriteEnum(v);
+
+            if (exportQuotedStrings)
+                return v => "\"" + v.ToString().Replace("\"", "\"\"") + "\"";
 
             return v => v.ToString();
         }

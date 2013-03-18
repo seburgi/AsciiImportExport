@@ -205,7 +205,7 @@ namespace AsciiImportExport
                             
                             do
                             {
-                                posOfSeparator = line.IndexOf(ColumnSeparator, posInLine);
+                                posOfSeparator = Math.Min(lineLength, line.IndexOf(ColumnSeparator, posInLine));
                                 if(posOfSeparator < 0) break;
 
                                 for (; posInLine < posOfSeparator; posInLine++)
